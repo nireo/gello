@@ -29,3 +29,39 @@ func get(c *gin.Context) {
 
 	c.JSON(200, serialized)
 }
+
+func create(c *gin.Context) {
+	db := database.GetDB()
+
+	type RequestBody struct {
+		Title string `json:"title" binding:"required"`
+	}
+
+	var body RequestBody
+	if err := c.BindJSON(&body); err != nil {
+		c.AbortWithStatus(400)
+		return
+	}
+
+	uuid := common.GenerateUUID()
+	board := Board{
+		Title: body.Title,
+		UUID:  uuid,
+	}
+
+	db.NewRecord(board)
+	db.Create(&board)
+}
+
+func getSingle(c *gin.Context) {
+	db := database.GetDB()
+	id := c.Param("id")
+
+	var board Board
+	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
+		c.AbortWithStatus(404)
+		return
+	}
+
+	c.JSON(200, board.Serialize())
+}
