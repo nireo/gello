@@ -83,3 +83,53 @@ func create(c *gin.Context) {
 
 	c.JSON(200, list.Serialize())
 }
+
+func delete(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	id := c.Param("id")
+
+	if id == "" {
+		c.AbortWithStatus(400)
+		return
+	}
+
+	var list List
+	if err := db.Where("uuid = ?", id).First(&list).Error; err != nil {
+		c.AbortWithStatus(404)
+		return
+	}
+
+	db.Delete(&list)
+	c.Status(204)
+}
+
+func update(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	id := c.Param("id")
+
+	if id == "" {
+		c.AbortWithStatus(400)
+		return
+	}
+
+	type RequestBody struct {
+		Title string `json:"title" binding:"required"`
+	}
+
+	var body RequestBody
+	if err := c.BindJSON(&body); err != nil {
+		c.AbortWithStatus(400)
+		return
+	}
+
+	var list List
+	if err := db.Where("uuid = ?", id).First(&list).Error; err != nil {
+		c.AbortWithStatus(404)
+		return
+	}
+
+	list.Title = body.Title
+
+	db.Save(&list)
+	c.JSON(200, list.Serialize())
+}

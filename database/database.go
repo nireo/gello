@@ -14,8 +14,6 @@ func Initialize() (*gorm.DB, error) {
 		panic(err)
 	}
 
-	db.LogMode(true)
-
 	models.Migrate(db)
 	return db, err
 }

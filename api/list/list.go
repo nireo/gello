@@ -8,7 +8,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		list.GET("/:id", get)
 		list.POST("/:id", create)
-		list.DELETE("/:id")
-		list.PATCH("/:id")
+		list.DELETE("/:id", delete)
+		list.PATCH("/:id", update)
 	}
 }
