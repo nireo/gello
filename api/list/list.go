@@ -6,8 +6,8 @@ import "github.com/gin-gonic/gin"
 func ApplyRoutes(r *gin.RouterGroup) {
 	list := r.Group("/list")
 	{
-		list.GET("/:id")
-		list.POST("/:id")
+		list.GET("/:id", get)
+		list.POST("/:id", create)
 		list.DELETE("/:id")
 		list.PATCH("/:id")
 	}
