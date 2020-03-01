@@ -2,7 +2,7 @@ package board
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/nireo/gello/database"
+	"github.com/jinzhu/gorm"
 	"github.com/nireo/gello/database/models"
 	"github.com/nireo/gello/lib/common"
 )
@@ -14,7 +14,7 @@ type Board = models.Board
 type JSON = common.JSON
 
 func get(c *gin.Context) {
-	db := database.GetDB()
+	db := c.MustGet("db").(*gorm.DB)
 
 	var boards []Board
 	if err := db.Find(&boards).Error; err != nil {
@@ -31,7 +31,7 @@ func get(c *gin.Context) {
 }
 
 func create(c *gin.Context) {
-	db := database.GetDB()
+	db := c.MustGet("db").(*gorm.DB)
 
 	type RequestBody struct {
 		Title string `json:"title" binding:"required"`
@@ -51,10 +51,12 @@ func create(c *gin.Context) {
 
 	db.NewRecord(board)
 	db.Create(&board)
+
+	c.JSON(200, board.Serialize())
 }
 
 func getSingle(c *gin.Context) {
-	db := database.GetDB()
+	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
 
 	var board Board
@@ -67,7 +69,7 @@ func getSingle(c *gin.Context) {
 }
 
 func delete(c *gin.Context) {
-	db := database.GetDB()
+	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
 
 	if id == "" {
@@ -86,7 +88,7 @@ func delete(c *gin.Context) {
 }
 
 func update(c *gin.Context) {
-	db := database.GetDB()
+	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
 
 	type RequestBody struct {

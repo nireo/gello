@@ -1,15 +1,21 @@
 package database
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite" // mysql config
+	"github.com/nireo/gello/database/models"
+)
 
-var db *gorm.DB
+// Initialize the database
+func Initialize() (*gorm.DB, error) {
+	db, err := gorm.Open("sqlite3", "./gello.db")
 
-// Initialize starts the database up
-func Initialize() {
-	db, _ = gorm.Open("sqlite3", "./gello.db")
-}
+	if err != nil {
+		panic(err)
+	}
 
-// GetDB returns a pointer to the database
-func GetDB() *gorm.DB {
-	return db
+	db.LogMode(true)
+
+	models.Migrate(db)
+	return db, err
 }

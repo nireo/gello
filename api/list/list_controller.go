@@ -2,7 +2,7 @@ package list
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/nireo/gello/database"
+	"github.com/jinzhu/gorm"
 	"github.com/nireo/gello/database/models"
 	"github.com/nireo/gello/lib/common"
 )
@@ -18,7 +18,7 @@ type JSON = common.JSON
 
 // Returns all lists related to a board
 func get(c *gin.Context) {
-	db := database.GetDB()
+	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
 
 	if id == "" {
@@ -47,7 +47,7 @@ func get(c *gin.Context) {
 }
 
 func create(c *gin.Context) {
-	db := database.GetDB()
+	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
 
 	if id == "" {
