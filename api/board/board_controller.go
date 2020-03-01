@@ -65,3 +65,48 @@ func getSingle(c *gin.Context) {
 
 	c.JSON(200, board.Serialize())
 }
+
+func delete(c *gin.Context) {
+	db := database.GetDB()
+	id := c.Param("id")
+
+	if id == "" {
+		c.AbortWithStatus(400)
+		return
+	}
+
+	var board Board
+	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
+		c.AbortWithStatus(404)
+		return
+	}
+
+	db.Delete(&board)
+	c.Status(204)
+}
+
+func update(c *gin.Context) {
+	db := database.GetDB()
+	id := c.Param("id")
+
+	type RequestBody struct {
+		Title string `json:"title" binding:"required"`
+	}
+
+	var body RequestBody
+	if err := c.BindJSON(&body); err != nil {
+		c.AbortWithStatus(400)
+		return
+	}
+
+	var board Board
+	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
+		c.AbortWithStatus(404)
+		return
+	}
+
+	board.Title = body.Title
+
+	db.Save(&board)
+	c.JSON(200, board.Serialize())
+}

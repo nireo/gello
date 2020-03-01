@@ -11,7 +11,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		board.GET("/", get)
 		board.GET("/:id", getSingle)
 		board.POST("/", create)
-		board.DELETE("/:id")
-		board.PATCH("/:id")
+		board.DELETE("/:id", delete)
+		board.PATCH("/:id", update)
 	}
 }
