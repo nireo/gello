@@ -52,3 +52,22 @@ func create(c *gin.Context) {
 
 	c.JSON(200, item.Serialize())
 }
+
+func delete(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	id := c.Param("id")
+
+	if id == "" {
+		c.AbortWithStatus(400)
+		return
+	}
+
+	var item Item
+	if err := db.Where("uuid = ?", id).First(&item).Error; err != nil {
+		c.AbortWithStatus(404)
+		return
+	}
+
+	db.Delete(&item)
+	c.Status(204)
+}

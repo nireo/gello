@@ -7,6 +7,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	item := r.Group("/items")
 	{
 		item.POST("/:id", create)
-		item.DELETE("/:id")
+		item.DELETE("/:id", delete)
 	}
 }
