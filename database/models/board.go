@@ -19,7 +19,6 @@ type Board struct {
 func (board *Board) Serialize() common.JSON {
 	return common.JSON{
 		"title": board.Title,
-		"lists": board.Lists,
 		"uuid":  board.UUID,
 	}
 }

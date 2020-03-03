@@ -13,6 +13,9 @@ type Board = models.Board
 // List type alias
 type List = models.List
 
+// Item type alias
+type Item = models.Item
+
 // JSON type alias
 type JSON = common.JSON
 
@@ -61,25 +64,28 @@ func create(c *gin.Context) {
 func getSingle(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
-
 	var board Board
 	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
 		c.AbortWithStatus(404)
 		return
 	}
-
 	// get lists related to a board
 	var lists []List
 	if err := db.Model(&board).Related(&lists).Error; err != nil {
 		c.AbortWithStatus(500)
 		return
 	}
-
 	serializedList := make([]JSON, len(lists), len(lists))
 	for index := range lists {
-		serializedList[index] = lists[index].Serialize()
+		var items []Item
+		if err := db.Model(&lists[index]).Related(&items).Error; err != nil {
+			c.AbortWithStatus(500)
+			return
+		}
+		listItem := lists[index]
+		listItem.Items = items
+		serializedList[index] = listItem.Serialize()
 	}
-
 	c.JSON(200, gin.H{
 		"board": board.Serialize(),
 		"lists": serializedList,
