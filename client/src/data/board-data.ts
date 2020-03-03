@@ -36,6 +36,18 @@ export const initialBoardData = {
       id: 'column-4',
       title: 'Column 4',
       itemsIds: []
+    },
+
+    'column-5': {
+      id: 'column-4',
+      title: 'Column 4',
+      itemsIds: []
+    },
+
+    'column-6': {
+      id: 'column-4',
+      title: 'Column 4',
+      itemsIds: []
     }
   },
   columnsOrder: ['column-1', 'column-2', 'column-3', 'column-4']
