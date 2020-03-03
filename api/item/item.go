@@ -8,5 +8,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		item.POST("/:id", create)
 		item.DELETE("/:id", delete)
+		item.PATCH("/:id", update)
 	}
 }

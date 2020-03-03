@@ -71,3 +71,34 @@ func delete(c *gin.Context) {
 	db.Delete(&item)
 	c.Status(204)
 }
+
+func update(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	id := c.Param("id")
+
+	if id == "" {
+		c.AbortWithStatus(400)
+		return
+	}
+
+	type RequestBody struct {
+		Content string `json:"content" binding:"required"`
+	}
+
+	var body RequestBody
+	if err := c.BindJSON(&body); err != nil {
+		c.AbortWithStatus(400)
+		return
+	}
+
+	var item Item
+	if err := db.Where("uuid = ?", id).First(&item).Error; err != nil {
+		c.AbortWithStatus(404)
+		return
+	}
+
+	item.Content = body.Content
+	db.Save(&item)
+
+	c.JSON(200, item.Serialize())
+}
