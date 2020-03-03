@@ -10,6 +10,9 @@ import (
 // Board type alias
 type Board = models.Board
 
+// List type alias
+type List = models.List
+
 // JSON type alias
 type JSON = common.JSON
 
@@ -65,7 +68,22 @@ func getSingle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, board.Serialize())
+	// get lists related to a board
+	var lists []List
+	if err := db.Model(&board).Related(&lists).Error; err != nil {
+		c.AbortWithStatus(500)
+		return
+	}
+
+	serializedList := make([]JSON, len(lists), len(lists))
+	for index := range lists {
+		serializedList[index] = lists[index].Serialize()
+	}
+
+	c.JSON(200, gin.H{
+		"board": board.Serialize(),
+		"lists": serializedList,
+	})
 }
 
 func delete(c *gin.Context) {

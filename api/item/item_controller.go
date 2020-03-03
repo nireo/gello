@@ -83,6 +83,7 @@ func update(c *gin.Context) {
 
 	type RequestBody struct {
 		Content string `json:"content" binding:"required"`
+		ListID  uint   `json:"list_id" binding:"required"`
 	}
 
 	var body RequestBody

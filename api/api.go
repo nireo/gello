@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/nireo/gello/api/board"
+	"github.com/nireo/gello/api/item"
 	"github.com/nireo/gello/api/list"
 )
 
@@ -12,5 +13,6 @@ func ApplyRoutes(r *gin.Engine) {
 	{
 		board.ApplyRoutes(routes)
 		list.ApplyRoutes(routes)
+		item.ApplyRoutes(routes)
 	}
 }
