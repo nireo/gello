@@ -38,8 +38,9 @@ const BoardColumnContent = styled.div<BoardColumnContentStylesProps>`
 export const BoardColumn: React.FC<BoardColumnProps> = props => {
   return (
     <BoardColumnWrapper>
-      <BoardColumnTitle>{props.column.title}</BoardColumnTitle>
-
+      <div>
+        <BoardColumnTitle>{props.column.title}</BoardColumnTitle>
+      </div>
       <Droppable droppableId={props.column.id}>
         {(provided, snapshot) => (
           <BoardColumnContent
@@ -54,6 +55,9 @@ export const BoardColumn: React.FC<BoardColumnProps> = props => {
           </BoardColumnContent>
         )}
       </Droppable>
+      <button className="button" style={{ marginTop: '1rem' }}>
+        Delete
+      </button>
     </BoardColumnWrapper>
   );
 };

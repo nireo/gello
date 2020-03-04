@@ -8,21 +8,21 @@ export const getBoards = async () => {
 };
 
 export const getSingleBoard = async (id: string) => {
-  const response = await axios.get(`${baseUrl}/${id}`);
+  const response = await axios.get(`${baseUrl}${id}`);
   return response.data;
 };
 
 export const createBoard = async (newBoard: CreateBoard) => {
-  const response = await axios.get(baseUrl, newBoard);
+  const response = await axios.post(baseUrl, newBoard);
   return response.data;
 };
 
 export const deleteBoard = async (id: string) => {
-  const response = await axios.delete(`${baseUrl}/${id}`);
+  const response = await axios.delete(`${baseUrl}${id}`);
   return response.data;
 };
 
 export const updateBoard = async (updated: CreateBoard, id: string) => {
-  const response = await axios.patch(`${baseUrl}/${id}`, updateBoard);
+  const response = await axios.patch(`${baseUrl}${id}`, updateBoard);
   return response.data;
 };
