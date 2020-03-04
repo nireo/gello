@@ -3,6 +3,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import { initialBoardData } from '../../data/board-data';
 import { BoardColumn } from './Column';
+import { getSingleBoard } from '../../services/board';
 
 const BoardEl = styled.div`
   display: flex;
@@ -10,8 +11,20 @@ const BoardEl = styled.div`
   justify-content: space-between;
 `;
 
-export class Board extends React.Component {
+type Props = {
+  id: string;
+};
+
+export class Board extends React.Component<Props> {
   state = initialBoardData;
+  constructor(props: Props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    console.log(this.props.id);
+  }
+
   onDragEnd = (result: any) => {
     const { source, destination, draggableId } = result;
 
@@ -31,6 +44,7 @@ export class Board extends React.Component {
     const columnFinish = (this.state.columns as any)[destination.droppableId];
 
     if (columnStart === columnFinish) {
+      // this executes when item is moved in the same column
       const newItemsIds = Array.from(columnStart.itemsIds);
 
       newItemsIds.splice(source.index, 1);
@@ -52,6 +66,7 @@ export class Board extends React.Component {
 
       this.setState(newState);
     } else {
+      // this executes when item is moved to a new column
       const newStartItemsIds = Array.from(columnStart.itemsIds);
 
       newStartItemsIds.splice(source.index, 1);
