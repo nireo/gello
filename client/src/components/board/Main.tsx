@@ -21,6 +21,11 @@ interface ListItem {
   uuid: string;
 }
 
+interface Item {
+  UUID: string;
+  Content: string;
+}
+
 export class Board extends React.Component<Props> {
   state = initialBoardData;
   constructor(props: Props) {
@@ -28,15 +33,14 @@ export class Board extends React.Component<Props> {
   }
 
   componentDidMount() {
-    let data = this.loadData();
-    this.betterFormatting(data);
+    this.loadData();
   }
 
   loadData() {
     axios
       .get(`/api/board/${this.props.id}`)
       .then((response: any) => {
-        return response.data;
+        this.betterFormatting(response.data);
       })
       .catch(() => {
         console.log('something went wrong');
@@ -53,19 +57,28 @@ export class Board extends React.Component<Props> {
       columns: {},
       columnsOrder: []
     };
-    console.log(data);
 
     let lists = data.lists;
     lists.forEach((item: ListItem) => {
-      const temp = {
+      const temp: any = {
         id: item.uuid,
         title: item.title,
-        itemIds: []
+        itemsIds: []
       };
 
-      dataTemplate[item.uuid] = temp;
+      item.items.forEach((item: Item) => {
+        dataTemplate.items[item.UUID] = {
+          id: item.UUID,
+          content: item.Content
+        };
+        temp.itemsIds = temp.itemsIds.concat(item.UUID);
+      });
+
+      dataTemplate.columns[item.uuid] = temp;
+      dataTemplate.columnsOrder = dataTemplate.columnsOrder.concat(item.uuid);
     });
-    console.log(dataTemplate);
+
+    this.setState(dataTemplate);
   }
 
   onDragEnd = (result: any) => {
