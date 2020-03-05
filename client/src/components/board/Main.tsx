@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { initialBoardData } from '../../data/board-data';
 import { BoardColumn } from './Column';
 import axios from 'axios';
+import { CreateColumn } from './CreateColumn';
 
 const BoardEl = styled.div`
   display: flex;
@@ -156,21 +157,26 @@ export class Board extends React.Component<Props> {
 
   render() {
     return (
-      <BoardEl>
-        <DragDropContext onDragEnd={this.onDragEnd}>
-          {this.state.columnsOrder.map(columnId => {
-            const column = (this.state.columns as any)[columnId];
+      <div>
+        <div>
+          <CreateColumn />
+        </div>
+        <BoardEl>
+          <DragDropContext onDragEnd={this.onDragEnd}>
+            {this.state.columnsOrder.map(columnId => {
+              const column = (this.state.columns as any)[columnId];
 
-            const items = column.itemsIds.map(
-              (itemId: string) => (this.state.items as any)[itemId]
-            );
+              const items = column.itemsIds.map(
+                (itemId: string) => (this.state.items as any)[itemId]
+              );
 
-            return (
-              <BoardColumn key={column.id} column={column} items={items} />
-            );
-          })}
-        </DragDropContext>
-      </BoardEl>
+              return (
+                <BoardColumn key={column.id} column={column} items={items} />
+              );
+            })}
+          </DragDropContext>
+        </BoardEl>
+      </div>
     );
   }
 }

@@ -16,7 +16,7 @@ type BoardColumnContentStylesProps = {
 const BoardColumnWrapper = styled.div`
   flex: 1;
   padding: 8px;
-  background-color: #e5eff5;
+  background-color: #ebecf0;
   border-radius: 4px;
 
   & + & {
@@ -38,9 +38,7 @@ const BoardColumnContent = styled.div<BoardColumnContentStylesProps>`
 export const BoardColumn: React.FC<BoardColumnProps> = props => {
   return (
     <BoardColumnWrapper>
-      <div>
-        <BoardColumnTitle>{props.column.title}</BoardColumnTitle>
-      </div>
+      <BoardColumnTitle>{props.column.title}</BoardColumnTitle>
       <Droppable droppableId={props.column.id}>
         {(provided, snapshot) => (
           <BoardColumnContent

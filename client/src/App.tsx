@@ -4,6 +4,7 @@ import { Navbar } from './components/layout/Navbar';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ManageMain } from './components/manage/Main';
 import { Register } from './components/user/Register';
+import { Main as BoardMain } from './components/board2/Main';
 
 const App: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const App: React.FC = () => {
         />
         <Route path="/manage" exact render={() => <ManageMain />} />
         <Route path="/register" exact render={() => <Register />} />
+        <Route path="/board2" exact render={() => <BoardMain />} />
       </Switch>
     </Router>
   );
