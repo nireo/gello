@@ -1,5 +1,24 @@
 import React from 'react';
+import Card from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
+import CardContent from '@material-ui/core/CardContent';
 
-export const BoardCard = () => {
-  return <div></div>;
+type Props = {
+  text: string;
+};
+
+export const BoardCard: React.FC<Props> = ({ text }) => {
+  return (
+    <Card style={styles.cardContainer}>
+      <CardContent>
+        <Typography gutterBottom>{text}</Typography>
+      </CardContent>
+    </Card>
+  );
+};
+
+const styles = {
+  cardContainer: {
+    marginBottom: 8
+  }
 };

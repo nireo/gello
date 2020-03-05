@@ -1,6 +1,4 @@
-import { Board } from '../../interfaces/Board';
-
-const reducer = (state: Board[] = [], action: any) => {
+const reducer = (state: any[] = [], action: any) => {
   switch (action.type) {
     default:
       return state;
