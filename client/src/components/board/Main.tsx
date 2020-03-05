@@ -3,7 +3,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import { initialBoardData } from '../../data/board-data';
 import { BoardColumn } from './Column';
-import { getSingleBoard } from '../../services/board';
+import axios from 'axios';
 
 const BoardEl = styled.div`
   display: flex;
@@ -15,6 +15,12 @@ type Props = {
   id: string;
 };
 
+interface ListItem {
+  title: string;
+  items: any;
+  uuid: string;
+}
+
 export class Board extends React.Component<Props> {
   state = initialBoardData;
   constructor(props: Props) {
@@ -22,7 +28,44 @@ export class Board extends React.Component<Props> {
   }
 
   componentDidMount() {
-    console.log(this.props.id);
+    let data = this.loadData();
+    this.betterFormatting(data);
+  }
+
+  loadData() {
+    axios
+      .get(`/api/board/${this.props.id}`)
+      .then((response: any) => {
+        return response.data;
+      })
+      .catch(() => {
+        console.log('something went wrong');
+      });
+  }
+
+  betterFormatting(data: any) {
+    if (!data) {
+      return;
+    }
+
+    let dataTemplate: any = {
+      items: {},
+      columns: {},
+      columnsOrder: []
+    };
+    console.log(data);
+
+    let lists = data.lists;
+    lists.forEach((item: ListItem) => {
+      const temp = {
+        id: item.uuid,
+        title: item.title,
+        itemIds: []
+      };
+
+      dataTemplate[item.uuid] = temp;
+    });
+    console.log(dataTemplate);
   }
 
   onDragEnd = (result: any) => {

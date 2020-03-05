@@ -10,7 +10,11 @@ const App: React.FC = () => {
     <Router>
       <Navbar />
       <Switch>
-        <Route path="/board" exact render={() => <Board id="hello" />} />
+        <Route
+          path="/board"
+          exact
+          render={() => <Board id="b0cca1a3-44e2-4b1d-85ab-b7ffd50d0501" />}
+        />
         <Route path="/manage" exact render={() => <ManageMain />} />
         <Route path="/register" exact render={() => <Register />} />
       </Switch>
