@@ -1,5 +1,6 @@
 import React from 'react';
 import { BoardCard } from './BoardCard';
+import ActionButton from './ActionButton';
 
 type Props = {
   title: string;
@@ -13,6 +14,7 @@ export const BoardList: React.FC<Props> = ({ title, items }) => {
       {items.map((item: any) => (
         <BoardCard key={item.uuid} text={item.content} />
       ))}
+      <ActionButton />
     </div>
   );
 };
@@ -23,6 +25,7 @@ const styles = {
     borderRadius: 3,
     width: 300,
     padding: 9,
-    marginRight: 8
+    marginRight: 8,
+    height: '100%'
   }
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { BoardList } from './BoardList';
 import { connect } from 'react-redux';
 import { AppState } from '../../store';
+import ActionButton from './ActionButton';
 
 type Props = {
   lists: any;
@@ -15,6 +16,7 @@ const Main: React.FC<Props> = ({ lists }) => {
         {lists.map((list: any) => (
           <BoardList title={list.title} items={list.items} />
         ))}
+        <ActionButton />
       </div>
     </div>
   );
