@@ -5,9 +5,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import Card from '@material-ui/core/Card';
 import TextArea from 'react-textarea-autosize';
 import Button from '@material-ui/core/Button';
+import { connect } from 'react-redux';
+import { addList } from '../../actions';
 
 type Props = {
   list?: any;
+  dispatch: any;
 };
 
 class ActionButton extends React.Component<Props> {
@@ -32,6 +35,17 @@ class ActionButton extends React.Component<Props> {
     this.setState({
       text: event.target.value
     });
+  };
+
+  handleAddList = () => {
+    const { dispatch } = this.props;
+    const { text } = this.state;
+
+    if (text) {
+      dispatch(addList(text));
+    }
+
+    return;
   };
 
   renderAddButton = () => {
@@ -94,6 +108,7 @@ class ActionButton extends React.Component<Props> {
         </Card>
         <div style={styles.formButtonGroup}>
           <Button
+            onMouseDown={this.handleAddList}
             variant="contained"
             style={{ color: 'white', backgroundColor: '#5aac44' }}
           >
@@ -129,4 +144,4 @@ const styles = {
   }
 };
 
-export default ActionButton;
+export default connect()(ActionButton);

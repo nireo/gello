@@ -1,5 +1,8 @@
-const addList = (title: string) => {
+import { CONSTANTS } from '.';
+
+export const addList = (title: string) => {
   return {
-    title
+    payload: title,
+    type: CONSTANTS.ADD_LIST
   };
 };

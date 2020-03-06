@@ -9,6 +9,7 @@ type Props = {
 };
 
 const Main: React.FC<Props> = ({ lists }) => {
+  console.log(lists);
   return (
     <div>
       <h2>Board title</h2>
