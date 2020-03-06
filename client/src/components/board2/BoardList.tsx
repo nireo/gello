@@ -5,16 +5,17 @@ import ActionButton from './ActionButton';
 type Props = {
   title: string;
   items: any;
+  id: number;
 };
 
-export const BoardList: React.FC<Props> = ({ title, items }) => {
+export const BoardList: React.FC<Props> = ({ title, items, id }) => {
   return (
     <div style={styles.container}>
       <h4>{title}</h4>
       {items.map((item: any) => (
         <BoardCard key={item.uuid} text={item.content} />
       ))}
-      <ActionButton />
+      <ActionButton listID={id} list={true} />
     </div>
   );
 };

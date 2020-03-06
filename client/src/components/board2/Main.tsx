@@ -15,7 +15,7 @@ const Main: React.FC<Props> = ({ lists }) => {
       <h2>Board title</h2>
       <div style={{ marginRight: 8, flexDirection: 'row', display: 'flex' }}>
         {lists.map((list: any) => (
-          <BoardList title={list.title} items={list.items} />
+          <BoardList id={list.uuid} title={list.title} items={list.items} />
         ))}
         <ActionButton />
       </div>
