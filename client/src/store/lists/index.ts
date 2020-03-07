@@ -6,29 +6,29 @@ let itemID = 5;
 const initialState = [
   {
     title: 'List 1',
-    uuid: 0,
+    uuid: `list-${1}`,
     items: [
       {
-        uuid: 1,
-        content: 'Create a good board'
+        uuid: `card-${1}`,
+        content: 'Create a good board 1'
       },
       {
-        uuid: 2,
-        content: 'Create a good board'
+        uuid: `card-${2}`,
+        content: 'Create a good board 2'
       }
     ]
   },
   {
     title: 'List 2',
-    uuid: 1,
+    uuid: `list-${2}`,
     items: [
       {
-        uuid: 3,
-        content: 'Create a good board'
+        uuid: `card-${3}`,
+        content: 'Create a good board 3'
       },
       {
-        uuid: 4,
-        content: 'Create a good board'
+        uuid: `card-${4}`,
+        content: 'Create a good board 4'
       }
     ]
   }
@@ -40,7 +40,7 @@ const reducer = (state: any = initialState, action: any) => {
       const newList = {
         title: action.payload,
         items: [],
-        uuid: listID
+        uuid: `list-${listID}`
       };
 
       listID += 1;
@@ -48,7 +48,7 @@ const reducer = (state: any = initialState, action: any) => {
     case CONSTANTS.ADD_ITEM:
       const newCard = {
         content: action.payload.text,
-        uuid: itemID
+        uuid: `card-${itemID}`
       };
 
       itemID += 1;

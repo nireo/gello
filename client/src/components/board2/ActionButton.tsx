@@ -64,10 +64,10 @@ class ActionButton extends React.Component<Props> {
   renderAddButton = () => {
     const { list } = this.props;
 
-    const buttonText = list ? 'Add another item' : 'Add another list';
-    const buttonTextOpacity = list ? 1 : 0.5;
-    const buttonTextColor = list ? 'white' : 'inherit';
-    const buttonTextBackground = list ? 'rgba(0,0,0,.15)' : 'inherit';
+    const buttonText = !list ? 'Add another item' : 'Add another list';
+    const buttonTextOpacity = !list ? 1 : 0.5;
+    const buttonTextColor = !list ? 'white' : 'inherit';
+    const buttonTextBackground = !list ? 'rgba(0,0,0,.15)' : 'inherit';
 
     return (
       <div
@@ -90,10 +90,10 @@ class ActionButton extends React.Component<Props> {
   renderForm = () => {
     const { list } = this.props;
 
-    const placeholder = list
+    const placeholder = !list
       ? 'Enter list title...'
       : 'Enter a title for this item...';
-    const buttonTitle = list ? 'Add list' : 'Add item';
+    const buttonTitle = !list ? 'Add list' : 'Add item';
 
     return (
       <div>
