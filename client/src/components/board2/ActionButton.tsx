@@ -64,7 +64,7 @@ class ActionButton extends React.Component<Props> {
   renderAddButton = () => {
     const { list } = this.props;
 
-    const buttonText = !list ? 'Add another item' : 'Add another list';
+    const buttonText = list ? 'Add another item' : 'Add another list';
     const buttonTextOpacity = !list ? 1 : 0.5;
     const buttonTextColor = !list ? 'white' : 'inherit';
     const buttonTextBackground = !list ? 'rgba(0,0,0,.15)' : 'inherit';

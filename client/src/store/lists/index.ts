@@ -71,16 +71,33 @@ const reducer = (state: any = initialState, action: any) => {
         droppableIdEnd,
         droppableIndexStart,
         droppableIndexEnd,
-        draggableId
+        draggableId,
+        type
       } = action.payload;
 
       const newState2 = [...state];
+
+      if (type === 'list') {
+        const list = newState2.splice(droppableIndexStart, 1);
+        newState2.splice(droppableIndexEnd, 0, ...list);
+        return newState2;
+      }
 
       // in the same list
       if (droppableIdStart === droppableIdEnd) {
         const list = state.find((list: any) => droppableIdStart === list.uuid);
         const item = list.items.splice(droppableIndexStart, 1);
         list.items.splice(droppableIndexEnd, 0, ...item);
+      }
+
+      // in to other list
+      if (droppableIdStart !== droppableIdEnd) {
+        const listStart = state.find(
+          (list: any) => droppableIdStart === list.uuid
+        );
+        const item = listStart.items.splice(droppableIndexStart, 1);
+        const listEnd = state.find((list: any) => droppableIdEnd === list.uuid);
+        listEnd.items.splice(droppableIndexEnd, 0, ...item);
       }
 
       return newState2;

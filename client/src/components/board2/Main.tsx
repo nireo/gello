@@ -3,8 +3,14 @@ import { BoardList } from './BoardList';
 import { connect } from 'react-redux';
 import { AppState } from '../../store';
 import ActionButton from './ActionButton';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 import { sort } from '../../actions';
+import styled from 'styled-components';
+
+const ListContainer = styled.div`
+  display: flex;
+  flex-direction: 'row';
+`;
 
 type Props = {
   lists: any;
@@ -13,7 +19,7 @@ type Props = {
 
 class Main extends React.Component<Props> {
   onDragEnd = (result: DropResult) => {
-    const { destination, source, draggableId } = result;
+    const { destination, source, draggableId, type } = result;
 
     // item not dropped anywhere
     if (!destination) {
@@ -26,7 +32,8 @@ class Main extends React.Component<Props> {
         destination.droppableId,
         source.index,
         destination.index,
-        draggableId
+        draggableId,
+        type
       )
     );
   };
@@ -37,14 +44,25 @@ class Main extends React.Component<Props> {
       <DragDropContext onDragEnd={this.onDragEnd}>
         <div>
           <h2>Board title</h2>
-          <div
-            style={{ marginRight: 8, flexDirection: 'row', display: 'flex' }}
-          >
-            {lists.map((list: any) => (
-              <BoardList id={list.uuid} title={list.title} items={list.items} />
-            ))}
-            <ActionButton />
-          </div>
+          <Droppable droppableId="all-lists" direction="horizontal" type="list">
+            {provided => (
+              <ListContainer
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {lists.map((list: any, index: number) => (
+                  <BoardList
+                    id={list.uuid}
+                    title={list.title}
+                    items={list.items}
+                    key={list.uuid}
+                    index={index}
+                  />
+                ))}
+                <ActionButton />
+              </ListContainer>
+            )}
+          </Droppable>
         </div>
       </DragDropContext>
     );
