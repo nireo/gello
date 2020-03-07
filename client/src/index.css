@@ -67,3 +67,16 @@ code {
   border: none;
   background: #d89cf6;
 }
+
+.nav-link {
+  border-radius: 4px;
+  box-shadow: none;
+  display: flex;
+  min-height: 20px;
+  text-decoration: none;
+  background-color: #e4f0f6;
+  color: #0079bf;
+  font-weight: 700;
+  line-height: 20px;
+  font-size: 14px;
+}
