@@ -3,14 +3,33 @@ import { BoardList } from './BoardList';
 import { connect } from 'react-redux';
 import { AppState } from '../../store';
 import ActionButton from './ActionButton';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { sort } from '../../actions';
 
 type Props = {
   lists: any;
+  dispatch?: any;
 };
 
 class Main extends React.Component<Props> {
-  onDragEnd = () => {};
+  onDragEnd = (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+
+    // item not dropped anywhere
+    if (!destination) {
+      return;
+    }
+
+    this.props.dispatch(
+      sort(
+        source.droppableId,
+        destination.droppableId,
+        source.index,
+        destination.index,
+        draggableId
+      )
+    );
+  };
 
   render() {
     const { lists } = this.props;
@@ -36,4 +55,4 @@ const mapStateToProps = (state: AppState) => ({
   lists: state.lists
 });
 
-export default connect(mapStateToProps, {})(Main);
+export default connect(mapStateToProps)(Main);

@@ -65,6 +65,26 @@ const reducer = (state: any = initialState, action: any) => {
       });
 
       return newState;
+    case CONSTANTS.DRAG_HAPPENED:
+      const {
+        droppableIdStart,
+        droppableIdEnd,
+        droppableIndexStart,
+        droppableIndexEnd,
+        draggableId
+      } = action.payload;
+
+      const newState2 = [...state];
+
+      // in the same list
+      if (droppableIdStart === droppableIdEnd) {
+        const list = state.find((list: any) => droppableIdStart === list.uuid);
+        const item = list.items.splice(droppableIndexStart, 1);
+        list.items.splice(droppableIndexEnd, 0, ...item);
+      }
+
+      return newState2;
+
     default:
       return state;
   }
