@@ -16,9 +16,15 @@ type List struct {
 
 // Serialize list data into JSON
 func (list *List) Serialize() common.JSON {
+	// parse the item data
+	serializedItems := make([]common.JSON, len(list.Items), len(list.Items))
+	for index := range list.Items {
+		serializedItems[index] = list.Items[index].Serialize()
+	}
+
 	return common.JSON{
 		"title": list.Title,
-		"items": list.Items,
+		"items": serializedItems,
 		"uuid":  list.UUID,
 	}
 }
