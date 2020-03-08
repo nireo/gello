@@ -50,6 +50,9 @@ class ActionButton extends React.Component<Props> {
     };
 
     if (text && boardID) {
+      this.setState({
+        text: ''
+      });
       dispatch(createList(createListObject, boardID));
     }
 
@@ -77,8 +80,8 @@ class ActionButton extends React.Component<Props> {
 
     const buttonText = list ? 'Add another item' : 'Add another list';
     const buttonTextOpacity = !list ? 1 : 0.5;
-    const buttonTextColor = !list ? 'white' : 'inherit';
-    const buttonTextBackground = !list ? 'rgba(0,0,0,.15)' : 'inherit';
+    const buttonTextColor = !list ? '#0079bf' : 'inherit';
+    const buttonTextBackground = !list ? '#e4f0f6' : 'inherit';
 
     return (
       <div
@@ -126,7 +129,8 @@ class ActionButton extends React.Component<Props> {
               width: '100%',
               outline: 'none',
               border: 'none',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              fontFamily: 'Roboto, sans-serif'
             }}
           />
         </Card>

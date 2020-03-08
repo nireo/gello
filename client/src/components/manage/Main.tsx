@@ -9,8 +9,6 @@ import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import Icon from '@material-ui/core/Icon';
 import { Link } from 'react-router-dom';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import Card from '@material-ui/core/Card';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 type Props = {
   dispatch: any;
@@ -27,7 +25,7 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
   }, []);
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" style={{ marginTop: '4rem' }}>
       <Grid container>
         <Grid item xs={3}>
           <nav>
@@ -53,20 +51,41 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
           </div>
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             {boards.map((board: Board) => (
-              <Card
-                style={{
-                  height: '80px',
-                  marginRight: '1rem',
-                  border: 'none'
-                }}
+              <Link
+                to={`/board/${board.uuid}`}
+                style={{ textDecoration: 'none' }}
               >
-                <div style={{ paddingLeft: '0.5rem', paddingRight: '4rem' }}>
-                  <h4 style={{ margin: 0, padding: 0 }}>{board.title}</h4>
-                  <Icon>
-                    <StarBorderIcon />
-                  </Icon>
+                <div className="board-button" style={{ marginLeft: '0.3rem' }}>
+                  <button
+                    style={{
+                      border: 'none',
+                      background: 'none',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <div
+                      style={{
+                        height: '80px',
+                        marginRight: '1rem',
+                        border: 'none'
+                      }}
+                    >
+                      <div
+                        style={{
+                          paddingLeft: '0.5rem',
+                          paddingRight: '4rem',
+                          display: 'flex'
+                        }}
+                      >
+                        <h3 style={{ marginTop: '5px', padding: 0 }}>
+                          {board.title}
+                        </h3>
+                        {'   '}
+                      </div>
+                    </div>
+                  </button>
                 </div>
-              </Card>
+              </Link>
             ))}
             <button
               style={{ border: 'none', background: 'none', cursor: 'pointer' }}

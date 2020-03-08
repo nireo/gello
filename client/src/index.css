@@ -38,16 +38,19 @@ code {
   margin-right: auto;
   margin-left: auto;
 }
+
 @media (min-width: 768px) {
   .container {
     width: 750px;
   }
 }
+
 @media (min-width: 992px) {
   .container {
     width: 970px;
   }
 }
+
 @media (min-width: 1200px) {
   .container {
     width: 1170px;
@@ -97,4 +100,20 @@ code {
   width: inherit;
   border-radius: 3px;
   font-size: 14px;
+}
+
+.board-button {
+  box-shadow: none;
+  border: none;
+  color: #172b4d;
+  display: table-cell;
+  height: 80px;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  width: inherit;
+  border-radius: 3px;
+  font-size: 14px;
+  background-color: #e4f0f6;
+  margin-right: 0.3rem;
 }
