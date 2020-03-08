@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { AppState } from '../../store';
 import ActionButton from './ActionButton';
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
-import { sort } from '../../actions';
+import { sort, initListData } from '../../actions';
 import styled from 'styled-components';
 
 const ListContainer = styled.div`
@@ -15,9 +15,13 @@ const ListContainer = styled.div`
 type Props = {
   lists: any;
   dispatch?: any;
+  id: string;
 };
 
 class Main extends React.Component<Props> {
+  state = {
+    loaded: false
+  };
   onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId, type } = result;
 
@@ -37,6 +41,12 @@ class Main extends React.Component<Props> {
       )
     );
   };
+
+  componentDidMount() {
+    if (this.state.loaded === false) {
+      this.props.dispatch(initListData(this.props.id));
+    }
+  }
 
   render() {
     const { lists } = this.props;

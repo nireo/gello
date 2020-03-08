@@ -18,7 +18,11 @@ const App: React.FC = () => {
         />
         <Route path="/home" exact render={() => <ManageMain />} />
         <Route path="/register" exact render={() => <Register />} />
-        <Route path="/board2" exact render={() => <BoardMain />} />
+        <Route
+          path="/board/:id"
+          exact
+          render={({ match }) => <BoardMain id={match.params.id} />}
+        />
       </Switch>
     </Router>
   );
