@@ -74,6 +74,18 @@ const reducer = (state: any = [], action: any) => {
       return action.payload;
     case CONSTANTS.CREATE_NEW_LIST:
       return [...state, action.payload];
+    case CONSTANTS.CREATE_NEW_ITEM:
+      const newState3 = state.map((list: any) => {
+        if (list.uuid === action.payload.id) {
+          return {
+            ...list,
+            items: [...list.items, action.payload.data]
+          };
+        } else {
+          return list;
+        }
+      });
+      return newState3;
     default:
       return state;
   }

@@ -16,7 +16,7 @@ const ListContainer = styled.div`
 type Props = {
   title: string;
   items: any;
-  id: number;
+  id: string;
   index: number;
 };
 
