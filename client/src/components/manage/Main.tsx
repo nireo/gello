@@ -10,8 +10,6 @@ import Icon from '@material-ui/core/Icon';
 import { Link } from 'react-router-dom';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import Card from '@material-ui/core/Card';
-import CarContent from '@material-ui/core/CardContent';
-import CardContent from '@material-ui/core/CardContent';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 type Props = {

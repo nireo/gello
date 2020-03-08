@@ -6,12 +6,14 @@ import Card from '@material-ui/core/Card';
 import TextArea from 'react-textarea-autosize';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
-import { addList, addItem } from '../../actions';
+import { addList, addItem, createList } from '../../actions';
+import { CreateList } from '../../interfaces/List';
 
 type Props = {
   list?: any;
   dispatch: any;
   listID?: number;
+  boardID?: string;
 };
 
 class ActionButton extends React.Component<Props> {
@@ -39,11 +41,15 @@ class ActionButton extends React.Component<Props> {
   };
 
   handleAddList = () => {
-    const { dispatch } = this.props;
+    const { dispatch, boardID } = this.props;
     const { text } = this.state;
 
-    if (text) {
-      dispatch(addList(text));
+    const createListObject: CreateList = {
+      title: text
+    };
+
+    if (text && boardID) {
+      dispatch(createList(createListObject, boardID));
     }
 
     return;

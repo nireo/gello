@@ -69,7 +69,7 @@ class Main extends React.Component<Props> {
                     index={index}
                   />
                 ))}
-                <ActionButton />
+                <ActionButton boardID={this.props.id} />
               </ListContainer>
             )}
           </Droppable>

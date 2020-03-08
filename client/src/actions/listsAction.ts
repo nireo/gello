@@ -1,6 +1,8 @@
 import { CONSTANTS } from '.';
 import { Dispatch } from 'redux';
 import { getSingleBoard } from '../services/board';
+import { createList as serviceCreateList } from '../services/list';
+import { CreateList } from '../interfaces/List';
 
 export const addList = (title: string) => {
   return {
@@ -15,6 +17,16 @@ export const initListData = (id: string) => {
     dispatch({
       payload: data.lists,
       type: CONSTANTS.LOAD_BOARD_DATA
+    });
+  };
+};
+
+export const createList = (list: CreateList, id: string) => {
+  return async (dispatch: Dispatch) => {
+    const data = await serviceCreateList(list, id);
+    dispatch({
+      type: CONSTANTS.CREATE_NEW_LIST,
+      payload: data
     });
   };
 };

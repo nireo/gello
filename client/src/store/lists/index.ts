@@ -72,6 +72,8 @@ const reducer = (state: any = [], action: any) => {
       return newState2;
     case CONSTANTS.LOAD_BOARD_DATA:
       return action.payload;
+    case CONSTANTS.CREATE_NEW_LIST:
+      return [...state, action.payload];
     default:
       return state;
   }
