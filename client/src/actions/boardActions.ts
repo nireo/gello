@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { getBoards } from '../services/board';
 import { CONSTANTS } from '.';
-import { Board } from '../components/board/Main';
+import { Board } from '../interfaces/Board';
 
 export const initBoards = () => {
   return async (dispatch: Dispatch) => {
