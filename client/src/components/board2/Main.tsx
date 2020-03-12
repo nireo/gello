@@ -7,20 +7,21 @@ import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 import { sort, initListData } from '../../actions';
 import styled from 'styled-components';
 import Drawer from '@material-ui/core/Drawer';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { Theme, withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import { DrawerContent } from './Drawer';
 
-const drawerWidth = 300;
+const drawerWidth = 339;
 
-const useStyles = makeStyles((theme: Theme) => {
-  createStyles({
-    drawer: {
-      width: drawerWidth,
-      flexShrink: 0
-    },
-    drawerPaper: {
-      width: drawerWidth
-    }
-  });
+const stylesMaterial = (theme: Theme) => ({
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0
+  },
+  drawerPaper: {
+    width: drawerWidth
+  }
 });
 
 const ListContainer = styled.div`
@@ -32,6 +33,7 @@ type Props = {
   lists: any;
   dispatch?: any;
   id: string;
+  classes: any;
 };
 
 class Main extends React.Component<Props> {
@@ -39,6 +41,7 @@ class Main extends React.Component<Props> {
     loaded: false,
     open: false
   };
+
   onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId, type } = result;
 
@@ -79,8 +82,9 @@ class Main extends React.Component<Props> {
 
   render() {
     const { lists } = this.props;
+    const { classes } = this.props;
     return (
-      <div>
+      <div style={{ display: 'flex' }}>
         <DragDropContext onDragEnd={this.onDragEnd}>
           <div>
             <div style={{ display: 'flex' }}>
@@ -115,12 +119,25 @@ class Main extends React.Component<Props> {
           </div>
         </DragDropContext>
         <Drawer
-          style={{ width: 300, flexShrink: 0 }}
+          className={classes.drawer}
           variant="persistent"
           anchor="right"
           open={this.state.open}
+          classes={{
+            paper: classes.drawerPaper
+          }}
         >
-          <div>Hello from drawer</div>
+          <div style={{ width: '100%' }}>
+            <div style={{ display: 'flex' }}>
+              <h4 style={{ paddingLeft: '10px' }}>Menu</h4>
+              <div style={{ paddingLeft: '14rem' }}>
+                <IconButton onClick={this.handleClose}>
+                  <CloseIcon />
+                </IconButton>
+              </div>
+            </div>
+            <DrawerContent />
+          </div>
         </Drawer>
       </div>
     );
@@ -131,4 +148,4 @@ const mapStateToProps = (state: AppState) => ({
   lists: state.lists
 });
 
-export default connect(mapStateToProps)(Main);
+export default connect(mapStateToProps)(withStyles(stylesMaterial)(Main));

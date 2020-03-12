@@ -117,3 +117,14 @@ code {
   background-color: #e4f0f6;
   margin-right: 0.3rem;
 }
+
+.link-button {
+  background: none;
+  font-size: 15px;
+  display: flex;
+  font-weight: 700;
+  color: #0079bf;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+}
