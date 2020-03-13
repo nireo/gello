@@ -1,24 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
+import AboutBoard from './DrawerPages/AboutBoard';
 
 export const DrawerContent: React.FC = () => {
+  const [page, setPage] = useState<string>('');
+
   return (
     <div>
-      <nav>
-        <ul>
-          <li
-            className="nav-link"
-            style={{ listStyle: 'none', marginBottom: '8px' }}
-          >
-            <button className="link-button">About this board</button>
-          </li>
-          <li
-            className="nav-link"
-            style={{ listStyle: 'none', marginBottom: '8px' }}
-          >
-            <button className="link-button">Change board color</button>
-          </li>
-        </ul>
-      </nav>
+      {page === '' && (
+        <nav>
+          <ul>
+            <li
+              className="nav-link"
+              style={{ listStyle: 'none', marginBottom: '8px' }}
+            >
+              <button className="link-button">About this board</button>
+            </li>
+            <li
+              className="nav-link"
+              style={{ listStyle: 'none', marginBottom: '8px' }}
+            >
+              <button className="link-button">Change board color</button>
+            </li>
+          </ul>
+        </nav>
+      )}
+      {page === 'about' && <AboutBoard />}
     </div>
   );
 };
