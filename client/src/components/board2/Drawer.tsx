@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import AboutBoard from './DrawerPages/AboutBoard';
+import ChangeBackground from './DrawerPages/ChangeBackground';
 
 export const DrawerContent: React.FC = () => {
   const [page, setPage] = useState<string>('');
@@ -21,7 +22,9 @@ export const DrawerContent: React.FC = () => {
               className="nav-link"
               style={{ listStyle: 'none', marginBottom: '8px' }}
             >
-              <button className="link-button">Change board color</button>
+              <button onClick={() => setPage('color')} className="link-button">
+                Change board color
+              </button>
             </li>
           </ul>
         </nav>
@@ -29,6 +32,7 @@ export const DrawerContent: React.FC = () => {
       {page === 'about' && (
         <AboutBoard title="Board title" description="You can a" />
       )}
+      {page === 'color' && <ChangeBackground />}
     </div>
   );
 };

@@ -128,3 +128,10 @@ code {
   text-decoration: none;
   cursor: pointer;
 }
+
+.color-preview {
+  background-color: black;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+}
