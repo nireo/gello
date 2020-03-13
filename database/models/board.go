@@ -13,6 +13,7 @@ type Board struct {
 	Title string
 	Lists []List
 	UUID  string
+	Color string
 }
 
 // Serialize board data into json
@@ -21,5 +22,6 @@ func (board *Board) Serialize() common.JSON {
 		"title":   board.Title,
 		"uuid":    board.UUID,
 		"created": board.CreatedAt,
+		"color":   board.Color,
 	}
 }

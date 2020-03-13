@@ -13,7 +13,9 @@ export const DrawerContent: React.FC = () => {
               className="nav-link"
               style={{ listStyle: 'none', marginBottom: '8px' }}
             >
-              <button className="link-button">About this board</button>
+              <button onClick={() => setPage('about')} className="link-button">
+                About this board
+              </button>
             </li>
             <li
               className="nav-link"
@@ -24,7 +26,9 @@ export const DrawerContent: React.FC = () => {
           </ul>
         </nav>
       )}
-      {page === 'about' && <AboutBoard />}
+      {page === 'about' && (
+        <AboutBoard title="Board title" description="You can a" />
+      )}
     </div>
   );
 };
