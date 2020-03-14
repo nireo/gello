@@ -16,6 +16,6 @@ type User struct {
 func (user *User) Serialize() common.JSON {
 	return common.JSON{
 		"username": user.Username,
-		"id":       user.Password,
+		"id":       user.ID,
 	}
 }
