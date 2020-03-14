@@ -52,7 +52,7 @@ func registerController(c *gin.Context) {
 
 	// if the user was found, return a conflict notice that the user already exists
 	_, ok := getUserWithUsername(requestBody.Username, db)
-	if ok == true {
+	if ok {
 		c.AbortWithStatus(http.StatusConflict)
 	}
 
@@ -66,5 +66,28 @@ func registerController(c *gin.Context) {
 		Password: hash,
 	}
 
-	c.JSON(http.StatusOK, user)
+	db.NewRecord(user)
+	db.Save(&user)
+
+	c.JSON(http.StatusOK, user.Serialize())
+}
+
+func loginController(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	var requestBody RequestBody
+	if err := c.BindJSON(&requestBody); err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+	}
+
+	user, ok := getUserWithUsername(requestBody.Username, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
+	}
+
+	if !checkHash(requestBody.Password, user.Password) {
+		c.AbortWithStatus(http.StatusForbidden)
+	}
+
+	c.JSON(http.StatusOK, user.Serialize())
 }
