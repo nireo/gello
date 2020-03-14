@@ -1,6 +1,8 @@
 package board
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/nireo/gello/database/models"
@@ -19,12 +21,35 @@ type Item = models.Item
 // JSON type alias
 type JSON = common.JSON
 
+// RequestBody struct
+type RequestBody struct {
+	Title string `json:"title" binding:"required"`
+}
+
+func getBoardWithID(id string, db *gorm.DB) (Board, bool) {
+	var board Board
+	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
+		return board, false
+	}
+
+	return board, true
+}
+
+func getListsRelatedToBoard(board Board, db *gorm.DB) ([]List, bool) {
+	var lists []List
+	if err := db.Model(&board).Related(&lists).Error; err != nil {
+		return lists, false
+	}
+
+	return lists, true
+}
+
 func get(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
 	var boards []Board
 	if err := db.Find(&boards).Error; err != nil {
-		c.AbortWithStatus(404)
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
@@ -33,19 +58,15 @@ func get(c *gin.Context) {
 		serialized[index] = boards[index].Serialize()
 	}
 
-	c.JSON(200, serialized)
+	c.JSON(http.StatusOK, serialized)
 }
 
 func create(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
-	type RequestBody struct {
-		Title string `json:"title" binding:"required"`
-	}
-
 	var body RequestBody
 	if err := c.BindJSON(&body); err != nil {
-		c.AbortWithStatus(400)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
@@ -58,35 +79,39 @@ func create(c *gin.Context) {
 	db.NewRecord(board)
 	db.Create(&board)
 
-	c.JSON(200, board.Serialize())
+	c.JSON(http.StatusOK, board.Serialize())
 }
 
 func getSingle(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
-	var board Board
-	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
-		c.AbortWithStatus(404)
+
+	board, ok := getBoardWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
-	// get lists related to a board
-	var lists []List
-	if err := db.Model(&board).Related(&lists).Error; err != nil {
-		c.AbortWithStatus(500)
+
+	lists, ok := getListsRelatedToBoard(board, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
+
 	serializedList := make([]JSON, len(lists), len(lists))
 	for index := range lists {
 		var items []Item
 		if err := db.Model(&lists[index]).Related(&items).Error; err != nil {
-			c.AbortWithStatus(500)
+			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
+
 		listItem := lists[index]
 		listItem.Items = items
 		serializedList[index] = listItem.Serialize()
 	}
-	c.JSON(200, gin.H{
+
+	c.JSON(http.StatusOK, gin.H{
 		"board": board.Serialize(),
 		"lists": serializedList,
 	})
@@ -97,42 +122,38 @@ func delete(c *gin.Context) {
 	id := c.Param("id")
 
 	if id == "" {
-		c.AbortWithStatus(400)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	var board Board
-	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
-		c.AbortWithStatus(404)
+	board, ok := getBoardWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
 	db.Delete(&board)
-	c.Status(204)
+	c.Status(http.StatusNoContent)
 }
 
 func update(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
 
-	type RequestBody struct {
-		Title string `json:"title" binding:"required"`
-	}
-
 	var body RequestBody
 	if err := c.BindJSON(&body); err != nil {
-		c.AbortWithStatus(400)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	var board Board
-	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
-		c.AbortWithStatus(404)
+	board, ok := getBoardWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
 	board.Title = body.Title
-
 	db.Save(&board)
-	c.JSON(200, board.Serialize())
+
+	c.JSON(http.StatusOK, board.Serialize())
 }
