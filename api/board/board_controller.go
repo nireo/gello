@@ -49,7 +49,7 @@ func getListsRelatedToBoard(board Board, db *gorm.DB) ([]List, bool) {
 }
 
 func chooseRandomColor() string {
-	return colors[rand.Intn(5)]
+	return colors[rand.Intn(4)]
 }
 
 func get(c *gin.Context) {

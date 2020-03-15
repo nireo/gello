@@ -55,7 +55,10 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
                 to={`/board/${board.uuid}`}
                 style={{ textDecoration: 'none' }}
               >
-                <div className="board-button" style={{ marginLeft: '0.3rem' }}>
+                <div
+                  className={`board-button color-${board.color}`}
+                  style={{ marginLeft: '0.3rem', color: 'white' }}
+                >
                   <button
                     style={{
                       border: 'none',
@@ -77,7 +80,13 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
                           display: 'flex'
                         }}
                       >
-                        <h3 style={{ marginTop: '5px', padding: 0 }}>
+                        <h3
+                          style={{
+                            marginTop: '5px',
+                            padding: 0,
+                            color: 'white'
+                          }}
+                        >
                           {board.title}
                         </h3>
                         {'   '}

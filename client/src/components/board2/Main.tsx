@@ -11,6 +11,8 @@ import { Theme, withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { DrawerContent } from './Drawer';
+import { setActiveBoard } from '../../actions';
+import { getSingleBoard } from '../../services/board';
 
 const drawerWidth = 339;
 
@@ -34,6 +36,7 @@ type Props = {
   dispatch?: any;
   id: string;
   classes: any;
+  active: any;
 };
 
 class Main extends React.Component<Props> {
@@ -65,6 +68,9 @@ class Main extends React.Component<Props> {
   componentDidMount(): void {
     if (this.state.loaded === false) {
       this.props.dispatch(initListData(this.props.id));
+      getSingleBoard(this.props.id).then((response: any) => {
+        this.props.dispatch(setActiveBoard(response.board));
+      });
     }
   }
 
@@ -81,14 +87,19 @@ class Main extends React.Component<Props> {
   };
 
   render() {
-    const { lists } = this.props;
+    const { lists, active } = this.props;
     const { classes } = this.props;
+
+    if (active === null) {
+      return null;
+    }
+
     return (
       <div style={{ display: 'flex' }}>
         <DragDropContext onDragEnd={this.onDragEnd}>
           <div>
             <div style={{ display: 'flex' }}>
-              <h2>Board title</h2>
+              <h2>{active.title}</h2>
               <div style={{ float: 'right' }}>
                 <button onClick={this.handleOpen}>Open drawer</button>
               </div>
@@ -145,7 +156,8 @@ class Main extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  lists: state.lists
+  lists: state.lists,
+  active: state.active
 });
 
 export default connect(mapStateToProps)(withStyles(stylesMaterial)(Main));
