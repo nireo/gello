@@ -95,11 +95,14 @@ class Main extends React.Component<Props> {
     }
 
     return (
-      <div style={{ display: 'flex' }}>
+      <div
+        style={{ display: 'flex', height: '100vh' }}
+        className={`color-${active.color}`}
+      >
         <DragDropContext onDragEnd={this.onDragEnd}>
           <div>
             <div style={{ display: 'flex' }}>
-              <h2>{active.title}</h2>
+              <h2 style={{ color: 'white' }}>{active.title}</h2>
               <div style={{ float: 'right' }}>
                 <button onClick={this.handleOpen}>Open drawer</button>
               </div>
@@ -113,6 +116,7 @@ class Main extends React.Component<Props> {
                 <ListContainer
                   {...provided.droppableProps}
                   ref={provided.innerRef}
+                  className={`color=${active.color}`}
                 >
                   {lists.map((list: any, index: number) => (
                     <BoardList

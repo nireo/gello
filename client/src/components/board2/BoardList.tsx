@@ -55,84 +55,86 @@ export const BoardList: React.FC<Props> = ({ title, items, id, index }) => {
   const componentId = open ? 'menu-popover' : undefined;
 
   return (
-    <Draggable draggableId={String(id)} index={index}>
-      {provided => (
-        <ListContainer
-          {...provided.draggableProps}
-          ref={provided.innerRef}
-          {...provided.dragHandleProps}
-        >
-          <Droppable droppableId={String(id)}>
-            {provided => (
-              <div {...provided.droppableProps} ref={provided.innerRef}>
-                <div style={{ display: 'flex' }}>
-                  <h4>{title}</h4>
-                  <IconButton
-                    style={{ marginLeft: 'auto' }}
-                    size="small"
-                    disableFocusRipple={true}
-                    aria-descripedby={id}
-                    onClick={handleClick}
-                  >
-                    <MoreHorizIcon />
-                  </IconButton>
-                </div>
-                <Popover
-                  id={componentId}
-                  open={open}
-                  onClose={handleClose}
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center'
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center'
-                  }}
-                >
-                  <div>
-                    <List
-                      component="nav"
-                      aria-labelledby="list-menu"
-                      subheader={
-                        <ListSubheader component="div">
-                          List actions
-                        </ListSubheader>
-                      }
-                      className={classes.root}
+    <div>
+      <Draggable draggableId={String(id)} index={index}>
+        {provided => (
+          <ListContainer
+            {...provided.draggableProps}
+            ref={provided.innerRef}
+            {...provided.dragHandleProps}
+          >
+            <Droppable droppableId={String(id)}>
+              {provided => (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  <div style={{ display: 'flex' }}>
+                    <h4>{title}</h4>
+                    <IconButton
+                      style={{ marginLeft: 'auto' }}
+                      size="small"
+                      disableFocusRipple={true}
+                      aria-descripedby={id}
+                      onClick={handleClick}
                     >
-                      <ListItem button style={{ width: '100%' }}>
-                        <ListItemText primary="Add card..." />
-                      </ListItem>
-                      <ListItem button>
-                        <ListItemText primary="Copy list..." />
-                      </ListItem>
-                      <ListItem button>
-                        <ListItemText primary="Move list..." />
-                      </ListItem>
-                      <Divider />
-                      <ListItem button>
-                        <ListItemText primary="Sort by..." />
-                      </ListItem>
-                    </List>
+                      <MoreHorizIcon />
+                    </IconButton>
                   </div>
-                </Popover>
-                {items.map((item: any, index: number) => (
-                  <BoardCard
-                    key={item.uuid}
-                    index={index}
-                    text={item.content}
-                    id={item.uuid}
-                  />
-                ))}
-                <ActionButton listID={id} list={true} />
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </ListContainer>
-      )}
-    </Draggable>
+                  <Popover
+                    id={componentId}
+                    open={open}
+                    onClose={handleClose}
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'center'
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'center'
+                    }}
+                  >
+                    <div>
+                      <List
+                        component="nav"
+                        aria-labelledby="list-menu"
+                        subheader={
+                          <ListSubheader component="div">
+                            List actions
+                          </ListSubheader>
+                        }
+                        className={classes.root}
+                      >
+                        <ListItem button style={{ width: '100%' }}>
+                          <ListItemText primary="Add card..." />
+                        </ListItem>
+                        <ListItem button>
+                          <ListItemText primary="Copy list..." />
+                        </ListItem>
+                        <ListItem button>
+                          <ListItemText primary="Move list..." />
+                        </ListItem>
+                        <Divider />
+                        <ListItem button>
+                          <ListItemText primary="Sort by..." />
+                        </ListItem>
+                      </List>
+                    </div>
+                  </Popover>
+                  {items.map((item: any, index: number) => (
+                    <BoardCard
+                      key={item.uuid}
+                      index={index}
+                      text={item.content}
+                      id={item.uuid}
+                    />
+                  ))}
+                  <ActionButton listID={id} list={true} />
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </ListContainer>
+        )}
+      </Draggable>
+    </div>
   );
 };
