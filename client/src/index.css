@@ -131,7 +131,30 @@ code {
 
 .color-preview {
   background-color: black;
-  width: 30px;
-  height: 30px;
+  width: 40%;
+  height: 80px;
+  margin-bottom: 7px;
   margin-right: 5px;
+  border-radius: 6px;
+  border: none;
+}
+
+.color-preview:hover {
+  cursor: pointer;
+}
+
+.color-blue {
+  background-color: rgb(0, 121, 191);
+}
+
+.color-orange {
+  background-color: rgb(210, 144, 52);
+}
+
+.color-green {
+  background-color: rgb(81, 152, 57);
+}
+
+.color-red {
+  background-color: rgb(176, 70, 50);
 }

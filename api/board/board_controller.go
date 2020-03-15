@@ -1,6 +1,7 @@
 package board
 
 import (
+	"math/rand"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -26,6 +27,9 @@ type RequestBody struct {
 	Title string `json:"title" binding:"required"`
 }
 
+// Colors used as board backgrounds
+var colors = [4]string{"blue", "red", "orange", "green"}
+
 func getBoardWithID(id string, db *gorm.DB) (Board, bool) {
 	var board Board
 	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
@@ -42,6 +46,10 @@ func getListsRelatedToBoard(board Board, db *gorm.DB) ([]List, bool) {
 	}
 
 	return lists, true
+}
+
+func chooseRandomColor() string {
+	return colors[rand.Intn(5)]
 }
 
 func get(c *gin.Context) {
@@ -74,6 +82,7 @@ func create(c *gin.Context) {
 	board := Board{
 		Title: body.Title,
 		UUID:  uuid,
+		Color: chooseRandomColor(),
 	}
 
 	db.NewRecord(board)
