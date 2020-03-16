@@ -1,6 +1,7 @@
 package board
 
 import (
+	"fmt"
 	"math/rand"
 	"net/http"
 
@@ -149,9 +150,16 @@ func update(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
 
-	var body RequestBody
+	type RequestBodyWithColor struct {
+		Color string `json:"color" binding:"required"`
+		Title string `json:"title" binding:"required"`
+	}
+
+	var body RequestBodyWithColor
 	if err := c.BindJSON(&body); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
+		fmt.Println(body)
+		fmt.Println(err)
 		return
 	}
 
@@ -162,6 +170,7 @@ func update(c *gin.Context) {
 	}
 
 	board.Title = body.Title
+	board.Color = body.Color
 	db.Save(&board)
 
 	c.JSON(http.StatusOK, board.Serialize())

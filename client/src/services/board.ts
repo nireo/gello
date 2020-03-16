@@ -23,6 +23,6 @@ export const deleteBoard = async (id: string) => {
 };
 
 export const updateBoard = async (updated: CreateBoard, id: string) => {
-  const response = await axios.patch(`${baseUrl}${id}`, updateBoard);
+  const response = await axios.patch(`${baseUrl}${id}`, updated);
   return response.data;
 };

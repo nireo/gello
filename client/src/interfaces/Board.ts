@@ -1,5 +1,6 @@
 export interface CreateBoard {
   title: string;
+  color: string;
 }
 
 export interface Board {
