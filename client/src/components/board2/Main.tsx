@@ -14,6 +14,7 @@ import { DrawerContent } from './Drawer';
 import { setActiveBoard } from '../../actions';
 import { getSingleBoard } from '../../services/board';
 import { CreateBoard } from '../../interfaces/Board';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const drawerWidth = 339;
 
@@ -194,17 +195,7 @@ class Main extends React.Component<Props> {
             paper: classes.drawerPaper
           }}
         >
-          <div style={{ width: '100%' }}>
-            <div style={{ display: 'flex' }}>
-              <h4 style={{ paddingLeft: '10px' }}>Menu</h4>
-              <div style={{ paddingLeft: '14rem' }}>
-                <IconButton onClick={this.handleClose}>
-                  <CloseIcon />
-                </IconButton>
-              </div>
-            </div>
-            <DrawerContent />
-          </div>
+          <DrawerContent closeDrawer={this.handleClose} />
         </Drawer>
       </div>
     );

@@ -1,12 +1,47 @@
 import React, { useState } from 'react';
 import AboutBoard from './DrawerPages/AboutBoard';
 import ChangeBackground from './DrawerPages/ChangeBackground';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import CloseIcon from '@material-ui/icons/Close';
 
-export const DrawerContent: React.FC = () => {
+type Props = {
+  closeDrawer: () => void;
+};
+
+export const DrawerContent: React.FC<Props> = ({ closeDrawer }) => {
   const [page, setPage] = useState<string>('');
 
   return (
     <div>
+      <div style={{ width: '100%' }}>
+        {page !== '' && (
+          <div style={{ display: 'inline-block' }}>
+            <IconButton onClick={() => setPage('')}>
+              <ArrowBackIcon />
+            </IconButton>
+          </div>
+        )}
+        <h4
+          style={{
+            paddingLeft: '10px',
+            display: 'inline-block',
+            textAlign: 'center'
+          }}
+        >
+          Menu
+        </h4>
+        <div
+          style={{
+            paddingLeft: `${page === '' ? '14' : '10'}rem`,
+            display: 'inline-block'
+          }}
+        >
+          <IconButton onClick={closeDrawer}>
+            <CloseIcon />
+          </IconButton>
+        </div>
+      </div>
       {page === '' && (
         <nav>
           <ul>
