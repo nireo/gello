@@ -2,10 +2,16 @@ import React, { useState, useEffect, ChangeEvent } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
+import { connect } from 'react-redux';
+import { AppState } from '../../../store';
+import { CreateBoard } from '../../../interfaces/Board';
+import { updateActive } from '../../../actions';
 
 type Props = {
   description: string;
   title: string;
+  active: any;
+  updateActive: (old: any, newData: CreateBoard) => void;
 };
 
 const AboutBoard: React.FC<Props> = props => {
@@ -16,8 +22,8 @@ const AboutBoard: React.FC<Props> = props => {
   useEffect(() => {
     // set values so they are easier to edit
     if (title === '' && description === '') {
-      setDescription(props.description);
-      setTitle(props.title);
+      setDescription(props.active.title);
+      setTitle(props.active.title);
     }
   }, []);
 
@@ -27,18 +33,31 @@ const AboutBoard: React.FC<Props> = props => {
     }
   };
 
+  const updateBoard = (event: ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const newData: CreateBoard = {
+      title,
+      color: props.active.color
+    };
+
+    props.updateActive(props.active, newData);
+  };
+
   return (
     <Container>
       {field !== 'title' ? (
-        <h4 onClick={() => setField('title')}>{props.title}</h4>
+        <h4 onClick={() => setField('title')}>{props.active.title}</h4>
       ) : (
-        <TextField
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-          placeholder="Title..."
-          style={{ marginBottom: '1rem' }}
-          onKeyDown={event => changeBoardData(event)}
-        />
+        <form onSubmit={updateBoard}>
+          <TextField
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+            placeholder="Title..."
+            style={{ marginBottom: '1rem' }}
+            onKeyDown={event => changeBoardData(event)}
+          />
+          <button style={{ display: 'none' }} type="submit"></button>
+        </form>
       )}
 
       {field !== 'description' ? (
@@ -61,4 +80,8 @@ const AboutBoard: React.FC<Props> = props => {
   );
 };
 
-export default AboutBoard;
+const mapStateToProps = (state: AppState) => ({
+  active: state.active
+});
+
+export default connect(mapStateToProps, { updateActive })(AboutBoard);
