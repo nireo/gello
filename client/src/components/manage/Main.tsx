@@ -9,6 +9,7 @@ import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import Icon from '@material-ui/core/Icon';
 import { Link } from 'react-router-dom';
 import DashboardIcon from '@material-ui/icons/Dashboard';
+import CreateBoard from './CreateBoard';
 
 type Props = {
   dispatch: any;
@@ -17,6 +18,7 @@ type Props = {
 
 const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
   const [loaded, setLoaded] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   useEffect(() => {
     if (!loaded && boards.length === 0) {
       dispatch(initBoards());
@@ -24,8 +26,13 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
     }
   }, []);
 
+  const closeModal = () => {
+    setOpen(false);
+  };
+
   return (
     <Container maxWidth="lg" style={{ marginTop: '4rem' }}>
+      <CreateBoard open={open} closeModal={closeModal} />
       <Grid container>
         <Grid item xs={3}>
           <nav>
@@ -98,6 +105,7 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
             ))}
             <button
               style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+              onClick={() => setOpen(true)}
             >
               <div className="create-board-button">
                 <p style={{ marginLeft: '1rem', marginRight: '1rem' }}>
