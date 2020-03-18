@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { connect } from 'react-redux';
+import { createBoard } from '../../actions/boardActions';
+import { CreateBoard } from '../../interfaces/Board';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -9,6 +14,14 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
+    },
+    paper: {
+      position: 'absolute',
+      width: 400,
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3)
     }
   })
 );
@@ -16,19 +29,51 @@ const useStyles = makeStyles((theme: Theme) =>
 type Props = {
   open: boolean;
   closeModal: () => void;
+  createBoard: (newData: CreateBoard) => void;
 };
 
 const CreateBoard: React.FC<Props> = ({ open, closeModal }) => {
   const [title, setTitle] = useState<string>('');
   const classes = useStyles();
 
+  const handleBoardCreation = (event: ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (title === '') {
+      return;
+    }
+
+    const newBoard: CreateBoard = {
+      color: 'red',
+      title
+    };
+
+    createBoard(newBoard);
+  };
+
   return (
     <div>
       <Modal open={open} onClose={closeModal} className={classes.modal}>
-        <Typography variant="h4">Create new board</Typography>
+        <div className={classes.paper}>
+          <Typography variant="h5">Create new board</Typography>
+          <form style={{ marginTop: '2rem' }} onSubmit={handleBoardCreation}>
+            <TextField
+              value={title}
+              onChange={({ target }) => setTitle(target.value)}
+              placeholder="Title..."
+              style={{ width: '100%' }}
+            />
+            <Button
+              variant="contained"
+              style={{ marginTop: '2rem' }}
+              type="submit"
+            >
+              Create board
+            </Button>
+          </form>
+        </div>
       </Modal>
     </div>
   );
 };
 
-export default CreateBoard;
+export default connect(null, { createBoard })(CreateBoard);
