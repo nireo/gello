@@ -19,6 +19,9 @@ type Board = models.Board
 // JSON type alias
 type JSON = common.JSON
 
+// Item model alias
+type Item = models.Item
+
 // RequestBody is the common request body between controllers
 type RequestBody struct {
 	Title string `json:"title" binding:"required"`
@@ -70,6 +73,7 @@ func get(c *gin.Context) {
 	lists, ok := getListsRelatedToABoard(&board, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusInternalServerError)
+		return
 	}
 
 	listsSerialized := make([]JSON, len(lists), len(lists))
@@ -158,5 +162,49 @@ func update(c *gin.Context) {
 }
 
 func copyList(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	id := c.Param("id")
 
+	if id == "" {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	list, ok := getListWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	// create the list
+	uuid := common.GenerateUUID()
+	newList := List{
+		Title:   list.Title,
+		UUID:    uuid,
+		BoardID: list.BoardID,
+	}
+
+	db.NewRecord(newList)
+	db.Create(&newList)
+
+	// copy the items
+	var itemsRelatedToList []Item
+	if err := db.Model(&list).Related(&itemsRelatedToList).Error; err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	for index := range itemsRelatedToList {
+		newItemUUID := common.GenerateUUID()
+		newItem := Item{
+			Content: itemsRelatedToList[index].Content,
+			UUID:    newItemUUID,
+			ListID:  newList.ID,
+		}
+
+		db.NewRecord(newItem)
+		db.Create(&newItem)
+	}
+
+	c.JSON(http.StatusOK, newList.Serialize())
 }
