@@ -56,7 +56,9 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
             </Icon>
             <h3>Personal boards</h3>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <div
+            style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}
+          >
             {boards.map((board: Board) => (
               <Link
                 to={`/board/${board.uuid}`}

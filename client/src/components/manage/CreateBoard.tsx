@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { createBoard } from '../../actions/boardActions';
-import { CreateBoard } from '../../interfaces/Board';
+import { CreateBoard as CreateBoardInterface } from '../../interfaces/Board';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,10 +29,10 @@ const useStyles = makeStyles((theme: Theme) =>
 type Props = {
   open: boolean;
   closeModal: () => void;
-  createBoard: (newData: CreateBoard) => void;
+  createBoard: (newData: CreateBoardInterface) => void;
 };
 
-const CreateBoard: React.FC<Props> = ({ open, closeModal }) => {
+const CreateBoard: React.FC<Props> = ({ open, closeModal, createBoard }) => {
   const [title, setTitle] = useState<string>('');
   const classes = useStyles();
 
@@ -42,12 +42,13 @@ const CreateBoard: React.FC<Props> = ({ open, closeModal }) => {
       return;
     }
 
-    const newBoard: CreateBoard = {
+    const newBoard: CreateBoardInterface = {
       color: 'red',
       title
     };
 
     createBoard(newBoard);
+    closeModal();
   };
 
   return (
