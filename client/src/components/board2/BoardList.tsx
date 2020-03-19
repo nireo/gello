@@ -12,6 +12,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Divider from '@material-ui/core/Divider';
+import { connect } from 'react-redux';
+import { deleteList } from '../../actions';
 
 const ListContainer = styled.div`
   background-color: #dfe3e6;
@@ -27,6 +29,7 @@ type Props = {
   items: any;
   id: string;
   index: number;
+  deleteList: (listID: string) => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,7 +42,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const BoardList: React.FC<Props> = ({ title, items, id, index }) => {
+const BoardList: React.FC<Props> = ({
+  title,
+  items,
+  id,
+  index,
+  deleteList
+}) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -53,6 +62,10 @@ export const BoardList: React.FC<Props> = ({ title, items, id, index }) => {
 
   const open = Boolean(anchorEl);
   const componentId = open ? 'menu-popover' : undefined;
+
+  const handleListDeletion = () => {
+    deleteList(id);
+  };
 
   return (
     <div>
@@ -106,6 +119,9 @@ export const BoardList: React.FC<Props> = ({ title, items, id, index }) => {
                         <ListItem button style={{ width: '100%' }}>
                           <ListItemText primary="Add card..." />
                         </ListItem>
+                        <ListItem button onClick={handleListDeletion}>
+                          <ListItemText primary="Delete list..." />
+                        </ListItem>
                         <ListItem button>
                           <ListItemText primary="Copy list..." />
                         </ListItem>
@@ -138,3 +154,5 @@ export const BoardList: React.FC<Props> = ({ title, items, id, index }) => {
     </div>
   );
 };
+
+export default connect(null, { deleteList })(BoardList);

@@ -1,7 +1,10 @@
 import { CONSTANTS } from '.';
 import { Dispatch } from 'redux';
 import { getSingleBoard } from '../services/board';
-import { createList as serviceCreateList } from '../services/list';
+import {
+  createList as serviceCreateList,
+  deleteList as serviceDeleteList
+} from '../services/list';
 import { CreateList } from '../interfaces/List';
 
 export const addList = (title: string) => {
@@ -27,6 +30,16 @@ export const createList = (list: CreateList, id: string) => {
     dispatch({
       type: CONSTANTS.CREATE_NEW_LIST,
       payload: data
+    });
+  };
+};
+
+export const deleteList = (listID: string) => {
+  return async (dispatch: Dispatch) => {
+    await serviceDeleteList(listID);
+    dispatch({
+      id: listID,
+      type: CONSTANTS.REMOVE_LIST
     });
   };
 };

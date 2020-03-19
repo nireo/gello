@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { BoardList } from './BoardList';
+import BoardList from './BoardList';
 import { connect } from 'react-redux';
 import { AppState } from '../../store';
 import ActionButton from './ActionButton';

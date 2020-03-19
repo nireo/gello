@@ -86,6 +86,11 @@ const reducer = (state: any = [], action: any) => {
         }
       });
       return newState3;
+    case CONSTANTS.REMOVE_LIST:
+      const filteredLists = state.filter(
+        (list: any) => list.uuid !== action.id
+      );
+      return filteredLists;
     default:
       return state;
   }
