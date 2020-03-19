@@ -158,3 +158,32 @@ code {
 .color-red {
   background-color: rgb(176, 70, 50);
 }
+
+.main-view {
+  width: 100%;
+  background-color: #0079b9;
+  color: white;
+  padding-bottom: 2.5rem;
+}
+
+.welcome-input {
+  padding: 4px;
+  line-height: 43px;
+  padding-left: 16px;
+  border-color: white;
+  border-style: solid;
+  border-radius: 0.3rem;
+}
+
+.welcome-button {
+  color: #fff;
+  background-color: #61bd4f;
+  border-color: #61bd4f;
+  padding: 0.5rem 1rem;
+  line-height: 1.5;
+  font-size: 1.5625rem;
+  margin-left: 8px;
+  border-radius: 0.3rem;
+  border: none;
+  cursor: pointer;
+}

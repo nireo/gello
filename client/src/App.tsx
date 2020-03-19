@@ -5,12 +5,14 @@ import ManageMain from './components/manage/Main';
 import { Register } from './components/user/Register';
 import BoardMain from './components/board2/Main';
 import { Login } from './components/user/Login';
+import { Main as WelcomeMain } from './components/welcome/Main';
 
 const App: React.FC = () => {
   return (
     <Router>
       <Navbar />
       <Switch>
+        <Route path="/" exact render={() => <WelcomeMain />} />
         <Route path="/home" exact render={() => <ManageMain />} />
         <Route path="/register" exact render={() => <Register />} />
         <Route
