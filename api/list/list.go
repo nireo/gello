@@ -10,5 +10,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		list.POST("/:id", create)
 		list.DELETE("/:id", delete)
 		list.PATCH("/:id", update)
+		list.POST("/:id/copy", copyList)
 	}
 }

@@ -31,7 +31,8 @@ type RequestBody struct {
 // Colors used as board backgrounds
 var colors = [4]string{"blue", "red", "orange", "green"}
 
-func getBoardWithID(id string, db *gorm.DB) (Board, bool) {
+// GetBoardWithID finds a board with the given ID
+func GetBoardWithID(id string, db *gorm.DB) (Board, bool) {
 	var board Board
 	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
 		return board, false
@@ -96,7 +97,7 @@ func getSingle(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
 
-	board, ok := getBoardWithID(id, db)
+	board, ok := GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -136,7 +137,7 @@ func delete(c *gin.Context) {
 		return
 	}
 
-	board, ok := getBoardWithID(id, db)
+	board, ok := GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -163,7 +164,7 @@ func update(c *gin.Context) {
 		return
 	}
 
-	board, ok := getBoardWithID(id, db)
+	board, ok := GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return

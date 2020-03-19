@@ -1,8 +1,11 @@
 package list
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/nireo/gello/api/board"
 	"github.com/nireo/gello/database/models"
 	"github.com/nireo/gello/lib/common"
 )
@@ -16,26 +19,57 @@ type Board = models.Board
 // JSON type alias
 type JSON = common.JSON
 
-// Returns all lists related to a board
+// RequestBody is the common request body between controllers
+type RequestBody struct {
+	Title string `json:"title" binding:"required"`
+}
+
+func getListWithID(id string, db *gorm.DB) (List, bool) {
+	var list List
+	if err := db.Where("uuid = ?", id).First(&list).Error; err != nil {
+		return list, false
+	}
+
+	return list, true
+}
+
+func getListsRelatedToABoard(board *Board, db *gorm.DB) ([]List, bool) {
+	var lists []List
+	if err := db.Model(&board).Related(&lists).Error; err != nil {
+		return lists, false
+	}
+
+	return lists, true
+}
+
+func validateRequestBody(c *gin.Context) (RequestBody, bool) {
+	var body RequestBody
+	if err := c.BindJSON(&body); err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return body, false
+	}
+
+	return body, true
+}
+
 func get(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
 
 	if id == "" {
-		c.AbortWithStatus(400)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	var board Board
-	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
-		c.AbortWithStatus(404)
+	board, ok := board.GetBoardWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	var lists []List
-	if err := db.Model(&board).Related(&lists).Error; err != nil {
-		c.AbortWithStatus(500)
-		return
+	lists, ok := getListsRelatedToABoard(&board, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusInternalServerError)
 	}
 
 	listsSerialized := make([]JSON, len(lists), len(lists))
@@ -43,7 +77,7 @@ func get(c *gin.Context) {
 		listsSerialized[index] = lists[index].Serialize()
 	}
 
-	c.JSON(200, listsSerialized)
+	c.JSON(http.StatusOK, listsSerialized)
 }
 
 func create(c *gin.Context) {
@@ -51,24 +85,18 @@ func create(c *gin.Context) {
 	id := c.Param("id")
 
 	if id == "" {
-		c.AbortWithStatus(400)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	type RequestBody struct {
-		Title string `json:"title" binding:"required"`
-	}
-
-	var body RequestBody
-	if err := c.BindJSON(&body); err != nil {
-		c.AbortWithStatus(400)
+	body, ok := validateRequestBody(c)
+	if !ok {
 		return
 	}
 
-	var board Board
-	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
-		c.AbortWithStatus(404)
-		return
+	board, ok := board.GetBoardWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 	}
 
 	uuid := common.GenerateUUID()
@@ -81,7 +109,7 @@ func create(c *gin.Context) {
 	db.NewRecord(list)
 	db.Save(&list)
 
-	c.JSON(200, list.Serialize())
+	c.JSON(http.StatusOK, list.Serialize())
 }
 
 func delete(c *gin.Context) {
@@ -89,18 +117,18 @@ func delete(c *gin.Context) {
 	id := c.Param("id")
 
 	if id == "" {
-		c.AbortWithStatus(400)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	var list List
-	if err := db.Where("uuid = ?", id).First(&list).Error; err != nil {
-		c.AbortWithStatus(404)
+	list, ok := getListWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
 	db.Delete(&list)
-	c.Status(204)
+	c.Status(http.StatusNoContent)
 }
 
 func update(c *gin.Context) {
@@ -108,28 +136,27 @@ func update(c *gin.Context) {
 	id := c.Param("id")
 
 	if id == "" {
-		c.AbortWithStatus(400)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	type RequestBody struct {
-		Title string `json:"title" binding:"required"`
-	}
-
-	var body RequestBody
-	if err := c.BindJSON(&body); err != nil {
-		c.AbortWithStatus(400)
+	body, ok := validateRequestBody(c)
+	if !ok {
 		return
 	}
 
-	var list List
-	if err := db.Where("uuid = ?", id).First(&list).Error; err != nil {
-		c.AbortWithStatus(404)
+	list, ok := getListWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
 	list.Title = body.Title
 
 	db.Save(&list)
-	c.JSON(200, list.Serialize())
+	c.JSON(http.StatusOK, list.Serialize())
+}
+
+func copyList(c *gin.Context) {
+
 }

@@ -8,13 +8,10 @@ import { sort, initListData, updateActive } from '../../actions';
 import styled from 'styled-components';
 import Drawer from '@material-ui/core/Drawer';
 import { Theme, withStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import { DrawerContent } from './Drawer';
 import { setActiveBoard } from '../../actions';
 import { getSingleBoard } from '../../services/board';
 import { CreateBoard } from '../../interfaces/Board';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const drawerWidth = 339;
 
