@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -8,6 +8,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { useLocation } from 'react-router-dom';
+
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -40,9 +45,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const Register: React.FC = props => {
   const classes = useStyles(props);
+  const [email, setEmail] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [loaded, setLoaded] = useState<boolean>(false);
   const [startedPassword, setStartedPassword] = useState<boolean>(false);
+  const query = useQuery();
+
+  useEffect(() => {
+    if (query.has('email') && email === '' && !loaded) {
+      const emailQuery = query.get('email');
+      if (emailQuery) {
+        setEmail(emailQuery);
+        setLoaded(true);
+      }
+    }
+  }, []);
 
   const register = (event: ChangeEvent<HTMLFormElement>) => {};
 
@@ -65,10 +83,23 @@ export const Register: React.FC = props => {
         </Typography>
         <form className={classes.form} noValidate onSubmit={register}>
           <TextField
+            value={email}
+            onChange={({ target }) => setEmail(target.value)}
+            margin="normal"
+            required
+            fullWidth
+            variant="filled"
+            label="Email"
+            name="Email"
+            autoComplete="email"
+            className={classes.root}
+          />
+          <TextField
             value={username}
             onChange={({ target }) => setUsername(target.value)}
             margin="normal"
             required
+            variant="filled"
             fullWidth
             label="Username"
             name="username"
@@ -81,6 +112,7 @@ export const Register: React.FC = props => {
             margin="normal"
             required
             fullWidth
+            variant="filled"
             name="password"
             label="Password"
             type="password"
