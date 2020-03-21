@@ -2,6 +2,18 @@ import axios from 'axios';
 import { CreateBoard } from '../interfaces/Board';
 const baseUrl: string = '/api/board/';
 
+let token: string | null = null;
+
+export const setToken = (newToken: string) => {
+  token = `bearer ${newToken}`;
+};
+
+const getConfig = () => ({
+  headers: {
+    Authorization: token
+  }
+});
+
 export const getBoards = async () => {
   const response = await axios.get(baseUrl);
   return response.data;

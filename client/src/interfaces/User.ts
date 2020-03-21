@@ -13,3 +13,8 @@ export interface RegisterInterface {
   email: string;
   password: string;
 }
+
+export interface UserWithToken {
+  token: string;
+  user: User;
+}

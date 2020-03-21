@@ -57,16 +57,25 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
             <h3>Personal boards</h3>
           </div>
           <div
-            style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap'
+            }}
           >
             {boards.map((board: Board) => (
               <Link
                 to={`/board/${board.uuid}`}
-                style={{ textDecoration: 'none' }}
+                style={{
+                  textDecoration: 'none',
+                  margin: '3px'
+                }}
               >
                 <div
                   className={`board-button color-${board.color}`}
-                  style={{ marginLeft: '0.3rem', color: 'white' }}
+                  style={{
+                    color: 'white'
+                  }}
                 >
                   <button
                     style={{
@@ -106,11 +115,20 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
               </Link>
             ))}
             <button
-              style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+              style={{
+                border: 'none',
+                background: 'none',
+                cursor: 'pointer'
+              }}
               onClick={() => setOpen(true)}
             >
               <div className="create-board-button">
-                <p style={{ marginLeft: '1rem', marginRight: '1rem' }}>
+                <p
+                  style={{
+                    marginLeft: '1rem',
+                    marginRight: '1rem'
+                  }}
+                >
                   Create new board
                 </p>
               </div>
