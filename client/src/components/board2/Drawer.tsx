@@ -4,12 +4,14 @@ import ChangeBackground from './DrawerPages/ChangeBackground';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CloseIcon from '@material-ui/icons/Close';
+import BoardActions from './DrawerPages/BoardActions';
 
 type Props = {
   closeDrawer: () => void;
+  id: string;
 };
 
-export const DrawerContent: React.FC<Props> = ({ closeDrawer }) => {
+export const DrawerContent: React.FC<Props> = ({ closeDrawer, id }) => {
   const [page, setPage] = useState<string>('');
 
   return (
@@ -61,6 +63,17 @@ export const DrawerContent: React.FC<Props> = ({ closeDrawer }) => {
                 Change board color
               </button>
             </li>
+            <li
+              className="nav-link"
+              style={{ listStyle: 'none', marginBottom: '8px' }}
+            >
+              <button
+                onClick={() => setPage('actions')}
+                className="link-button"
+              >
+                Board actions
+              </button>
+            </li>
           </ul>
         </nav>
       )}
@@ -68,6 +81,7 @@ export const DrawerContent: React.FC<Props> = ({ closeDrawer }) => {
         <AboutBoard title="Board title" description="You can a" />
       )}
       {page === 'color' && <ChangeBackground />}
+      {page === 'actions' && <BoardActions id={id} />}
     </div>
   );
 };

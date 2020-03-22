@@ -192,7 +192,10 @@ class Main extends React.Component<Props> {
             paper: classes.drawerPaper
           }}
         >
-          <DrawerContent closeDrawer={this.handleClose} />
+          <DrawerContent
+            id={this.props.active.uuid}
+            closeDrawer={this.handleClose}
+          />
         </Drawer>
       </div>
     );

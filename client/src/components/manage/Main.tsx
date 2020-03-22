@@ -10,6 +10,8 @@ import Icon from '@material-ui/core/Icon';
 import { Link } from 'react-router-dom';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import CreateBoard from './CreateBoard';
+import { IconButton } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 type Props = {
   dispatch: any;
