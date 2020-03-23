@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/layout/Navbar';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import ManageMain from './components/manage/Main';
@@ -6,8 +6,23 @@ import Register from './components/user/Register';
 import BoardMain from './components/board2/Main';
 import Login from './components/user/Login';
 import { Main as WelcomeMain } from './components/welcome/Main';
+import { connect } from 'react-redux';
+import { AppState } from './store';
+import { checkLocalStorage } from './actions';
+import { User } from './interfaces/User';
 
-const App: React.FC = () => {
+type Props = {
+  user: User | null;
+  checkLocalStorage: () => void;
+};
+
+const App: React.FC<Props> = ({ user, checkLocalStorage }) => {
+  useEffect(() => {
+    if (!user) {
+      checkLocalStorage();
+    }
+  }, [user, checkLocalStorage]);
+
   return (
     <Router>
       <Navbar />
@@ -27,4 +42,8 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+const mapStateToProps = (state: AppState) => ({
+  user: state.user
+});
+
+export default connect(mapStateToProps, { checkLocalStorage })(App);

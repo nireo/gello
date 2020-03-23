@@ -11,8 +11,8 @@ import setTokens from '../utils/setTokens';
 export const loginAction = (credentials: LoginInterface) => {
   return async (dispatch: Dispatch) => {
     const data: UserWithToken = await login(credentials);
+    window.localStorage.setItem('gello-user', JSON.stringify(data));
     setTokens(data.token);
-
     dispatch({
       type: CONSTANTS.LOGIN,
       data: data
@@ -23,11 +23,26 @@ export const loginAction = (credentials: LoginInterface) => {
 export const registerAction = (credentials: RegisterInterface) => {
   return async (dispatch: Dispatch) => {
     const data: UserWithToken = await register(credentials);
+    window.localStorage.setItem('gello-user', JSON.stringify(data));
     setTokens(data.token);
 
     dispatch({
       type: CONSTANTS.LOGIN,
       data: data
     });
+  };
+};
+
+export const checkLocalStorage = () => {
+  return async (dispatch: Dispatch) => {
+    const userInfo: string | null = localStorage.getItem('gello-user');
+    if (userInfo) {
+      const userInfoJSON: UserWithToken = JSON.parse(userInfo);
+      setTokens(userInfoJSON.token);
+      dispatch({
+        type: 'LOG_IN',
+        data: userInfoJSON.user
+      });
+    }
   };
 };
