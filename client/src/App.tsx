@@ -2,7 +2,7 @@ import React from 'react';
 import { Navbar } from './components/layout/Navbar';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import ManageMain from './components/manage/Main';
-import { Register } from './components/user/Register';
+import Register from './components/user/Register';
 import BoardMain from './components/board2/Main';
 import { Login } from './components/user/Login';
 import { Main as WelcomeMain } from './components/welcome/Main';

@@ -8,7 +8,7 @@ import { login, register } from '../services/user';
 import { CONSTANTS } from './index';
 import setTokens from '../utils/setTokens';
 
-export const loginAction = async (credentials: LoginInterface) => {
+export const loginAction = (credentials: LoginInterface) => {
   return async (dispatch: Dispatch) => {
     const data: UserWithToken = await login(credentials);
     setTokens(data.token);
@@ -20,7 +20,7 @@ export const loginAction = async (credentials: LoginInterface) => {
   };
 };
 
-export const registerAction = async (credentials: RegisterInterface) => {
+export const registerAction = (credentials: RegisterInterface) => {
   return async (dispatch: Dispatch) => {
     const data: UserWithToken = await register(credentials);
     setTokens(data.token);

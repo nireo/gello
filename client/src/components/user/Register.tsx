@@ -9,6 +9,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useLocation } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { AppState } from '../../store';
+import { registerAction } from '../../actions';
+import { RegisterInterface, User } from '../../interfaces/User';
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
@@ -43,7 +47,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const Register: React.FC = props => {
+type Props = {
+  registerAction: (credentials: RegisterInterface) => void;
+  user: User | null;
+};
+
+const Register: React.FC<Props> = props => {
   const classes = useStyles(props);
   const [email, setEmail] = useState<string>('');
   const [username, setUsername] = useState<string>('');
@@ -60,9 +69,13 @@ export const Register: React.FC = props => {
         setLoaded(true);
       }
     }
-  }, []);
+  }, [email, loaded, query]);
 
-  const register = (event: ChangeEvent<HTMLFormElement>) => {};
+  const register = (event: ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const registerObject: RegisterInterface = { email, username, password };
+    props.registerAction(registerObject);
+  };
 
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -118,20 +131,6 @@ export const Register: React.FC = props => {
             type="password"
             autoComplete="current-password"
             className={classes.root}
-            error={
-              startedPassword &&
-              /^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]{8,}$/.test(
-                password
-              )
-            }
-            helperText={
-              startedPassword &&
-              !/^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]{8,}$/.test(
-                password
-              )
-                ? 'Minimum eight characters, at least one letter, one number and one special character'
-                : ''
-            }
           />
           <Button
             type="submit"
@@ -155,3 +154,9 @@ export const Register: React.FC = props => {
     </Container>
   );
 };
+
+const mapStateToProps = (state: AppState) => ({
+  user: state.user
+});
+
+export default connect(mapStateToProps, { registerAction })(Register);

@@ -18,12 +18,6 @@ type User = models.User
 // JSON type alias
 type JSON = common.JSON
 
-// RequestBody common between different controllers
-type RequestBody struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
-
 // Returns the user struct or a boolean telling if the user was found
 func getUserWithUsername(username string, db *gorm.DB) (User, bool) {
 	var user User
@@ -69,6 +63,12 @@ func generateToken(data JSON) (string, error) {
 func registerController(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
+	type RequestBody struct {
+		Email    string `json:"email" binding:"required"`
+		Username string `json:"username" binding:"required"`
+		Password string `json:"password" binding:"required"`
+	}
+
 	var requestBody RequestBody
 	if err := c.BindJSON(&requestBody); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -101,6 +101,11 @@ func registerController(c *gin.Context) {
 
 func loginController(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
+
+	type RequestBody struct {
+		Username string `json:"username" binding:"required"`
+		Password string `json:"password" binding:"required"`
+	}
 
 	var requestBody RequestBody
 	if err := c.BindJSON(&requestBody); err != nil {

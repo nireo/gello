@@ -10,6 +10,7 @@ type User struct {
 	gorm.Model
 	Username string
 	Password string
+	Email    string
 }
 
 // Serialize user data into JSON
