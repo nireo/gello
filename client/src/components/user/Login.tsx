@@ -8,6 +8,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { connect } from 'react-redux';
+import { AppState } from '../../store';
+import { loginAction } from '../../actions';
+import { User, LoginInterface } from '../../interfaces/User';
+import { AlreadyLoggedIn } from './AlreadyLoggedIn';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -38,12 +43,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const Login: React.FC = props => {
+type Props = {
+  user: User | null;
+  loginAction: (credentials: LoginInterface) => void;
+};
+
+const Login: React.FC<Props> = props => {
   const classes = useStyles(props);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const login = (event: ChangeEvent<HTMLFormElement>) => {};
+  if (props.user !== null) {
+    return <AlreadyLoggedIn />;
+  }
+
+  const login = (event: ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const loginObject: LoginInterface = { username, password };
+    props.loginAction(loginObject);
+  };
 
   return (
     <Container component="main" maxWidth="sm">
@@ -100,3 +118,9 @@ export const Login: React.FC = props => {
     </Container>
   );
 };
+
+const mapStateToProps = (state: AppState) => ({
+  user: state.user
+});
+
+export default connect(mapStateToProps, { loginAction })(Login);

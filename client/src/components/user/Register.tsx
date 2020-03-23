@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
+import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import { AppState } from '../../store';
 import { registerAction } from '../../actions';
 import { RegisterInterface, User } from '../../interfaces/User';
+import { AlreadyLoggedIn } from './AlreadyLoggedIn';
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
@@ -70,6 +71,10 @@ const Register: React.FC<Props> = props => {
       }
     }
   }, [email, loaded, query]);
+
+  if (props.user !== null) {
+    return <AlreadyLoggedIn />;
+  }
 
   const register = (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -144,7 +149,7 @@ const Register: React.FC<Props> = props => {
           <Grid container>
             <Grid item xs></Grid>
             <Grid item>
-              <Link href="#" variant="body2" style={{ color: '#0079b9' }}>
+              <Link to="/login" style={{ color: '#0079b9' }}>
                 {'Already have an account? Login'}
               </Link>
             </Grid>
