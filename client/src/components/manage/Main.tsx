@@ -10,15 +10,15 @@ import Icon from '@material-ui/core/Icon';
 import { Link } from 'react-router-dom';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import CreateBoard from './CreateBoard';
-import { IconButton } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { User } from '../../interfaces/User';
 
 type Props = {
   dispatch: any;
   boards: Board[];
+  user: User | null;
 };
 
-const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
+const ManageMain: React.FC<Props> = ({ boards, dispatch, user }) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   useEffect(() => {
@@ -28,6 +28,7 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
     }
   }, []);
 
+  console.log(user);
   const closeModal = () => {
     setOpen(false);
   };
@@ -143,7 +144,8 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch }) => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  boards: state.boards
+  boards: state.boards,
+  user: state.user
 });
 
 export default connect(mapStateToProps)(ManageMain);

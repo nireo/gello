@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { deleteList } from '../../actions';
 
 const ListContainer = styled.div`
-  background-color: #dfe3e6;
+  background-color: #ebecf0;
   border-radius: 3px;
   width: 300px;
   padding: 9px;

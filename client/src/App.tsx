@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Navbar } from './components/layout/Navbar';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import ManageMain from './components/manage/Main';
@@ -19,6 +19,7 @@ type Props = {
 const App: React.FC<Props> = ({ user, checkLocalStorage }) => {
   useEffect(() => {
     if (!user) {
+      console.log('hello');
       checkLocalStorage();
     }
   }, [user, checkLocalStorage]);

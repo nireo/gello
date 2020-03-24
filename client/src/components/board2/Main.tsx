@@ -12,6 +12,7 @@ import { DrawerContent } from './Drawer';
 import { setActiveBoard } from '../../actions';
 import { getSingleBoard } from '../../services/board';
 import { CreateBoard } from '../../interfaces/Board';
+import { Container, Typography } from '@material-ui/core';
 
 const drawerWidth = 339;
 
@@ -114,7 +115,13 @@ class Main extends React.Component<Props> {
     const { classes } = this.props;
 
     if (active === null) {
-      return null;
+      return (
+        <Container>
+          <Typography variant="h2">
+            The board you're looking for is private or it's not found.
+          </Typography>
+        </Container>
+      );
     }
 
     return (

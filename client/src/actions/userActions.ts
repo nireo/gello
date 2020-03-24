@@ -15,7 +15,7 @@ export const loginAction = (credentials: LoginInterface) => {
     setTokens(data.token);
     dispatch({
       type: CONSTANTS.LOGIN,
-      data: data
+      data: data.user
     });
   };
 };
@@ -28,7 +28,7 @@ export const registerAction = (credentials: RegisterInterface) => {
 
     dispatch({
       type: CONSTANTS.LOGIN,
-      data: data
+      data: data.user
     });
   };
 };
