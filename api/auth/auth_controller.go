@@ -60,6 +60,14 @@ func generateToken(data JSON) (string, error) {
 	return tokenString, err
 }
 
+func addTokenWithUserToResponse(serializedUser JSON) common.JSON {
+	token, _ := generateToken(serializedUser)
+	return common.JSON{
+		"user":  serializedUser,
+		"token": token,
+	}
+}
+
 func registerController(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
@@ -96,7 +104,7 @@ func registerController(c *gin.Context) {
 	db.NewRecord(user)
 	db.Save(&user)
 
-	c.JSON(http.StatusOK, user.Serialize())
+	c.JSON(http.StatusOK, addTokenWithUserToResponse(user.Serialize()))
 }
 
 func loginController(c *gin.Context) {
@@ -124,5 +132,5 @@ func loginController(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, user.Serialize())
+	c.JSON(http.StatusOK, addTokenWithUserToResponse(user.Serialize()))
 }
