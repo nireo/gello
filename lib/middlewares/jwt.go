@@ -49,12 +49,24 @@ func extractTokenFromAuthorizationHeader(c *gin.Context) (string, error) {
 		return "", errors.New("Authorization header empty")
 	}
 
-	splittedStrings := strings.Split(authorization, "bearer ")
-	if len(splittedStrings) < 1 {
-		return "", errors.New("Token not in bearer format")
+	token := []string{}
+
+	// check for different bearer token types, since some services use 'bearer' and other 'Bearer'
+	if strings.Contains(authorization, "bearer") {
+		token = strings.Split(authorization, "bearer ")
+		if len(token) < 1 {
+			return "", errors.New("Token not in bearer format")
+		}
+	} else if strings.Contains(authorization, "Bearer") {
+		token = strings.Split(authorization, "Bearer ")
+		if len(token) < 1 {
+			return "", errors.New("Token not in Bearer format")
+		}
+	} else {
+		return "", errors.New("Authorization field doesn't include a token")
 	}
 
-	return splittedStrings[1], nil
+	return token[1], nil
 }
 
 // JWTMiddleware extracts and parses token from header/cookie

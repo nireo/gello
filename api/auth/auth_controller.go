@@ -53,7 +53,7 @@ func generateToken(data JSON) (string, error) {
 	date := time.Now().Add(time.Hour * 24 * 7)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user": data,
-		"exp":  date.Unix,
+		"exp":  date.Unix(),
 	})
 
 	tokenString, err := token.SignedString([]byte("secret key"))

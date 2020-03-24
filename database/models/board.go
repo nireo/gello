@@ -10,10 +10,12 @@ import (
 // Board data model
 type Board struct {
 	gorm.Model
-	Title string
-	Lists []List
-	UUID  string
-	Color string
+	Title  string
+	Lists  []List
+	UUID   string
+	Color  string
+	UserID uint
+	User   User
 }
 
 // Serialize board data into json

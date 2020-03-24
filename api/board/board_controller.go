@@ -73,6 +73,7 @@ func get(c *gin.Context) {
 
 func create(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
+	user := c.MustGet("user").(models.User)
 
 	var body RequestBody
 	if err := c.BindJSON(&body); err != nil {
@@ -82,9 +83,10 @@ func create(c *gin.Context) {
 
 	uuid := common.GenerateUUID()
 	board := Board{
-		Title: body.Title,
-		UUID:  uuid,
-		Color: chooseRandomColor(),
+		Title:  body.Title,
+		UUID:   uuid,
+		Color:  chooseRandomColor(),
+		UserID: user.ID,
 	}
 
 	db.NewRecord(board)
