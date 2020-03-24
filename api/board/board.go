@@ -9,10 +9,10 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	board := r.Group("/board")
 	{
-		board.GET("/", get)
-		board.GET("/:id", getSingle)
+		board.GET("/", middlewares.Authorized, get)
+		board.GET("/:id", middlewares.Authorized, getSingle)
 		board.POST("/", middlewares.Authorized, create)
-		board.DELETE("/:id", delete)
-		board.PATCH("/:id", update)
+		board.DELETE("/:id", middlewares.Authorized, delete)
+		board.PATCH("/:id", middlewares.Authorized, update)
 	}
 }

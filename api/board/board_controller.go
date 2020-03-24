@@ -1,7 +1,6 @@
 package board
 
 import (
-	"fmt"
 	"math/rand"
 	"net/http"
 
@@ -41,6 +40,15 @@ func GetBoardWithID(id string, db *gorm.DB) (Board, bool) {
 	return board, true
 }
 
+func getUsersBoards(user models.User, db *gorm.DB) ([]Board, bool) {
+	var boards []Board
+	if err := db.Model(&user).Related(&boards).Error; err != nil {
+		return boards, false
+	}
+
+	return boards, true
+}
+
 func getListsRelatedToBoard(board Board, db *gorm.DB) ([]List, bool) {
 	var lists []List
 	if err := db.Model(&board).Related(&lists).Error; err != nil {
@@ -56,10 +64,11 @@ func chooseRandomColor() string {
 
 func get(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
+	user := c.MustGet("user").(models.User)
 
-	var boards []Board
-	if err := db.Find(&boards).Error; err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+	boards, ok := getUsersBoards(user, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
@@ -98,10 +107,17 @@ func create(c *gin.Context) {
 func getSingle(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
+	user := c.MustGet("user").(models.User)
 
 	board, ok := GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	// check if the user owns the board
+	if board.UserID != user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 
@@ -133,6 +149,7 @@ func getSingle(c *gin.Context) {
 func delete(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
+	user := c.MustGet("user").(models.User)
 
 	if id == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -145,6 +162,11 @@ func delete(c *gin.Context) {
 		return
 	}
 
+	if board.UserID != user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
 	db.Delete(&board)
 	c.Status(http.StatusNoContent)
 }
@@ -152,6 +174,7 @@ func delete(c *gin.Context) {
 func update(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
+	user := c.MustGet("user").(models.User)
 
 	type RequestBodyWithColor struct {
 		Color string `json:"color" binding:"required"`
@@ -161,14 +184,17 @@ func update(c *gin.Context) {
 	var body RequestBodyWithColor
 	if err := c.BindJSON(&body); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
-		fmt.Println(body)
-		fmt.Println(err)
 		return
 	}
 
 	board, ok := GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if board.UserID != user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 
