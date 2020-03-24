@@ -8,9 +8,10 @@ import (
 // Item data model
 type Item struct {
 	gorm.Model
-	Content string
-	UUID    string
-	ListID  uint
+	Content  string
+	UUID     string
+	ListID   uint
+	ListUUID string
 }
 
 // Serialize item data into json

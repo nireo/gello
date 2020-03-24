@@ -143,7 +143,11 @@ class ActionButton extends React.Component<Props> {
             {buttonTitle}
           </Button>
           <Icon
-            style={{ marginLeft: 0, cursor: 'pointer', color: 'white' }}
+            style={{
+              marginLeft: 0,
+              cursor: 'pointer',
+              color: `${!list ? 'white' : 'black'}`
+            }}
             onClick={this.closeForm}
           >
             <CloseIcon />
