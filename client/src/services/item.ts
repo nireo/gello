@@ -25,6 +25,6 @@ export const deleteItem = async (id: string) => {
 };
 
 export const updateItem = async (item: UpdateItem, id: string) => {
-  const response = await axios.post(`${baseUrl}${id}`, item);
+  const response = await axios.patch(`${baseUrl}${id}`, item);
   return response.data;
 };

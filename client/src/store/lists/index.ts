@@ -1,4 +1,5 @@
 import { CONSTANTS } from '../../actions';
+import { updateItem } from '../../services/item';
 
 let listID = 4;
 let itemID = 5;
@@ -67,6 +68,9 @@ const reducer = (state: any = [], action: any) => {
         const item = listStart.items.splice(droppableIndexStart, 1);
         const listEnd = state.find((list: any) => droppableIdEnd === list.uuid);
         listEnd.items.splice(droppableIndexEnd, 0, ...item);
+
+        // update item to the new list
+        updateTheItemList(listEnd, item);
       }
 
       return newState2;
@@ -94,6 +98,15 @@ const reducer = (state: any = [], action: any) => {
     default:
       return state;
   }
+};
+
+const updateTheItemList = (newList: any, item: any) => {
+  const updatedItem = {
+    content: item[0].content,
+    uuid: newList.uuid
+  };
+
+  updateItem(updatedItem, item[0].uuid);
 };
 
 export default reducer;

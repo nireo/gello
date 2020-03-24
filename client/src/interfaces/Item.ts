@@ -3,6 +3,6 @@ export interface CreateItem {
 }
 
 export interface UpdateItem {
-  list_uuid: string;
+  uuid: string;
   content: string;
 }
