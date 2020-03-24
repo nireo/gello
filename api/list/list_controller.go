@@ -27,7 +27,8 @@ type RequestBody struct {
 	Title string `json:"title" binding:"required"`
 }
 
-func getListWithID(id string, db *gorm.DB) (List, bool) {
+// GetListWithID returns a list corresponding to a id
+func GetListWithID(id string, db *gorm.DB) (List, bool) {
 	var list List
 	if err := db.Where("uuid = ?", id).First(&list).Error; err != nil {
 		return list, false
@@ -125,7 +126,7 @@ func delete(c *gin.Context) {
 		return
 	}
 
-	list, ok := getListWithID(id, db)
+	list, ok := GetListWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -149,7 +150,7 @@ func update(c *gin.Context) {
 		return
 	}
 
-	list, ok := getListWithID(id, db)
+	list, ok := GetListWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -170,7 +171,7 @@ func copyList(c *gin.Context) {
 		return
 	}
 
-	list, ok := getListWithID(id, db)
+	list, ok := GetListWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return

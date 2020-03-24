@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/nireo/gello/api/list"
 	"github.com/nireo/gello/database/models"
 	"github.com/nireo/gello/lib/common"
 )
@@ -18,12 +19,21 @@ type List = models.List
 // JSON type alias
 type JSON = common.JSON
 
+func getItemWithID(id string, db *gorm.DB) (Item, bool) {
+	var item Item
+	if err := db.Where("uuid = ?", id).First(&item).First(&item).Error; err != nil {
+		return item, false
+	}
+
+	return item, true
+}
+
 func create(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
 
 	if id == "" {
-		c.AbortWithStatus(400)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
@@ -33,13 +43,13 @@ func create(c *gin.Context) {
 
 	var body RequestBody
 	if err := c.BindJSON(&body); err != nil {
-		c.AbortWithStatus(400)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	var list List
-	if err := db.Where("uuid = ?", id).First(&list).Error; err != nil {
-		c.AbortWithStatus(404)
+	list, ok := list.GetListWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
@@ -53,7 +63,7 @@ func create(c *gin.Context) {
 	db.NewRecord(item)
 	db.Save(&item)
 
-	c.JSON(200, item.Serialize())
+	c.JSON(http.StatusOK, item.Serialize())
 }
 
 func delete(c *gin.Context) {
@@ -61,18 +71,18 @@ func delete(c *gin.Context) {
 	id := c.Param("id")
 
 	if id == "" {
-		c.AbortWithStatus(400)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	var item Item
-	if err := db.Where("uuid = ?", id).First(&item).Error; err != nil {
-		c.AbortWithStatus(404)
+	item, ok := getItemWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
 	db.Delete(&item)
-	c.Status(204)
+	c.Status(http.StatusNoContent)
 }
 
 func update(c *gin.Context) {
@@ -80,7 +90,7 @@ func update(c *gin.Context) {
 	id := c.Param("id")
 
 	if id == "" {
-		c.AbortWithStatus(400)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
@@ -91,18 +101,18 @@ func update(c *gin.Context) {
 
 	var body RequestBody
 	if err := c.BindJSON(&body); err != nil {
-		c.AbortWithStatus(400)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	var item Item
-	if err := db.Where("uuid = ?", id).First(&item).Error; err != nil {
-		c.AbortWithStatus(404)
+	item, ok := getItemWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	var list List
-	if err := db.Where("uuid = ?", body.ListUUID).First(&list).Error; err != nil {
+	list, ok := list.GetListWithID(body.ListUUID, db)
+	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
