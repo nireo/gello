@@ -16,6 +16,7 @@ type Board struct {
 	Color  string
 	UserID uint
 	User   User
+	Users  []*User `gorm:"many2many:user_shared"`
 }
 
 // Serialize board data into json
@@ -25,5 +26,6 @@ func (board *Board) Serialize() common.JSON {
 		"uuid":    board.UUID,
 		"created": board.CreatedAt,
 		"color":   board.Color,
+		"users":   board.Users,
 	}
 }

@@ -14,5 +14,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		board.POST("/", middlewares.Authorized, create)
 		board.DELETE("/:id", middlewares.Authorized, delete)
 		board.PATCH("/:id", middlewares.Authorized, update)
+		board.POST("/share/:id", middlewares.Authorized)
 	}
 }

@@ -204,3 +204,42 @@ func update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, board.Serialize())
 }
+
+func shareBoard(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	id := c.Param("id")
+	user := c.MustGet("user").(models.User)
+
+	type RequestBody struct {
+		UserID string `json:"user_id" binding:"required"`
+	}
+
+	var body RequestBody
+	if err := c.BindJSON(&body); err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	board, ok := GetBoardWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if board.UserID != user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
+	}
+
+	var userToAdd models.User
+	if err := db.Where("uuid = ?", body.UserID).First(&userToAdd).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if err := db.Model(&board).Association("Users").Append(&userToAdd).Error; err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, board.Serialize())
+}
