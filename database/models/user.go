@@ -11,6 +11,8 @@ type User struct {
 	Username string
 	Password string
 	Email    string
+	UUID     string
+	Shared   []*Board `gorm:"many2many:user_shared"`
 }
 
 // Serialize user data into JSON
@@ -18,6 +20,7 @@ func (user *User) Serialize() common.JSON {
 	return common.JSON{
 		"username": user.Username,
 		"id":       user.ID,
+		"uuid":     user.UUID,
 	}
 }
 

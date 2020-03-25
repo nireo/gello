@@ -96,9 +96,12 @@ func registerController(c *gin.Context) {
 		return
 	}
 
+	uuid := common.GenerateUUID()
+
 	user := User{
 		Username: requestBody.Username,
 		Password: hash,
+		UUID:     uuid,
 	}
 
 	db.NewRecord(user)
