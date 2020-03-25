@@ -59,6 +59,7 @@ func validateRequestBody(c *gin.Context) (RequestBody, bool) {
 func get(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
+	user := c.MustGet("user").(models.User)
 
 	if id == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -68,6 +69,11 @@ func get(c *gin.Context) {
 	board, ok := board.GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if user.ID == board.UserID {
+		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 
@@ -88,6 +94,7 @@ func get(c *gin.Context) {
 func create(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
+	user := c.MustGet("user").(models.User)
 
 	if id == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -102,6 +109,11 @@ func create(c *gin.Context) {
 	board, ok := board.GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
+	}
+
+	if board.UserID == user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
 	}
 
 	uuid := common.GenerateUUID()

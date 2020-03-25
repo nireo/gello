@@ -15,26 +15,26 @@ const getConfig = () => ({
 });
 
 export const getBoards = async () => {
-  const response = await axios.get(baseUrl);
+  const response = await axios.get(baseUrl, getConfig());
   return response.data;
 };
 
 export const getSingleBoard = async (id: string) => {
-  const response = await axios.get(`${baseUrl}${id}`);
+  const response = await axios.get(`${baseUrl}${id}`, getConfig());
   return response.data;
 };
 
 export const createBoard = async (newBoard: CreateBoard) => {
-  const response = await axios.post(baseUrl, newBoard);
+  const response = await axios.post(baseUrl, newBoard, getConfig());
   return response.data;
 };
 
 export const deleteBoard = async (id: string) => {
-  const response = await axios.delete(`${baseUrl}${id}`);
+  const response = await axios.delete(`${baseUrl}${id}`, getConfig());
   return response.data;
 };
 
 export const updateBoard = async (updated: CreateBoard, id: string) => {
-  const response = await axios.patch(`${baseUrl}${id}`, updated);
+  const response = await axios.patch(`${baseUrl}${id}`, updated, getConfig());
   return response.data;
 };
