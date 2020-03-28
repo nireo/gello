@@ -3,7 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@global': {
@@ -23,7 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1
   },
   link: {
-    margin: theme.spacing(1, 1.5)
+    margin: theme.spacing(1, 1.5),
+    color: 'black',
+    textDecoration: 'none'
   }
 }));
 
@@ -46,20 +48,10 @@ export const Navbar: React.FC = props => {
           gello
         </Typography>
         <nav>
-          <Link
-            variant="button"
-            color="textPrimary"
-            href="#"
-            className={classes.link}
-          >
+          <Link to="/home" className={classes.link}>
             Home
           </Link>
-          <Link
-            variant="button"
-            color="textPrimary"
-            href="#"
-            className={classes.link}
-          >
+          <Link to="/login" className={classes.link}>
             Login
           </Link>
         </nav>

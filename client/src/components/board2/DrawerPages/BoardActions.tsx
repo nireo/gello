@@ -21,11 +21,20 @@ const BoardActions: React.FC<Props> = ({ id, deleteBoard }) => {
 
   return (
     <Container>
-      <Typography variant="h6">Delete board</Typography>
-      <Typography>This action can't be reversed.</Typography>
-      <Button onClick={handleBoardDeletion} variant="contained">
-        Delete
-      </Button>
+      <div style={{ marginBottom: '3rem' }}>
+        <Typography variant="h6">Delete board</Typography>
+        <Typography>This action can't be reversed.</Typography>
+        <Button onClick={handleBoardDeletion} variant="contained">
+          Delete
+        </Button>
+      </div>
+      <div>
+        <Typography variant="h6">Share board</Typography>
+        <Typography>
+          You can share this board to other users. So that you can collaborate
+          on it.
+        </Typography>
+      </div>
     </Container>
   );
 };

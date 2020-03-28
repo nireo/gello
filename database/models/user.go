@@ -12,7 +12,6 @@ type User struct {
 	Password string
 	Email    string
 	UUID     string
-	Shared   []*Board `gorm:"many2many:user_shared"`
 }
 
 // Serialize user data into JSON

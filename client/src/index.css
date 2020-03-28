@@ -187,3 +187,8 @@ code {
   border: none;
   cursor: pointer;
 }
+
+.navbar-link {
+  color: black;
+  text-decoration: none;
+}

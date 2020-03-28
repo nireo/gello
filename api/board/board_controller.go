@@ -205,6 +205,7 @@ func update(c *gin.Context) {
 	c.JSON(http.StatusOK, board.Serialize())
 }
 
+/*
 func shareBoard(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
@@ -236,10 +237,9 @@ func shareBoard(c *gin.Context) {
 		return
 	}
 
-	if err := db.Model(&board).Association("Users").Append(&userToAdd).Error; err != nil {
-		c.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
+	board.Users = append(board.Users, userToAdd)
+	userToAdd.Shared = append(userToAdd.Shared, board)
 
 	c.JSON(http.StatusOK, board.Serialize())
 }
+*/
