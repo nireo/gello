@@ -4,6 +4,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { AppState } from '../../store';
+import { User } from '../../interfaces/User';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@global': {
@@ -29,7 +32,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const Navbar: React.FC = props => {
+type Props = {
+  user: User | null;
+};
+
+const Navbar: React.FC<Props> = props => {
   const classes = useStyles(props);
   return (
     <AppBar
@@ -48,14 +55,29 @@ export const Navbar: React.FC = props => {
           gello
         </Typography>
         <nav>
-          <Link to="/home" className={classes.link}>
-            Home
-          </Link>
-          <Link to="/login" className={classes.link}>
-            Login
-          </Link>
+          {props.user !== null && (
+            <Link to="/home" className={classes.link}>
+              Home
+            </Link>
+          )}
+          {props.user === null && (
+            <Link to="/login" className={classes.link}>
+              Login
+            </Link>
+          )}
+          {props.user !== null && (
+            <Link to="/settings" className={classes.link}>
+              Settings
+            </Link>
+          )}
         </nav>
       </Toolbar>
     </AppBar>
   );
 };
+
+const mapStateToProps = (state: AppState) => ({
+  user: state.user
+});
+
+export default connect(mapStateToProps)(Navbar);
