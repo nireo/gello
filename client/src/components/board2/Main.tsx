@@ -19,11 +19,11 @@ const drawerWidth = 339;
 const stylesMaterial = (theme: Theme) => ({
   drawer: {
     width: drawerWidth,
-    flexShrink: 0
+    flexShrink: 0,
   },
   drawerPaper: {
-    width: drawerWidth
-  }
+    width: drawerWidth,
+  },
 });
 
 const ListContainer = styled.div`
@@ -44,18 +44,18 @@ class Main extends React.Component<Props> {
     loaded: false,
     open: false,
     newTitle: '',
-    showTitleForm: false
+    showTitleForm: false,
   };
 
   showTitleForm = () => {
     this.setState({
-      showTitleForm: true
+      showTitleForm: true,
     });
   };
 
   closeTitleForm = () => {
     this.setState({
-      showTitleForm: false
+      showTitleForm: false,
     });
   };
 
@@ -90,13 +90,13 @@ class Main extends React.Component<Props> {
 
   handleOpen = () => {
     this.setState({
-      open: true
+      open: true,
     });
   };
 
   handleClose = () => {
     this.setState({
-      open: false
+      open: false,
     });
   };
 
@@ -104,7 +104,7 @@ class Main extends React.Component<Props> {
     event.preventDefault();
     const newData: CreateBoard = {
       title: this.state.newTitle,
-      color: this.props.active.color
+      color: this.props.active.color,
     };
 
     this.props.dispatch(updateActive(this.props.active, newData));
@@ -131,7 +131,7 @@ class Main extends React.Component<Props> {
       >
         <DragDropContext onDragEnd={this.onDragEnd}>
           <div>
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               {this.state.showTitleForm ? (
                 <h2>
                   <form onSubmit={this.updateBoard}>
@@ -141,7 +141,7 @@ class Main extends React.Component<Props> {
                       value={this.state.newTitle}
                       onChange={({ target }) =>
                         this.setState({
-                          newTitle: target.value
+                          newTitle: target.value,
                         })
                       }
                       style={{
@@ -149,18 +149,20 @@ class Main extends React.Component<Props> {
                         border: 'none',
                         color: 'white',
                         fontSize: '1.17em',
-                        fontFamily: 'Open Sans, sans-serif'
+                        fontFamily: 'Open Sans, sans-serif',
                       }}
                     />
                     <button type="submit" style={{ display: 'none' }}></button>
                   </form>
                 </h2>
               ) : (
-                <h2 style={{ color: 'white' }} onClick={this.showTitleForm}>
-                  {active.title}
-                </h2>
+                <div>
+                  <h2 style={{ color: 'white' }} onClick={this.showTitleForm}>
+                    {active.title}
+                  </h2>
+                </div>
               )}
-              <div style={{ float: 'right' }}>
+              <div>
                 <button onClick={this.handleOpen}>Open drawer</button>
               </div>
             </div>
@@ -169,7 +171,7 @@ class Main extends React.Component<Props> {
               direction="horizontal"
               type="list"
             >
-              {provided => (
+              {(provided) => (
                 <ListContainer
                   {...provided.droppableProps}
                   ref={provided.innerRef}
@@ -196,7 +198,7 @@ class Main extends React.Component<Props> {
           anchor="right"
           open={this.state.open}
           classes={{
-            paper: classes.drawerPaper
+            paper: classes.drawerPaper,
           }}
         >
           <DrawerContent
@@ -211,7 +213,7 @@ class Main extends React.Component<Props> {
 
 const mapStateToProps = (state: AppState) => ({
   lists: state.lists,
-  active: state.active
+  active: state.active,
 });
 
 export default connect(mapStateToProps)(withStyles(stylesMaterial)(Main));

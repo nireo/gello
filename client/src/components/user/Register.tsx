@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -19,42 +19,44 @@ const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: '#0079b9'
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(1)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
-  },
-
-  root: {
-    '& label.Mui-focused': {
-      color: '#0079b9'
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    paper: {
+      marginTop: theme.spacing(8),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
     },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#0079b9'
-    }
-  }
-}));
+    avatar: {
+      margin: theme.spacing(1),
+      backgroundColor: '#0079b9',
+    },
+    form: {
+      width: '100%',
+      marginTop: theme.spacing(1),
+    },
+    submit: {
+      margin: theme.spacing(3, 0, 2),
+    },
+
+    root: {
+      '& label.Mui-focused': {
+        color: '#0079b9',
+      },
+      '& .MuiInput-underline:after': {
+        borderBottomColor: '#0079b9',
+      },
+    },
+  })
+);
 
 type Props = {
   registerAction: (credentials: RegisterInterface) => void;
   user: User | null;
 };
 
-const Register: React.FC<Props> = props => {
-  const classes = useStyles(props);
+const Register: React.FC<Props> = ({ registerAction, user }) => {
+  const classes = useStyles();
   const [email, setEmail] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -72,14 +74,14 @@ const Register: React.FC<Props> = props => {
     }
   }, [email, loaded, query]);
 
-  if (props.user !== null) {
+  if (user !== null) {
     return <AlreadyLoggedIn />;
   }
 
   const register = (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     const registerObject: RegisterInterface = { email, username, password };
-    props.registerAction(registerObject);
+    registerAction(registerObject);
   };
 
   const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +108,7 @@ const Register: React.FC<Props> = props => {
             margin="normal"
             required
             fullWidth
-            variant="filled"
+            variant="outlined"
             label="Email"
             name="Email"
             autoComplete="email"
@@ -117,7 +119,7 @@ const Register: React.FC<Props> = props => {
             onChange={({ target }) => setUsername(target.value)}
             margin="normal"
             required
-            variant="filled"
+            variant="outlined"
             fullWidth
             label="Username"
             name="username"
@@ -130,7 +132,7 @@ const Register: React.FC<Props> = props => {
             margin="normal"
             required
             fullWidth
-            variant="filled"
+            variant="outlined"
             name="password"
             label="Password"
             type="password"
@@ -149,8 +151,11 @@ const Register: React.FC<Props> = props => {
           <Grid container>
             <Grid item xs></Grid>
             <Grid item>
-              <Link to="/login" style={{ color: '#0079b9' }}>
-                {'Already have an account? Login'}
+              <Link
+                to="/login"
+                style={{ color: '#0079b9', textDecoration: 'none' }}
+              >
+                Already have an account? Login
               </Link>
             </Grid>
           </Grid>
@@ -161,7 +166,7 @@ const Register: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  user: state.user
+  user: state.user,
 });
 
 export default connect(mapStateToProps, { registerAction })(Register);

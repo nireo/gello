@@ -2,65 +2,66 @@ import React, { useState, ChangeEvent } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { connect } from 'react-redux';
 import { AppState } from '../../store';
 import { loginAction } from '../../actions';
 import { User, LoginInterface } from '../../interfaces/User';
-import { AlreadyLoggedIn } from './AlreadyLoggedIn';
+import { Redirect, Link } from 'react-router-dom';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: '#0079b9'
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(1)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
-  },
-
-  root: {
-    '& label.Mui-focused': {
-      color: '#0079b9'
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    paper: {
+      marginTop: theme.spacing(8),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
     },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#0079b9'
-    }
-  }
-}));
+    avatar: {
+      margin: theme.spacing(1),
+      backgroundColor: '#0079b9',
+    },
+    form: {
+      width: '100%',
+      marginTop: theme.spacing(1),
+    },
+    submit: {
+      margin: theme.spacing(3, 0, 2),
+    },
+
+    root: {
+      '& label.Mui-focused': {
+        color: '#0079b9',
+      },
+      '& .MuiInput-underline:after': {
+        borderBottomColor: '#0079b9',
+      },
+    },
+  })
+);
 
 type Props = {
   user: User | null;
   loginAction: (credentials: LoginInterface) => void;
 };
 
-const Login: React.FC<Props> = props => {
-  const classes = useStyles(props);
+const Login: React.FC<Props> = ({ user, loginAction }) => {
+  const classes = useStyles();
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  if (props.user !== null) {
-    return <AlreadyLoggedIn />;
+  if (user !== null) {
+    return <Redirect to="/home" />;
   }
 
   const login = (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     const loginObject: LoginInterface = { username, password };
-    props.loginAction(loginObject);
+    loginAction(loginObject);
   };
 
   return (
@@ -81,6 +82,7 @@ const Login: React.FC<Props> = props => {
             fullWidth
             label="Username"
             name="username"
+            variant="outlined"
             autoComplete="username"
             className={classes.root}
           />
@@ -93,6 +95,7 @@ const Login: React.FC<Props> = props => {
             name="password"
             label="Password"
             type="password"
+            variant="outlined"
             autoComplete="current-password"
             className={classes.root}
           />
@@ -108,8 +111,11 @@ const Login: React.FC<Props> = props => {
           <Grid container>
             <Grid item xs></Grid>
             <Grid item>
-              <Link href="#" variant="body2" style={{ color: '#0079b9' }}>
-                {`Don't have an account? Register`}
+              <Link
+                to="/register"
+                style={{ color: '#0079b9', textDecoration: 'none' }}
+              >
+                Don't have an account? Register
               </Link>
             </Grid>
           </Grid>
@@ -120,7 +126,7 @@ const Login: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  user: state.user
+  user: state.user,
 });
 
 export default connect(mapStateToProps, { loginAction })(Login);
