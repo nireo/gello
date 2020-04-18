@@ -10,26 +10,30 @@ import { connect } from 'react-redux';
 import { AppState } from './store';
 import { checkLocalStorage } from './actions';
 import { User } from './interfaces/User';
+import { PrivateRoute } from './components/user/ProtectedRoute';
 
 type Props = {
-  user: User | null;
+  user: User;
   checkLocalStorage: () => void;
 };
 
 const App: React.FC<Props> = ({ user, checkLocalStorage }) => {
   useEffect(() => {
-    if (user === null) {
+    if (!user) {
       checkLocalStorage();
+      console.log('hello');
     }
   }, [user, checkLocalStorage]);
+  console.log(user);
 
   return (
     <Router>
       <Navbar />
       <Switch>
         <Route path="/" exact render={() => <WelcomeMain />} />
-        <Route path="/home" exact render={() => <ManageMain />} />
-        <Route path="/register" exact render={() => <Register />} />
+        <PrivateRoute path="/home" exact user={user}>
+          <ManageMain />
+        </PrivateRoute>
         <Route
           path="/board/:id"
           exact
@@ -43,7 +47,7 @@ const App: React.FC<Props> = ({ user, checkLocalStorage }) => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  user: state.user
+  user: state.user,
 });
 
 export default connect(mapStateToProps, { checkLocalStorage })(App);

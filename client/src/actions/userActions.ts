@@ -1,7 +1,7 @@
 import {
   LoginInterface,
   RegisterInterface,
-  UserWithToken
+  UserWithToken,
 } from '../interfaces/User';
 import { Dispatch } from 'redux';
 import { login, register } from '../services/user';
@@ -15,7 +15,7 @@ export const loginAction = (credentials: LoginInterface) => {
     setTokens(data.token);
     dispatch({
       type: CONSTANTS.LOGIN,
-      data: data.user
+      data: data.user,
     });
   };
 };
@@ -28,7 +28,7 @@ export const registerAction = (credentials: RegisterInterface) => {
 
     dispatch({
       type: CONSTANTS.LOGIN,
-      data: data.user
+      data: data.user,
     });
   };
 };
@@ -40,8 +40,8 @@ export const checkLocalStorage = () => {
       const userInfoJSON: UserWithToken = JSON.parse(userInfo);
       setTokens(userInfoJSON.token);
       dispatch({
-        type: 'LOG_IN',
-        data: userInfoJSON.user
+        type: CONSTANTS.LOGIN,
+        data: userInfoJSON.user,
       });
     }
   };
