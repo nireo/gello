@@ -46,3 +46,7 @@ export const checkLocalStorage = () => {
     }
   };
 };
+
+export const logoutAction = () => {
+  return { type: CONSTANTS.LOGOUT };
+};

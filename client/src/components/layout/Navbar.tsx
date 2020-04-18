@@ -3,41 +3,50 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { AppState } from '../../store';
 import { User } from '../../interfaces/User';
+import Button from '@material-ui/core/Button';
+import { logoutAction } from '../../actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@global': {
     ul: {
       margin: 0,
       padding: 0,
-      listStyle: 'none'
-    }
+      listStyle: 'none',
+    },
   },
   appBar: {
-    borderBottom: `1px solid ${theme.palette.divider}`
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
   toolbar: {
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   toolbarTitle: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   link: {
     margin: theme.spacing(1, 1.5),
     color: 'black',
-    textDecoration: 'none'
-  }
+    textDecoration: 'none',
+  },
 }));
 
 type Props = {
   user: User | null;
+  logoutAction: () => void;
 };
 
-const Navbar: React.FC<Props> = props => {
+const Navbar: React.FC<Props> = (props) => {
   const classes = useStyles(props);
+
+  const handleLogout = () => {
+    props.logoutAction();
+    return <Redirect to="/" />;
+  };
+
   return (
     <AppBar
       position="static"
@@ -70,6 +79,15 @@ const Navbar: React.FC<Props> = props => {
               Settings
             </Link>
           )}
+          {props.user !== null && (
+            <Button
+              variant="contained"
+              style={{ color: 'white', backgroundColor: '#0079b9' }}
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          )}
         </nav>
       </Toolbar>
     </AppBar>
@@ -77,7 +95,7 @@ const Navbar: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  user: state.user
+  user: state.user,
 });
 
-export default connect(mapStateToProps)(Navbar);
+export default connect(mapStateToProps, { logoutAction })(Navbar);
