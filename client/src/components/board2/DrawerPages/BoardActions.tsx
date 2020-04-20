@@ -46,7 +46,11 @@ const BoardActions: React.FC<Props> = ({ id, deleteBoard }) => {
             onChange={({ target }) => setNewUser(target.value)}
             placeholder="Username"
           />
-          <Button variant="contained" style={{ marginTop: '1rem' }}>
+          <Button
+            type="submit"
+            variant="contained"
+            style={{ marginTop: '1rem' }}
+          >
             Add user
           </Button>
         </form>

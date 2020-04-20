@@ -1,6 +1,7 @@
 import React from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
+import { Footer } from '../layout/Footer';
 
 export const Main: React.FC = () => {
   return (
@@ -22,10 +23,12 @@ export const Main: React.FC = () => {
       </div>
       <Container maxWidth="md" style={{ marginTop: '4rem' }}>
         <Typography variant="h4">Collaborate with others!</Typography>
-        <Typography style={{ fontSize: '16px' }}>
-          Gello lets you collaborate with other people.
+        <Typography style={{ fontSize: '18px' }}>
+          Gello makes it easier to add multiple users to a board for
+          collaboration.
         </Typography>
       </Container>
+      <Footer />
     </div>
   );
 };
