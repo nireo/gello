@@ -41,7 +41,7 @@ export const Footer: React.FC = () => {
           component="p"
           color="textSecondary"
         >
-          making work easier
+          making work easier since 2020
         </Typography>
         <Copyright />
       </Container>

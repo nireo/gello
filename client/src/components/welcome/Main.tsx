@@ -2,6 +2,7 @@ import React from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { Footer } from '../layout/Footer';
+import { ReactComponent as CollaborationSVG } from '../../svg/collaborate.svg';
 
 export const Main: React.FC = () => {
   return (
@@ -27,6 +28,7 @@ export const Main: React.FC = () => {
           Gello makes it easier to add multiple users to a board for
           collaboration.
         </Typography>
+        
       </Container>
       <Footer />
     </div>

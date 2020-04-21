@@ -21,6 +21,7 @@ type Props = {
 const ManageMain: React.FC<Props> = ({ boards, dispatch, user }) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(0);
   useEffect(() => {
     if (!loaded && boards.length === 0) {
       dispatch(initBoards());
@@ -28,7 +29,6 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch, user }) => {
     }
   }, []);
 
-  console.log(user);
   const closeModal = () => {
     setOpen(false);
   };
@@ -40,7 +40,7 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch, user }) => {
         <Grid item xs={3}>
           <nav>
             <ul>
-              <li style={{ listStyle: 'none ' }}>
+              <li style={{ listStyle: 'none ' }} onClick={() => setPage(0)}>
                 <Link to="/home" className="nav-link">
                   <Icon style={{ marginRight: '0.5rem' }}>
                     <DashboardIcon />
@@ -49,94 +49,118 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch, user }) => {
                   <strong>Boards</strong>
                 </Link>
               </li>
+              <li
+                style={{ listStyle: 'none', marginTop: '0.3rem' }}
+                onClick={() => setPage(1)}
+              >
+                <Link to="/home" className="nav-link">
+                  <Icon style={{ marginRight: '0.5rem' }}>
+                    <DashboardIcon />
+                  </Icon>
+                  {'  '}
+                  <strong>Templates</strong>
+                </Link>
+              </li>
             </ul>
           </nav>
         </Grid>
         <Grid item xs={9}>
-          <div style={{ display: 'flex' }}>
-            <Icon style={{ paddingTop: '1.052rem' }}>
-              <PermIdentityOutlinedIcon />
-            </Icon>
-            <h3>Personal boards</h3>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap'
-            }}
-          >
-            {boards.map((board: Board) => (
-              <Link
-                to={`/board/${board.uuid}`}
+          {page === 0 && (
+            <div>
+              <div style={{ display: 'flex' }}>
+                <Icon style={{ paddingTop: '1.052rem' }}>
+                  <PermIdentityOutlinedIcon />
+                </Icon>
+                <h3>Personal boards</h3>
+              </div>
+              <div
                 style={{
-                  textDecoration: 'none',
-                  margin: '3px'
+                  display: 'flex',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
                 }}
               >
-                <div
-                  className={`board-button color-${board.color}`}
-                  style={{
-                    color: 'white'
-                  }}
-                >
-                  <button
+                {boards.map((board: Board) => (
+                  <Link
+                    to={`/board/${board.uuid}`}
                     style={{
-                      border: 'none',
-                      background: 'none',
-                      cursor: 'pointer'
+                      textDecoration: 'none',
+                      margin: '3px',
                     }}
                   >
                     <div
+                      className={`board-button color-${board.color}`}
                       style={{
-                        height: '80px',
-                        marginRight: '1rem',
-                        border: 'none'
+                        color: 'white',
                       }}
                     >
-                      <div
+                      <button
                         style={{
-                          paddingLeft: '0.5rem',
-                          paddingRight: '4rem',
-                          display: 'flex'
+                          border: 'none',
+                          background: 'none',
+                          cursor: 'pointer',
                         }}
                       >
-                        <h3
+                        <div
                           style={{
-                            marginTop: '5px',
-                            padding: 0,
-                            color: 'white'
+                            height: '80px',
+                            marginRight: '1rem',
+                            border: 'none',
                           }}
                         >
-                          {board.title}
-                        </h3>
-                        {'   '}
-                      </div>
+                          <div
+                            style={{
+                              paddingLeft: '0.5rem',
+                              paddingRight: '4rem',
+                              display: 'flex',
+                            }}
+                          >
+                            <h3
+                              style={{
+                                marginTop: '5px',
+                                padding: 0,
+                                color: 'white',
+                              }}
+                            >
+                              {board.title}
+                            </h3>
+                            {'   '}
+                          </div>
+                        </div>
+                      </button>
                     </div>
-                  </button>
-                </div>
-              </Link>
-            ))}
-            <button
-              style={{
-                border: 'none',
-                background: 'none',
-                cursor: 'pointer'
-              }}
-              onClick={() => setOpen(true)}
-            >
-              <div className="create-board-button">
-                <p
+                  </Link>
+                ))}
+                <button
                   style={{
-                    marginLeft: '1rem',
-                    marginRight: '1rem'
+                    border: 'none',
+                    background: 'none',
+                    cursor: 'pointer',
                   }}
+                  onClick={() => setOpen(true)}
                 >
-                  Create new board
-                </p>
+                  <div className="create-board-button">
+                    <p
+                      style={{
+                        marginLeft: '1rem',
+                        marginRight: '1rem',
+                      }}
+                    >
+                      Create new board
+                    </p>
+                  </div>
+                </button>
               </div>
-            </button>
-          </div>
+            </div>
+          )}
+          {page === 1 && (
+            <div style={{ display: 'flex' }}>
+              <Icon style={{ paddingTop: '1.052rem' }}>
+                <PermIdentityOutlinedIcon />
+              </Icon>
+              <h3>Templates</h3>
+            </div>
+          )}
         </Grid>
       </Grid>
     </Container>
@@ -145,7 +169,7 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch, user }) => {
 
 const mapStateToProps = (state: AppState) => ({
   boards: state.boards,
-  user: state.user
+  user: state.user,
 });
 
 export default connect(mapStateToProps)(ManageMain);

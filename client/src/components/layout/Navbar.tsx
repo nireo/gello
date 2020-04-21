@@ -44,6 +44,7 @@ const Navbar: React.FC<Props> = (props) => {
 
   const handleLogout = () => {
     props.logoutAction();
+    console.log('hello');
     return <Redirect to="/" />;
   };
 
