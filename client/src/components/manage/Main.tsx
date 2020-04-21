@@ -5,13 +5,13 @@ import { initBoards } from '../../actions';
 import { Board } from '../../interfaces/Board';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import Icon from '@material-ui/core/Icon';
 import { Link } from 'react-router-dom';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import CreateBoard from './CreateBoard';
 import { User } from '../../interfaces/User';
 import { Boards } from './Boards';
+import { Templates } from './Templates';
 
 type Props = {
   dispatch: any;
@@ -72,11 +72,8 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch, user }) => {
             </div>
           )}
           {page === 1 && (
-            <div style={{ display: 'flex' }}>
-              <Icon style={{ paddingTop: '1.052rem' }}>
-                <PermIdentityOutlinedIcon />
-              </Icon>
-              <h3>Templates</h3>
+            <div>
+              <Templates />
             </div>
           )}
         </Grid>
