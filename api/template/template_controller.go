@@ -13,6 +13,12 @@ import (
 // JSON type alias
 type JSON = common.JSON
 
+// User model alias
+type User = models.User
+
+// Template model alias
+type Template = models.Template
+
 func getTemplates(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	page := c.Param("page")
@@ -28,7 +34,7 @@ func getTemplates(c *gin.Context) {
 		return
 	}
 
-	var templates []models.Template
+	var templates []Template
 	if err := db.Find(&templates).Offset(pageNumber * 10).Limit(10).Error; err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "no templates found"})
 		return
@@ -40,4 +46,35 @@ func getTemplates(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, serializedTemplates)
+}
+
+func createTemplate(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	user := c.MustGet("user").(User)
+
+	type RequestBody struct {
+		Title       string `json:"title" binding:"required"`
+		Description string `json:"description" binding:"required"`
+	}
+
+	var body RequestBody
+	if err := c.BindJSON(&body).Error; err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	uuid := common.GenerateUUID()
+	newTemplate := Template{
+		Title:       body.Title,
+		Description: body.Description,
+		Official:    false,
+		UUID:        uuid,
+		User:        user,
+		UserID:      user.ID,
+	}
+
+	db.NewRecord(newTemplate)
+	db.Create(&newTemplate)
+
+	c.JSON(http.StatusOK, newTemplate.Serialize())
 }
