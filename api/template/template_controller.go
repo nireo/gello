@@ -78,3 +78,37 @@ func createTemplate(c *gin.Context) {
 
 	c.JSON(http.StatusOK, newTemplate.Serialize())
 }
+
+func updateTemplate(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	user := c.MustGet("user").(User)
+	id := c.Param("id")
+
+	type RequestBody struct {
+		Title       string `json:"title" binding:"required"`
+		Description string `json:"description" binding:"required"`
+	}
+
+	var body RequestBody
+	if err := c.BindJSON(&body).Error; err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	var template Template
+	if err := db.Where("uuid = ?", id).First(&template).Error; err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "template not found"})
+		return
+	}
+
+	if user.ID != template.UserID {
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "you don't own this template"})
+		return
+	}
+
+	template.Title = body.Title
+	template.Description = body.Description
+
+	db.Save(&template)
+	c.JSON(http.StatusOK, template.Serialize())
+}
