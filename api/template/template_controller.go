@@ -112,3 +112,28 @@ func updateTemplate(c *gin.Context) {
 	db.Save(&template)
 	c.JSON(http.StatusOK, template.Serialize())
 }
+
+func deleteTemplate(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	user := c.MustGet("user").(User)
+	id := c.Param("id")
+
+	if id == "" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "an id has to be provided"})
+		return
+	}
+
+	var template Template
+	if err := db.Where("uuid = ?", id).First(&template).Error; err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "template not found"})
+		return
+	}
+
+	if template.UserID != user.ID {
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "you don't own this template"})
+		return
+	}
+
+	db.Delete(&template)
+	c.Status(http.StatusNoContent)
+}

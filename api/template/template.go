@@ -12,5 +12,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		template.GET("/", getTemplates)
 		template.POST("/", middlewares.Authorized, createTemplate)
 		template.PATCH("/:id", middlewares.Authorized, updateTemplate)
+		template.DELETE("/:id", middlewares.Authorized, deleteTemplate)
 	}
 }
