@@ -11,6 +11,8 @@ import { Button } from '@material-ui/core';
 import { CreateStepper } from './CreateStepper';
 
 export const Create: React.FC = () => {
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [templates, setTemplates] = useState<string[]>([]);
   const [newTemplate, setNewTemplate] = useState<string>('');
 
@@ -39,6 +41,20 @@ export const Create: React.FC = () => {
   return (
     <Container maxWidth="md">
       <CreateStepper />
+      <div>
+        <TextField
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+          placeholder="Title..."
+          style={{ width: '100%' }}
+        />
+      </div>
+      <TextField
+        value={description}
+        onChange={({ target }) => setDescription(target.value)}
+        placeholder="Description..."
+        style={{ width: '100%' }}
+      />
       <Typography variant="h4">Create new template</Typography>
       <form onSubmit={createNewTemplate}>
         <TextField
