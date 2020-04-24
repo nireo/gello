@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Button } from '@material-ui/core';
+import { CreateStepper } from './CreateStepper';
 
 export const Create: React.FC = () => {
   const [templates, setTemplates] = useState<string[]>([]);
@@ -37,6 +38,7 @@ export const Create: React.FC = () => {
 
   return (
     <Container maxWidth="md">
+      <CreateStepper />
       <Typography variant="h4">Create new template</Typography>
       <form onSubmit={createNewTemplate}>
         <TextField
