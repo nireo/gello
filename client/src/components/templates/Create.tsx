@@ -41,6 +41,15 @@ export const Create: React.FC = () => {
     setNewTemplate('');
   };
 
+  const submitNewTemplate = () => {
+    const templateObject = {
+      private: privateTemplate,
+      lists: templates.join('|'),
+      title,
+      description,
+    };
+  };
+
   return (
     <Container maxWidth="md">
       <CreateStepper activeStep={activeStep} setActiveStep={setActiveStep} />
