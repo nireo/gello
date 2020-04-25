@@ -22,6 +22,7 @@ type Template = models.Template
 func getTemplates(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	page := c.Param("page")
+	user := c.MustGet("user").(User)
 
 	if page == "" {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "you need to provide a page"})
@@ -40,12 +41,23 @@ func getTemplates(c *gin.Context) {
 		return
 	}
 
+	var userTemplates []Template
+	if err := db.Model(&user).Related(&userTemplates).Error; err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+		return
+	}
+
 	serializedTemplates := make([]JSON, len(templates), len(templates))
 	for index := range templates {
 		serializedTemplates[index] = templates[index].Serialize()
 	}
 
-	c.JSON(http.StatusOK, serializedTemplates)
+	serializedUserTemplates := make([]JSON, len(userTemplates), len(userTemplates))
+	for index := range userTemplates {
+		serializedUserTemplates[index] = userTemplates[index].Serialize()
+	}
+
+	c.JSON(http.StatusOK, gin.H{"userTemplates": serializedUserTemplates, "templates": serializedTemplates})
 }
 
 func createTemplate(c *gin.Context) {
