@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Button } from '@material-ui/core';
 import { CreateStepper } from './CreateStepper';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 export const Create: React.FC = () => {
   const [title, setTitle] = useState<string>('');
@@ -16,6 +17,7 @@ export const Create: React.FC = () => {
   const [templates, setTemplates] = useState<string[]>([]);
   const [newTemplate, setNewTemplate] = useState<string>('');
   const [activeStep, setActiveStep] = useState<number>(0);
+  const [privateTemplate, setPrivateTemplate] = useState<boolean>(false);
 
   // list of selected templates (contains the indices)
   const [selected, setSelected] = useState<string[]>([]);
@@ -101,6 +103,25 @@ export const Create: React.FC = () => {
                 </ListItem>
               ))}
             </List>
+          </div>
+        </div>
+      )}
+      {activeStep === 2 && (
+        <div>
+          <Typography>
+            You're almost done, just a few little settings to configure!
+          </Typography>
+          <FormControlLabel
+            label="Private template"
+            control={
+              <Checkbox
+                checked={privateTemplate}
+                onClick={() => setPrivateTemplate(!privateTemplate)}
+              />
+            }
+          />
+          <div>
+            <Button variant="contained">Create template</Button>
           </div>
         </div>
       )}

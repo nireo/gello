@@ -14,6 +14,7 @@ type Template struct {
 	UserID      uint
 	Official    bool
 	UUID        string
+	Private     bool
 }
 
 // Serialize template data into json
