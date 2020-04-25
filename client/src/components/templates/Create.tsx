@@ -15,6 +15,7 @@ export const Create: React.FC = () => {
   const [description, setDescription] = useState<string>('');
   const [templates, setTemplates] = useState<string[]>([]);
   const [newTemplate, setNewTemplate] = useState<string>('');
+  const [activeStep, setActiveStep] = useState<number>(0);
 
   // list of selected templates (contains the indices)
   const [selected, setSelected] = useState<string[]>([]);
@@ -40,54 +41,69 @@ export const Create: React.FC = () => {
 
   return (
     <Container maxWidth="md">
-      <CreateStepper />
-      <div>
-        <TextField
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-          placeholder="Title..."
-          style={{ width: '100%' }}
-        />
-      </div>
-      <TextField
-        value={description}
-        onChange={({ target }) => setDescription(target.value)}
-        placeholder="Description..."
-        style={{ width: '100%' }}
-      />
-      <Typography variant="h4">Create new template</Typography>
-      <form onSubmit={createNewTemplate}>
-        <TextField
-          value={newTemplate}
-          onChange={({ target }) => setNewTemplate(target.value)}
-          placeholder="New list name."
-        />
-        <Button
-          type="submit"
-          style={{ marginLeft: '1rem' }}
-          variant="contained"
-        >
-          Add list
-        </Button>
-      </form>
-      <div style={{ marginTop: '3rem' }}>
-        <Typography variant="h5">Lists</Typography>
-        <List dense>
-          {templates.map((template: string) => (
-            <ListItem key={template} button>
-              <ListItemText id={template} primary={template} />
-              <ListItemSecondaryAction>
-                <Checkbox
-                  edge="end"
-                  onChange={handleToggle(template)}
-                  checked={selected.indexOf(template) !== -1}
-                  inputProps={{ 'aria-labelledby': template }}
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
-        </List>
-      </div>
+      <CreateStepper activeStep={activeStep} setActiveStep={setActiveStep} />
+      {activeStep === 0 && (
+        <div>
+          <div style={{ marginBottom: '2rem', marginTop: '2rem' }}>
+            <TextField
+              value={title}
+              onChange={({ target }) => setTitle(target.value)}
+              placeholder="Title..."
+              style={{ width: '100%' }}
+              label="Title"
+              variant="outlined"
+            />
+          </div>
+          <TextField
+            value={description}
+            onChange={({ target }) => setDescription(target.value)}
+            placeholder="Description..."
+            style={{ width: '100%' }}
+            multiline
+            rows={3}
+            variant="outlined"
+            label="Description"
+          />
+        </div>
+      )}
+      {activeStep === 1 && (
+        <div>
+          <form onSubmit={createNewTemplate}>
+            <TextField
+              value={newTemplate}
+              onChange={({ target }) => setNewTemplate(target.value)}
+              placeholder="New list name."
+              style={{ width: '100%' }}
+              variant="outlined"
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              style={{ marginTop: '1rem' }}
+            >
+              Add list
+            </Button>
+          </form>
+          <div style={{ marginTop: '3rem' }}>
+            <Typography variant="h5">Lists</Typography>
+            <List dense>
+              {templates.map((template: string) => (
+                <ListItem key={template} button>
+                  <ListItemText id={template} primary={template} />
+                  <ListItemSecondaryAction>
+                    <Checkbox
+                      edge="end"
+                      onChange={handleToggle(template)}
+                      checked={selected.indexOf(template) !== -1}
+                      inputProps={{ 'aria-labelledby': template }}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+          </div>
+        </div>
+      )}
     </Container>
   );
 };
