@@ -15,6 +15,7 @@ type Template struct {
 	Official    bool
 	UUID        string
 	Private     bool
+	Lists       string
 }
 
 // Serialize template data into json

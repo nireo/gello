@@ -67,12 +67,19 @@ func createTemplate(c *gin.Context) {
 	type RequestBody struct {
 		Title       string `json:"title" binding:"required"`
 		Description string `json:"description" binding:"required"`
+		Lists       string `json:"lists" binding:"required"`
+		Private     string `json:"private" binding:"required"`
 	}
 
 	var body RequestBody
 	if err := c.BindJSON(&body).Error; err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
+	}
+
+	privateValue := false
+	if body.Private == "true" {
+		privateValue = true
 	}
 
 	uuid := common.GenerateUUID()
@@ -83,6 +90,8 @@ func createTemplate(c *gin.Context) {
 		UUID:        uuid,
 		User:        user,
 		UserID:      user.ID,
+		Private:     privateValue,
+		Lists:       body.Lists,
 	}
 
 	db.NewRecord(newTemplate)
@@ -99,6 +108,8 @@ func updateTemplate(c *gin.Context) {
 	type RequestBody struct {
 		Title       string `json:"title" binding:"required"`
 		Description string `json:"description" binding:"required"`
+		Private     string `json:"private" binding:"required"`
+		Lists       string `json:"lists" binding:"required"`
 	}
 
 	var body RequestBody
