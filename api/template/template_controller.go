@@ -3,6 +3,7 @@ package template
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -15,6 +16,12 @@ type JSON = common.JSON
 
 // User model alias
 type User = models.User
+
+// Board model alias
+type Board = models.Board
+
+// List model alias
+type List = models.List
 
 // Template model alias
 type Template = models.Template
@@ -158,5 +165,66 @@ func deleteTemplate(c *gin.Context) {
 	}
 
 	db.Delete(&template)
+	c.Status(http.StatusNoContent)
+}
+
+// the function for creating the new board with the lists in the template
+func applyTemplate(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	id := c.Param("id")
+	user := c.MustGet("user").(User)
+
+	if id == "" {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	type RequestBody struct {
+		Title string `json:"title" binding:"required"`
+	}
+
+	var body RequestBody
+	if err := c.BindJSON(&body).Error; err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	var template Template
+	if err := db.Where("uuid = ?", id).First(&template).Error; err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "template has not been found"})
+		return
+	}
+
+	if template.Private && template.UserID != user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
+	// Create new board
+	boardUUID := common.GenerateUUID()
+	board := Board{
+		Title:  body.Title,
+		UUID:   boardUUID,
+		Color:  "blue",
+		UserID: user.ID,
+	}
+
+	db.NewRecord(board)
+	db.Create(&board)
+
+	// Create the lists
+	lists := strings.Split(template.Lists, "|")
+	for _, list := range lists {
+		listUUID := common.GenerateUUID()
+		newList := List{
+			Title:   list,
+			UUID:    listUUID,
+			BoardID: board.ID,
+		}
+
+		db.NewRecord(newList)
+		db.Save(&newList)
+	}
+
 	c.Status(http.StatusNoContent)
 }
