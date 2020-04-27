@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Icon from '@material-ui/core/Icon';
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -6,6 +6,10 @@ import Create from '../templates/Create';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+import { Template } from '../../interfaces/Template';
+import { AppState } from '../../store';
+import { getTemplatesAction } from '../../actions/index';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,9 +29,21 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const Templates: React.FC = () => {
+type Props = {
+  templates: Template[];
+  getTemplatesAction: () => void;
+};
+
+const Templates: React.FC<Props> = ({ templates, getTemplatesAction }) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [loaded, setLoaded] = useState<boolean>(false);
   const classes = useStyles();
+  useEffect(() => {
+    if (!loaded) {
+      getTemplatesAction();
+      setLoaded(true);
+    }
+  }, [loaded]);
 
   const closeModal = () => {
     setOpen(false);
@@ -45,7 +61,7 @@ export const Templates: React.FC = () => {
         }}
       >
         <div className={classes.paper}>
-          <Create />
+          <Create setOpen={setOpen} />
         </div>
       </Modal>
       <div style={{ display: 'flex' }}>
@@ -65,3 +81,9 @@ export const Templates: React.FC = () => {
     </div>
   );
 };
+
+const mapStateToProps = (state: AppState) => ({
+  templates: state.templates,
+});
+
+export default connect(mapStateToProps, { getTemplatesAction })(Templates);

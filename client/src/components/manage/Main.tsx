@@ -11,7 +11,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import CreateBoard from './CreateBoard';
 import { User } from '../../interfaces/User';
 import { Boards } from './Boards';
-import { Templates } from './Templates';
+import Templates from './Templates';
 
 type Props = {
   dispatch: any;

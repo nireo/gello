@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, Dispatch, SetStateAction } from 'react';
 import Container from '@material-ui/core/Container';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -16,9 +16,10 @@ import { createTemplateAction } from '../../actions';
 
 type Props = {
   createTemplateAction: (template: CreateTemplate) => void;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const Create: React.FC<Props> = ({ createTemplateAction }) => {
+const Create: React.FC<Props> = ({ createTemplateAction, setOpen }) => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [templates, setTemplates] = useState<string[]>([]);
@@ -57,6 +58,7 @@ const Create: React.FC<Props> = ({ createTemplateAction }) => {
     };
 
     createTemplateAction(templateObject);
+    setOpen(false);
   };
 
   return (
