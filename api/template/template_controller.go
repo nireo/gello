@@ -3,7 +3,6 @@ package template
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -29,22 +28,10 @@ type Template = models.Template
 
 func getTemplates(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
-	page := c.Param("page")
 	user := c.MustGet("user").(User)
 
-	if page == "" {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "you need to provide a page"})
-		return
-	}
-
-	pageNumber, err := strconv.Atoi(page)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "error occurred while parsing page"})
-		return
-	}
-
 	var templates []Template
-	if err := db.Find(&templates).Offset(pageNumber * 10).Limit(10).Error; err != nil {
+	if err := db.Find(&templates).Error; err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "no templates found"})
 		return
 	}
