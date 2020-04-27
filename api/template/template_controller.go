@@ -70,7 +70,6 @@ func createTemplate(c *gin.Context) {
 	fmt.Println(body)
 	if err := c.BindJSON(&body); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
