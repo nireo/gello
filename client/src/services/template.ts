@@ -19,7 +19,7 @@ export const getTemplates = async () => {
 };
 
 export const createTemplate = async (newTemplate: CreateTemplate) => {
-  const response = await axios.post(baseUrl, { newTemplate }, getConfig());
+  const response = await axios.post(baseUrl, newTemplate, getConfig());
   return response.data;
 };
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Icon from '@material-ui/core/Icon';
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import Typography from '@material-ui/core/Typography';
-import { Create } from '../templates/Create';
+import Create from '../templates/Create';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';

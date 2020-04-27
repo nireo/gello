@@ -10,8 +10,15 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { Button } from '@material-ui/core';
 import { CreateStepper } from './CreateStepper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { CreateTemplate } from '../../interfaces/Template';
+import { connect } from 'react-redux';
+import { createTemplateAction } from '../../actions';
 
-export const Create: React.FC = () => {
+type Props = {
+  createTemplateAction: (template: CreateTemplate) => void;
+};
+
+const Create: React.FC<Props> = ({ createTemplateAction }) => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [templates, setTemplates] = useState<string[]>([]);
@@ -42,12 +49,14 @@ export const Create: React.FC = () => {
   };
 
   const submitNewTemplate = () => {
-    const templateObject = {
-      private: privateTemplate,
+    const templateObject: CreateTemplate = {
+      private: privateTemplate ? 'true' : 'false',
       lists: templates.join('|'),
       title,
       description,
     };
+
+    createTemplateAction(templateObject);
   };
 
   return (
@@ -130,10 +139,14 @@ export const Create: React.FC = () => {
             }
           />
           <div>
-            <Button variant="contained">Create template</Button>
+            <Button onClick={() => submitNewTemplate()} variant="contained">
+              Create template
+            </Button>
           </div>
         </div>
       )}
     </Container>
   );
 };
+
+export default connect(null, { createTemplateAction })(Create);

@@ -1,6 +1,7 @@
 package template
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -79,8 +80,10 @@ func createTemplate(c *gin.Context) {
 	}
 
 	var body RequestBody
-	if err := c.BindJSON(&body).Error; err != nil {
+	fmt.Println(body)
+	if err := c.BindJSON(&body); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
+		fmt.Println(err)
 		return
 	}
 
@@ -120,7 +123,7 @@ func updateTemplate(c *gin.Context) {
 	}
 
 	var body RequestBody
-	if err := c.BindJSON(&body).Error; err != nil {
+	if err := c.BindJSON(&body); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
@@ -184,7 +187,7 @@ func applyTemplate(c *gin.Context) {
 	}
 
 	var body RequestBody
-	if err := c.BindJSON(&body).Error; err != nil {
+	if err := c.BindJSON(&body); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}

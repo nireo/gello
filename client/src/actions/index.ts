@@ -3,6 +3,7 @@ export * from './itemActions';
 export * from './boardActions';
 export * from './activeActionts';
 export * from './userActions';
+export * from './templateAction';
 
 export const CONSTANTS = {
   ADD_ITEM: 'ADD_ITEM',
