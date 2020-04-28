@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { Template } from '../../interfaces/Template';
 import { AppState } from '../../store';
 import { getTemplatesAction } from '../../actions/index';
+import formatDate from '../../utils/date';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -77,7 +78,21 @@ const Templates: React.FC<Props> = ({ templates, getTemplatesAction }) => {
         Here you can find premade boards, so that you can get more easily.
       </Typography>
       <h4>Official templates</h4>
+      {templates.map((template: Template) => (
+        <div>
+          <Typography>{template.title}</Typography>
+          <Typography color="textSecondary">{template.description}</Typography>
+          <Typography color="textSecondary">{template.description}</Typography>
+        </div>
+      ))}
       <h4>Community templates</h4>
+      {templates.map((template: Template) => (
+        <div>
+          <Typography>{template.title}</Typography>
+          <Typography color="textSecondary">{template.description}</Typography>
+          <Typography color="textSecondary">{template.description}</Typography>
+        </div>
+      ))}
     </div>
   );
 };
