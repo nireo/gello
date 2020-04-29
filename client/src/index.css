@@ -192,3 +192,12 @@ code {
   color: black;
   text-decoration: none;
 }
+
+.template-box {
+  margin-right: 2rem;
+  border: 0.0625rem solid #dadce0;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  width: 200px;
+  cursor: pointer;
+}

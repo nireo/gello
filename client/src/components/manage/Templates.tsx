@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-  templates: Template[];
+  templates: any;
   getTemplatesAction: () => void;
 };
 
@@ -78,21 +78,29 @@ const Templates: React.FC<Props> = ({ templates, getTemplatesAction }) => {
         Here you can find premade boards, so that you can get more easily.
       </Typography>
       <h4>Official templates</h4>
-      {templates.map((template: Template) => (
-        <div>
-          <Typography>{template.title}</Typography>
-          <Typography color="textSecondary">{template.description}</Typography>
-          <Typography color="textSecondary">{template.description}</Typography>
-        </div>
-      ))}
+      <div style={{ display: 'flex' }}>
+        {templates.templates.map((template: Template) => (
+          <div className="template-box">
+            <Typography>{template.title}</Typography>
+            <Typography color="textSecondary">
+              {template.description}
+            </Typography>
+            <Typography>{formatDate(template.created_at)}</Typography>
+          </div>
+        ))}
+      </div>
       <h4>Community templates</h4>
-      {templates.map((template: Template) => (
-        <div>
-          <Typography>{template.title}</Typography>
-          <Typography color="textSecondary">{template.description}</Typography>
-          <Typography color="textSecondary">{template.description}</Typography>
-        </div>
-      ))}
+      <div style={{ display: 'flex' }}>
+        {templates.templates.map((template: Template) => (
+          <div>
+            <Typography>{template.title}</Typography>
+            <Typography color="textSecondary">
+              {template.description}
+            </Typography>
+            <Typography>{formatDate(template.created_at)}</Typography>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
