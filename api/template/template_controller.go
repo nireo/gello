@@ -228,7 +228,7 @@ func getTemplateWithID(c *gin.Context) {
 	}
 
 	var template Template
-	if err := db.Where("uuid = ?", template).First(&template).Error; err != nil {
+	if err := db.Where("uuid = ?", id).First(&template).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}

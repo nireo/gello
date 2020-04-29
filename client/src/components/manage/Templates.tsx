@@ -11,6 +11,7 @@ import { Template } from '../../interfaces/Template';
 import { AppState } from '../../store';
 import { getTemplatesAction } from '../../actions/index';
 import formatDate from '../../utils/date';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -80,13 +81,18 @@ const Templates: React.FC<Props> = ({ templates, getTemplatesAction }) => {
       <h4>Official templates</h4>
       <div style={{ display: 'flex' }}>
         {templates.templates.map((template: Template) => (
-          <div className="template-box">
-            <Typography>{template.title}</Typography>
-            <Typography color="textSecondary">
-              {template.description}
-            </Typography>
-            <Typography>{formatDate(template.created_at)}</Typography>
-          </div>
+          <Link
+            to={`template/${template.uuid}`}
+            style={{ textDecoration: 'none', color: 'black' }}
+          >
+            <div className="template-box">
+              <Typography>{template.title}</Typography>
+              <Typography color="textSecondary">
+                {template.description}
+              </Typography>
+              <Typography>{formatDate(template.created_at)}</Typography>
+            </div>
+          </Link>
         ))}
       </div>
       <h4>Community templates</h4>

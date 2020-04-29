@@ -11,6 +11,7 @@ import { AppState } from './store';
 import { checkLocalStorage } from './actions';
 import { User } from './interfaces/User';
 import { PrivateRoute } from './components/user/ProtectedRoute';
+import SingleTemplate from './components/manage/SingleTemplate';
 
 type Props = {
   user: User;
@@ -31,6 +32,11 @@ const App: React.FC<Props> = ({ user, checkLocalStorage }) => {
       <Navbar />
       <Switch>
         <Route path="/" exact render={() => <WelcomeMain />} />
+        <Route
+          path="/template/:id"
+          exact
+          render={({ match }) => <SingleTemplate id={match.params.id} />}
+        />
         <PrivateRoute path="/home" exact user={user}>
           <ManageMain />
         </PrivateRoute>

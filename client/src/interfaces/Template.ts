@@ -10,6 +10,8 @@ export interface Template {
   description: string;
   lists: string;
   created_at: string;
+  uuid: string;
+  official: boolean;
 }
 
 export interface TemplateState {

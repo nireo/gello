@@ -4,6 +4,7 @@ import { AppState } from '../../store/index';
 import Container from '@material-ui/core/Container';
 import { Template } from '../../interfaces/Template';
 import { getTemplateWithID } from '../../services/template';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 type Props = {
   id: string;
@@ -24,7 +25,17 @@ const SingleTemplate: React.FC<Props> = ({ id }) => {
     }
   }, [loaded]);
 
-  return <Container></Container>;
+  return (
+    <Container>
+      {template === null ? (
+        <div style={{ marginTop: '4rem', textAlign: 'center' }}>
+          <CircularProgress />
+        </div>
+      ) : (
+        <div>{template.title}</div>
+      )}
+    </Container>
+  );
 };
 
 const mapStateToProps = (state: AppState) => ({

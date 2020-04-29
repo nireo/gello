@@ -117,7 +117,7 @@ class Main extends React.Component<Props> {
     if (active === null) {
       return (
         <Container>
-          <Typography variant="h2">
+          <Typography variant="h4" style={{ marginTop: '4rem' }}>
             The board you're looking for is private or it's not found.
           </Typography>
         </Container>
