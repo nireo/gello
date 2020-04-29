@@ -25,5 +25,7 @@ func (template *Template) Serialize() common.JSON {
 		"description": template.Description,
 		"created_at":  template.CreatedAt,
 		"lists":       template.Lists,
+		"official":    template.Official,
+		"uuid":        template.UUID,
 	}
 }

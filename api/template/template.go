@@ -10,6 +10,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	template := r.Group("/template")
 	{
 		template.GET("/", getTemplates)
+		template.GET("/:id", getTemplateWithID)
 		template.POST("/", middlewares.Authorized, createTemplate)
 		template.POST("/:id", middlewares.Authorized, applyTemplate)
 		template.PATCH("/:id", middlewares.Authorized, updateTemplate)
