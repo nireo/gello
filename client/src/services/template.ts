@@ -18,6 +18,11 @@ export const getTemplates = async () => {
   return response.data;
 };
 
+export const getTemplateWithID = async (id: string) => {
+  const response = await axios.get(`${baseUrl}/${id}`);
+  return response.data;
+};
+
 export const createTemplate = async (newTemplate: CreateTemplate) => {
   const response = await axios.post(baseUrl, newTemplate, getConfig());
   return response.data;

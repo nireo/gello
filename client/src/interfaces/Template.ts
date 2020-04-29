@@ -11,3 +11,8 @@ export interface Template {
   lists: string;
   created_at: string;
 }
+
+export interface TemplateState {
+  userTemplates: Template[];
+  templates: Template[];
+}
