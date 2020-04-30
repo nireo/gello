@@ -12,6 +12,7 @@ import Modal from '@material-ui/core/Modal';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { createBoardFromTemplateAction } from '../../actions';
+import { User } from '../../interfaces/User';
 
 type Props = {
   id: string;
@@ -31,12 +32,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface TemplateWithUser {
+  user: User;
+  template: Template;
+}
+
 const SingleTemplate: React.FC<Props> = ({
   id,
   createBoardFromTemplateAction,
 }) => {
   const [loaded, setLoaded] = useState<boolean>(false);
-  const [template, setTemplate] = useState<Template | null>(null);
+  const [template, setTemplate] = useState<TemplateWithUser | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [boardName, setBoardName] = useState<string>('');
   const classes = useStyles();
@@ -103,9 +109,12 @@ const SingleTemplate: React.FC<Props> = ({
         <div style={{ marginTop: '4rem' }}>
           <Grid container>
             <Grid item xs={4}>
-              <Typography variant="h4">{template.title}</Typography>
+              <Typography variant="h4">{template.template.title}</Typography>
+              <Typography variant="subtitle1">
+                By {template.user.username}
+              </Typography>
               <Typography color="textSecondary">
-                {template.description}
+                {template.template.description}
               </Typography>
               <div style={{ marginTop: '2rem' }}>
                 <Button variant="contained" onClick={() => setOpen(true)}>
@@ -118,7 +127,7 @@ const SingleTemplate: React.FC<Props> = ({
             </Grid>
             <Grid item xs={8}>
               <Typography>Lists in template</Typography>
-              {template.lists.split('|').map((list: string) => (
+              {template.template.lists.split('|').map((list: string) => (
                 <div
                   className="template-box"
                   style={{

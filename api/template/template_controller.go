@@ -233,5 +233,14 @@ func getTemplateWithID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, template.Serialize())
+	var user User
+	if err := db.Where("id = ?", template.UserID).First(&user).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"user":     user.Serialize(),
+		"template": template.Serialize(),
+	})
 }
