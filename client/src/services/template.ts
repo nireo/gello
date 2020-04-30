@@ -33,6 +33,11 @@ export const deleteTemplate = async (id: string) => {
   return response.data;
 };
 
+export const useTemplate = async (id: string, title: string) => {
+  const response = await axios.post(`${baseUrl}/${id}`, { title }, getConfig());
+  return response.data;
+};
+
 export const updateTemplate = async (
   updatedTemplate: CreateTemplate,
   id: string

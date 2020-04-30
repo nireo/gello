@@ -2,17 +2,18 @@ import { Dispatch } from 'redux';
 import {
   getBoards,
   createBoard as serviceCreateBoard,
-  deleteBoard as serviceDeleteBoard
+  deleteBoard as serviceDeleteBoard,
 } from '../services/board';
 import { CONSTANTS } from '.';
 import { Board, CreateBoard } from '../interfaces/Board';
+import { useTemplate } from '../services/template';
 
 export const initBoards = () => {
   return async (dispatch: Dispatch) => {
     const data: Board[] = await getBoards();
     dispatch({
       type: CONSTANTS.INIT_BOARDS,
-      payload: data
+      payload: data,
     });
   };
 };
@@ -22,7 +23,7 @@ export const createBoard = (newBoard: CreateBoard) => {
     const data: Board = await serviceCreateBoard(newBoard);
     dispatch({
       type: CONSTANTS.CREATE_NEW_BOARD,
-      data: data
+      data: data,
     });
   };
 };
@@ -32,7 +33,20 @@ export const deleteBoard = (id: string) => {
     await serviceDeleteBoard(id);
     dispatch({
       type: CONSTANTS.REMOVE_BOARD,
-      id: id
+      id: id,
+    });
+  };
+};
+
+export const createBoardFromTemplateAction = (
+  id: string,
+  boardTitle: string
+) => {
+  return async (dispatch: Dispatch) => {
+    const newBoard = await useTemplate(id, boardTitle);
+    dispatch({
+      type: CONSTANTS.CREATE_NEW_BOARD,
+      data: newBoard,
     });
   };
 };

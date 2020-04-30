@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, ChangeEvent } from 'react';
 import { connect } from 'react-redux';
 import { AppState } from '../../store/index';
 import Container from '@material-ui/core/Container';
@@ -11,9 +11,11 @@ import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { createBoardFromTemplateAction } from '../../actions';
 
 type Props = {
   id: string;
+  createBoardFromTemplateAction: (id: string, boardTitle: string) => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -29,7 +31,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const SingleTemplate: React.FC<Props> = ({ id }) => {
+const SingleTemplate: React.FC<Props> = ({
+  id,
+  createBoardFromTemplateAction,
+}) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [template, setTemplate] = useState<Template | null>(null);
   const [open, setOpen] = useState<boolean>(false);
@@ -51,6 +56,12 @@ const SingleTemplate: React.FC<Props> = ({ id }) => {
     setOpen(false);
   };
 
+  const useTemplate = (event: ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    createBoardFromTemplateAction(id, boardName);
+    setOpen(false);
+  };
+
   return (
     <Container maxWidth="md">
       <Modal
@@ -63,7 +74,7 @@ const SingleTemplate: React.FC<Props> = ({ id }) => {
         }}
       >
         <div className={classes.paper}>
-          <form>
+          <form onSubmit={useTemplate}>
             <Typography variant="h6">Use template</Typography>
             <Typography color="textSecondary">
               Insert a name for the board which will be using this template.
@@ -131,4 +142,6 @@ const mapStateToProps = (state: AppState) => ({
   templates: state.templates,
 });
 
-export default connect(mapStateToProps, null)(SingleTemplate);
+export default connect(mapStateToProps, { createBoardFromTemplateAction })(
+  SingleTemplate
+);
