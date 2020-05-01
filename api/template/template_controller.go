@@ -260,5 +260,8 @@ func likeTemplate(c *gin.Context) {
 		return
 	}
 
+	template.Likes = template.Likes + 1
+	db.Save(&template)
+
 	c.Status(http.StatusNoContent)
 }

@@ -16,6 +16,7 @@ type Template struct {
 	UUID        string
 	Private     bool
 	Lists       string
+	Likes       uint
 }
 
 // Serialize template data into json
@@ -27,5 +28,6 @@ func (template *Template) Serialize() common.JSON {
 		"lists":       template.Lists,
 		"official":    template.Official,
 		"uuid":        template.UUID,
+		"likes":       template.Likes,
 	}
 }
