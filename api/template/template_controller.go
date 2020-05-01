@@ -244,3 +244,21 @@ func getTemplateWithID(c *gin.Context) {
 		"template": template.Serialize(),
 	})
 }
+
+func likeTemplate(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	id := c.Param("id")
+
+	if id == "" {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	var template Template
+	if err := db.Where("uuid = ?", id).First(&template).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	c.Status(http.StatusNoContent)
+}
