@@ -49,6 +49,7 @@ export const checkLocalStorage = () => {
 
 export const logoutAction = () => {
   return (dispatch: Dispatch) => {
+    localStorage.clear();
     dispatch({
       type: CONSTANTS.LOGOUT,
     });
