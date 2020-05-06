@@ -109,9 +109,10 @@ func create(c *gin.Context) {
 	board, ok := board.GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
+		return
 	}
 
-	if board.UserID == user.ID {
+	if board.UserID != user.ID {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
