@@ -13,6 +13,8 @@ import { setActiveBoard } from '../../actions';
 import { getSingleBoard } from '../../services/board';
 import { CreateBoard } from '../../interfaces/Board';
 import { Container, Typography } from '@material-ui/core';
+import DashboardIcons from '@material-ui/icons/Dashboard';
+import IconButton from '@material-ui/core/IconButton';
 
 const drawerWidth = 339;
 
@@ -163,7 +165,9 @@ class Main extends React.Component<Props> {
                 </div>
               )}
               <div>
-                <button onClick={this.handleOpen}>Open drawer</button>
+                <IconButton onClick={this.handleOpen}>
+                  <DashboardIcons />
+                </IconButton>
               </div>
             </div>
             <Droppable

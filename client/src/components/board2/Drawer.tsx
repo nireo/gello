@@ -5,6 +5,9 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CloseIcon from '@material-ui/icons/Close';
 import BoardActions from './DrawerPages/BoardActions';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 type Props = {
   closeDrawer: () => void;
@@ -28,7 +31,7 @@ export const DrawerContent: React.FC<Props> = ({ closeDrawer, id }) => {
           style={{
             paddingLeft: '10px',
             display: 'inline-block',
-            textAlign: 'center'
+            textAlign: 'center',
           }}
         >
           Menu
@@ -36,7 +39,7 @@ export const DrawerContent: React.FC<Props> = ({ closeDrawer, id }) => {
         <div
           style={{
             paddingLeft: `${page === '' ? '14' : '10'}rem`,
-            display: 'inline-block'
+            display: 'inline-block',
           }}
         >
           <IconButton onClick={closeDrawer}>
@@ -45,41 +48,21 @@ export const DrawerContent: React.FC<Props> = ({ closeDrawer, id }) => {
         </div>
       </div>
       {page === '' && (
-        <nav>
-          <ul>
-            <li
-              className="nav-link"
-              style={{ listStyle: 'none', marginBottom: '8px' }}
-            >
-              <button onClick={() => setPage('about')} className="link-button">
-                About this board
-              </button>
-            </li>
-            <li
-              className="nav-link"
-              style={{ listStyle: 'none', marginBottom: '8px' }}
-            >
-              <button onClick={() => setPage('color')} className="link-button">
-                Change board color
-              </button>
-            </li>
-            <li
-              className="nav-link"
-              style={{ listStyle: 'none', marginBottom: '8px' }}
-            >
-              <button
-                onClick={() => setPage('actions')}
-                className="link-button"
-              >
-                Board actions
-              </button>
-            </li>
-          </ul>
-        </nav>
+        <div>
+          <List component="nav" aria-label="secondary mailbox folders">
+            <ListItem button onClick={() => setPage('about')}>
+              <ListItemText primary="About this board" />
+            </ListItem>
+            <ListItem button onClick={() => setPage('color')}>
+              <ListItemText primary="Change board color" />
+            </ListItem>
+            <ListItem button onClick={() => setPage('actions')}>
+              <ListItemText primary="Board actions" />
+            </ListItem>
+          </List>
+        </div>
       )}
-      {page === 'about' && (
-        <AboutBoard title="Board title" description="You can a" />
-      )}
+      {page === 'about' && <AboutBoard title="Board title" description="" />}
       {page === 'color' && <ChangeBackground />}
       {page === 'actions' && <BoardActions id={id} />}
     </div>
