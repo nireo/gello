@@ -4,7 +4,7 @@ import {
   UserWithToken,
 } from '../interfaces/User';
 import { Dispatch } from 'redux';
-import { login, register } from '../services/user';
+import { login, register, removeUser } from '../services/user';
 import { CONSTANTS } from './index';
 import setTokens from '../utils/setTokens';
 
@@ -50,6 +50,15 @@ export const checkLocalStorage = () => {
 export const logoutAction = () => {
   return (dispatch: Dispatch) => {
     localStorage.clear();
+    dispatch({
+      type: CONSTANTS.LOGOUT,
+    });
+  };
+};
+
+export const removeUserAction = () => {
+  return async (dispatch: Dispatch) => {
+    await removeUser();
     dispatch({
       type: CONSTANTS.LOGOUT,
     });
