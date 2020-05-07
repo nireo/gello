@@ -18,6 +18,12 @@ type User = models.User
 // JSON type alias
 type JSON = common.JSON
 
+// Template model alias
+type Template = models.Template
+
+// Board model alias
+type Board = models.Board
+
 // Returns the user struct or a boolean telling if the user was found
 func getUserWithUsername(username string, db *gorm.DB) (User, bool) {
 	var user User
@@ -136,4 +142,33 @@ func loginController(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, addTokenWithUserToResponse(user.Serialize()))
+}
+
+func removeUser(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	user := c.MustGet("user").(User)
+
+	// remove all of the user's templates
+	var templates []Template
+	if err := db.Where("user_id = ?", user.ID).Find(&templates).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	for index := range templates {
+		db.Delete(&templates[index])
+	}
+
+	// remove all of the user's boards
+	var boards []Board
+	if err := db.Where("user_id = ?", user.ID).Find(&boards).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	for index := range boards {
+		db.Delete(&boards[index])
+	}
+
+	db.Delete(&user)
 }
