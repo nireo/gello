@@ -12,6 +12,7 @@ import { checkLocalStorage } from './actions';
 import { User } from './interfaces/User';
 import { PrivateRoute } from './components/user/ProtectedRoute';
 import SingleTemplate from './components/manage/SingleTemplate';
+import Settings from './components/user/Settings';
 
 type Props = {
   user: User;
@@ -22,10 +23,8 @@ const App: React.FC<Props> = ({ user, checkLocalStorage }) => {
   useEffect(() => {
     if (!user) {
       checkLocalStorage();
-      console.log('hello');
     }
   }, [user, checkLocalStorage]);
-  console.log(user);
 
   return (
     <Router>
@@ -47,6 +46,9 @@ const App: React.FC<Props> = ({ user, checkLocalStorage }) => {
         />
         <Route path="/register" exact render={() => <Register />} />
         <Route path="/login" exact render={() => <Login />} />
+        <PrivateRoute path="/settings" exact user={user}>
+          <Settings />
+        </PrivateRoute>
       </Switch>
     </Router>
   );
