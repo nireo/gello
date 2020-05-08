@@ -12,5 +12,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		auth.POST("/login", loginController)
 		auth.POST("/register", registerController)
 		auth.DELETE("/remove", middlewares.Authorized, removeUser)
+		auth.PATCH("/update", middlewares.Authorized, updateUser)
 	}
 }

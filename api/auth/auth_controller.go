@@ -34,6 +34,16 @@ func getUserWithUsername(username string, db *gorm.DB) (User, bool) {
 	return user, true
 }
 
+// Returns the user struct with a boolean informing the user was found
+func getUserWithEmail(email string, db *gorm.DB) (User, bool) {
+	var user User
+	if err := db.Where("email = ?", email).First(&user).Error; err != nil {
+		return user, false
+	}
+
+	return user, true
+}
+
 func deleteUser(username string, db *gorm.DB) bool {
 	user, ok := getUserWithUsername(username, db)
 	if !ok {
@@ -171,4 +181,52 @@ func removeUser(c *gin.Context) {
 	}
 
 	db.Delete(&user)
+}
+
+func updateUser(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	user := c.MustGet("user").(models.User)
+
+	type RequestBody struct {
+		Username string `json:"username" binding:"required"`
+		Email    string `json:"email" binding:"required"`
+	}
+
+	var body RequestBody
+	if err := c.BindJSON(&body); err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	// check that there is a difference in information
+	if user.Username == body.Username && user.Email == body.Email {
+		// return no content because the request was successfull, but there is no content to return
+		c.AbortWithStatus(http.StatusNoContent)
+		return
+	}
+
+	// check for new username
+	if user.Username != body.Username {
+		// check for conflicts
+		_, ok := getUserWithUsername(body.Username, db)
+		if ok {
+			c.AbortWithStatus(http.StatusConflict)
+			return
+		}
+
+		user.Username = body.Username
+	}
+
+	if user.Email != body.Email {
+		// check for conflitcts
+		_, ok := getUserWithEmail(body.Email, db)
+		if ok {
+			c.AbortWithStatus(http.StatusConflict)
+			return
+		}
+
+		user.Email = body.Email
+	}
+
+	c.Status(http.StatusNoContent)
 }
