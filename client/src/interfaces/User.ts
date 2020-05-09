@@ -2,6 +2,7 @@ export interface User {
   id: number;
   username: string;
   uuid: string;
+  email: string;
 }
 
 export interface LoginInterface {
@@ -18,4 +19,9 @@ export interface RegisterInterface {
 export interface UserWithToken {
   token: string;
   user: User;
+}
+
+export interface UpdateUser {
+  email: string;
+  username: string;
 }

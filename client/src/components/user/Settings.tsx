@@ -7,14 +7,24 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import { removeUserAction } from '../../actions';
 import TextField from '@material-ui/core/TextField';
+import { User, UpdateUser } from '../../interfaces/User';
+import { updateUser } from '../../services/user';
 
 type Props = {
   removeUserAction: () => void;
+  user: User | null;
 };
 
-const Settings: React.FC<Props> = ({ removeUserAction }) => {
+const Settings: React.FC<Props> = ({ removeUserAction, user }) => {
   const [newEmail, setNewEmail] = useState<string>('');
   const [showEmailForm, setShowEmailForm] = useState<boolean>(false);
+  const [newUsername, setNewUsername] = useState<string>('');
+  const [showUsernameForm, setShowUsernameForm] = useState<boolean>(false);
+
+  if (user === null) {
+    return null;
+  }
+
   const removeAccount = () => {
     if (
       window.confirm('Are you sure you want to delete all your information?')
@@ -26,6 +36,22 @@ const Settings: React.FC<Props> = ({ removeUserAction }) => {
 
   const updateEmail = (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const newInformation: UpdateUser = {
+      email: newEmail,
+      username: user.email,
+    };
+
+    updateUser(newInformation);
+  };
+
+  const updateUsername = (event: ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const newInformation: UpdateUser = {
+      email: user.email,
+      username: newUsername,
+    };
+
+    updateUser(newInformation);
   };
 
   return (
@@ -90,6 +116,12 @@ const Settings: React.FC<Props> = ({ removeUserAction }) => {
             Change email
           </Button>
         )}
+      </div>
+      <Divider style={{ marginBottom: '2rem', marginTop: '2rem' }} />
+      <div>
+        <form onSubmit={updateUsername} style={{ marginTop: '1rem' }}>
+          <TextField />
+        </form>
       </div>
     </Container>
   );
