@@ -119,9 +119,41 @@ const Settings: React.FC<Props> = ({ removeUserAction, user }) => {
       </div>
       <Divider style={{ marginBottom: '2rem', marginTop: '2rem' }} />
       <div>
-        <form onSubmit={updateUsername} style={{ marginTop: '1rem' }}>
-          <TextField />
-        </form>
+        <Typography variant="h5">Change your username</Typography>
+        <Typography variant="body1" color="textSecondary">
+          Update your username
+        </Typography>
+        {showUsernameForm ? (
+          <form onSubmit={updateUsername} style={{ marginTop: '1rem' }}>
+            <TextField
+              value={newUsername}
+              onChange={({ target }) => setNewUsername(target.value)}
+              placeholder="New username"
+              label="New username"
+              style={{ width: '100%' }}
+            />
+            <div style={{ marginTop: '1rem' }}>
+              <Button variant="contained" type="submit">
+                Update
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => setShowUsernameForm(false)}
+                style={{ marginLeft: '0.5rem' }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <Button
+            variant="contained"
+            style={{ marginTop: '1rem' }}
+            onClick={() => setShowUsernameForm(true)}
+          >
+            Change username
+          </Button>
+        )}
       </div>
     </Container>
   );
