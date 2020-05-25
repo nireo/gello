@@ -24,6 +24,18 @@ type Template = models.Template
 // Board model alias
 type Board = models.Board
 
+// RegisterBody contains the JSON fields used in the register controller
+type RegisterBody struct {
+	Email    string `json:"email" binding:"required"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+// LoginBody contains the JSON fields used in the login controller
+type LoginBody struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
 
 // Returns the user struct or a boolean telling if the user was found
 func getUserWithUsername(username string, db *gorm.DB) (User, bool) {
@@ -99,6 +111,7 @@ func registerController(c *gin.Context) {
     c.Status(http.StatusBadRequest)
     return
   }
+
 
 	// if the user was found, return a conflict notice that the user already exists
 	_, ok := getUserWithUsername(requestBody.Username, db)

@@ -248,6 +248,7 @@ func getTemplateWithID(c *gin.Context) {
 func likeTemplate(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
+	user := c.MustGet("user").(User)
 
 	if id == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -257,6 +258,12 @@ func likeTemplate(c *gin.Context) {
 	var template Template
 	if err := db.Where("uuid = ?", id).First(&template).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	// check the that the user isn't likeing his own template
+	if template.UserID != user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 
