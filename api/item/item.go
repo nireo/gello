@@ -1,13 +1,16 @@
 package item
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/nireo/gello/lib/middlewares"
+)
 
 // ApplyRoutes to gin engine
 func ApplyRoutes(r *gin.RouterGroup) {
 	item := r.Group("/items")
 	{
-		item.POST("/:id", create)
-		item.DELETE("/:id", delete)
-		item.PATCH("/:id", update)
+		item.POST("/:id", middlewares.Authorized, create)
+		item.DELETE("/:id", middlewares.Authorized, delete)
+		item.PATCH("/:id", middlewares.Authorized, update)
 	}
 }

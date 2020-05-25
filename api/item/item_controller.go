@@ -19,6 +19,12 @@ type List = models.List
 // JSON type alias
 type JSON = common.JSON
 
+// Board model alias
+type Board = models.Board
+
+// User model alias
+type User = models.User
+
 func getItemWithID(id string, db *gorm.DB) (Item, bool) {
 	var item Item
 	if err := db.Where("uuid = ?", id).First(&item).First(&item).Error; err != nil {
@@ -30,6 +36,7 @@ func getItemWithID(id string, db *gorm.DB) (Item, bool) {
 
 func create(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
+	user := c.MustGet("user").(User)
 	id := c.Param("id")
 
 	if id == "" {
@@ -53,6 +60,12 @@ func create(c *gin.Context) {
 		return
 	}
 
+	// check that user owns list
+	if list.UserID != user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
 	item := Item{
 		Content:  body.Content,
 		ListID:   list.ID,
@@ -69,6 +82,7 @@ func create(c *gin.Context) {
 func delete(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
+	user := c.MustGet("user").(User)
 
 	if id == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -81,6 +95,17 @@ func delete(c *gin.Context) {
 		return
 	}
 
+	list, ok := list.GetListWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if list.UserID != user.ID {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
 	db.Delete(&item)
 	c.Status(http.StatusNoContent)
 }
@@ -88,6 +113,7 @@ func delete(c *gin.Context) {
 func update(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
+	user := c.MustGet("user").(User)
 
 	if id == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -117,6 +143,11 @@ func update(c *gin.Context) {
 		return
 	}
 
+	if list.UserID != user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
 	if item.ListID != list.ID {
 		item.ListID = list.ID
 	}
@@ -124,5 +155,5 @@ func update(c *gin.Context) {
 	item.Content = body.Content
 	db.Save(&item)
 
-	c.JSON(200, item.Serialize())
+	c.JSON(http.StatusOK, item.Serialize())
 }
