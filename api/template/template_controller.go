@@ -209,6 +209,7 @@ func applyTemplate(c *gin.Context) {
 			Title:   list,
 			UUID:    listUUID,
 			BoardID: board.ID,
+			UserID:  user.ID,
 		}
 
 		db.NewRecord(newList)

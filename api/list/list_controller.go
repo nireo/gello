@@ -22,6 +22,9 @@ type JSON = common.JSON
 // Item model alias
 type Item = models.Item
 
+// User model alias
+type User = models.User
+
 // RequestBody is the common request body between controllers
 type RequestBody struct {
 	Title string `json:"title" binding:"required"`
@@ -122,6 +125,7 @@ func create(c *gin.Context) {
 		Title:   body.Title,
 		UUID:    uuid,
 		BoardID: board.ID,
+		UserID:  user.ID,
 	}
 
 	db.NewRecord(list)
@@ -178,6 +182,7 @@ func update(c *gin.Context) {
 func copyList(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
+	user := c.MustGet("user").(User)
 
 	if id == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -196,6 +201,7 @@ func copyList(c *gin.Context) {
 		Title:   list.Title,
 		UUID:    uuid,
 		BoardID: list.BoardID,
+		UserID:  user.ID,
 	}
 
 	db.NewRecord(newList)

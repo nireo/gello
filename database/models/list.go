@@ -12,6 +12,7 @@ type List struct {
 	Items   []Item
 	BoardID uint
 	UUID    string
+	UserID  uint
 }
 
 // Serialize list data into JSON
