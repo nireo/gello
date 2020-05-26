@@ -16,6 +16,7 @@ type Board struct {
 	Color  string
 	UserID uint
 	User   User
+	Tags   []Tag
 }
 
 // Serialize board data into json
