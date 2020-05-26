@@ -8,8 +8,10 @@ import (
 // Tag data model
 type Tag struct {
 	gorm.Model
-	Color string
-	Label string
+	Color   string
+	Label   string
+	UUID    string
+	BoardID uint
 }
 
 // Serialize tag data to json

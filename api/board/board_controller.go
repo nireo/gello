@@ -22,6 +22,9 @@ type Item = models.Item
 // JSON type alias
 type JSON = common.JSON
 
+// Tag model alias
+type Tag = models.Tag
+
 // RequestBody struct
 type RequestBody struct {
 	Title string `json:"title" binding:"required"`
@@ -243,3 +246,48 @@ func shareBoard(c *gin.Context) {
 	c.JSON(http.StatusOK, board.Serialize())
 }
 */
+
+func addTagToBoard(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	user := c.MustGet("user").(models.User)
+	id := c.Param("id")
+
+	if id == "" {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	type TagRequestBody struct {
+		Color string `json:"color" binding:"required"`
+		Label string `json:"label" binding:"required"`
+	}
+
+	var body TagRequestBody
+	if err := c.BindJSON(&body).Error; err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	board, ok := GetBoardWithID(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if user.ID != board.UserID {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
+	newTag := Tag{
+		UUID:    common.GenerateUUID(),
+		Label:   body.Label,
+		Color:   body.Color,
+		BoardID: board.ID,
+	}
+
+	db.NewRecord(newTag)
+	db.Save(&newTag)
+
+	c.JSON(http.StatusOK, newTag.Serialize())
+}
