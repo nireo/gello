@@ -12,6 +12,7 @@ type Item struct {
 	UUID     string
 	ListID   uint
 	ListUUID string
+	TagID    uint
 }
 
 // Serialize item data into json

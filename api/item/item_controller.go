@@ -157,3 +157,40 @@ func update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, item.Serialize())
 }
+
+func addTagToItem(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	id := c.Param("id")
+
+	if id == "" {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	type RequestBody struct {
+		TagID string `json:"tag_id" binding:"required"`
+	}
+
+	var body RequestBody
+	if err := c.BindJSON(&body).Error; err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	var item Item
+	if err := db.Where("uuid = ?", id).First(&item).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	var tag models.Tag
+	if err := db.Where("uuid = ?", body.TagID).First(&tag).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	item.TagID = tag.ID
+
+	db.Save(&item)
+	c.JSON(http.StatusOK, item.Serialize())
+}

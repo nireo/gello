@@ -9,8 +9,9 @@ import (
 func ApplyRoutes(r *gin.RouterGroup) {
 	item := r.Group("/items")
 	{
-		item.POST("/:id", middlewares.Authorized, create)
+		item.POST("/create/:id", middlewares.Authorized, create)
 		item.DELETE("/:id", middlewares.Authorized, delete)
 		item.PATCH("/:id", middlewares.Authorized, update)
+		item.POST("/tag/:id", addTagToItem)
 	}
 }
