@@ -15,6 +15,7 @@ import { CreateBoard } from '../../interfaces/Board';
 import { Container, Typography } from '@material-ui/core';
 import DashboardIcons from '@material-ui/icons/Dashboard';
 import IconButton from '@material-ui/core/IconButton';
+import Modal from '@material-ui/core/Modal';
 
 const drawerWidth = 339;
 
@@ -25,6 +26,19 @@ const stylesMaterial = (theme: Theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
   },
 });
 
@@ -47,6 +61,7 @@ class Main extends React.Component<Props> {
     open: false,
     newTitle: '',
     showTitleForm: false,
+    selectedItem: { content: '' },
   };
 
   showTitleForm = () => {
@@ -126,11 +141,24 @@ class Main extends React.Component<Props> {
       );
     }
 
+    const closeModal = () => {
+      this.setState({
+        selectedItem: { content: '' },
+      });
+    };
+
     return (
       <div
         style={{ display: 'flex', height: '100vh' }}
         className={`color-${active.color}`}
       >
+        <Modal
+          open={this.state.selectedItem.content === ''}
+          onClose={closeModal}
+          className={classes.modal}
+        >
+          <div>Hello from modal</div>
+        </Modal>
         <DragDropContext onDragEnd={this.onDragEnd}>
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
