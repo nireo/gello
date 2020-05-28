@@ -2,11 +2,12 @@ import React, { useState, useEffect, ChangeEvent } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { Tag } from '../../interfaces/Item';
+import Typography from '@material-ui/core/Typography';
 
 type Props = {
   id: string;
   title: string;
-  tags: Tag;
+  tags: Tag[];
 };
 
 export const ItemEditor: React.FC<Props> = ({ id, title, tags }) => {
@@ -17,6 +18,7 @@ export const ItemEditor: React.FC<Props> = ({ id, title, tags }) => {
   useEffect(() => {
     if (!loaded) {
       setNewTitle(title);
+      setLoaded(true);
     }
   }, []);
 
@@ -42,6 +44,12 @@ export const ItemEditor: React.FC<Props> = ({ id, title, tags }) => {
         <Button variant="contained">Create tag</Button>
       </form>
       Choose from already existing tags
+      {tags.map((tag: Tag) => (
+        <div>
+          <div style={{ backgroundColor: tag.color }}></div>
+          <Typography color="textSecondary">{tag.label}</Typography>
+        </div>
+      ))}
     </div>
   );
 };

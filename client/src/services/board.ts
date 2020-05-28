@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { CreateBoard } from '../interfaces/Board';
+import { Tag } from '../interfaces/Item';
 const baseUrl: string = '/api/board/';
 
 let token: string | null = null;
@@ -10,8 +11,8 @@ export const setToken = (newToken: string) => {
 
 const getConfig = () => ({
   headers: {
-    Authorization: token
-  }
+    Authorization: token,
+  },
 });
 
 export const getBoards = async () => {
@@ -36,5 +37,10 @@ export const deleteBoard = async (id: string) => {
 
 export const updateBoard = async (updated: CreateBoard, id: string) => {
   const response = await axios.patch(`${baseUrl}${id}`, updated, getConfig());
+  return response.data;
+};
+
+export const addTagToBoard = async (newTag: Tag, id: string) => {
+  const response = await axios.post(`${baseUrl}/${id}`, newTag, getConfig());
   return response.data;
 };
