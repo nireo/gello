@@ -18,7 +18,7 @@ type Props = {
 export const BoardCard: React.FC<Props> = ({ text, id, index }) => {
   return (
     <Draggable draggableId={String(id)} index={index}>
-      {provided => (
+      {(provided) => (
         <CardContainer
           ref={provided.innerRef}
           {...provided.draggableProps}
