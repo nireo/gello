@@ -32,14 +32,6 @@ const stylesMaterial = (theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  paper: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
 });
 
 const ListContainer = styled.div`
@@ -61,7 +53,7 @@ class Main extends React.Component<Props> {
     open: false,
     newTitle: '',
     showTitleForm: false,
-    selectedItem: { content: '' },
+    selectedItem: null,
   };
 
   showTitleForm = () => {
@@ -153,11 +145,21 @@ class Main extends React.Component<Props> {
         className={`color-${active.color}`}
       >
         <Modal
-          open={this.state.selectedItem.content === ''}
+          open={this.state.selectedItem != null}
           onClose={closeModal}
           className={classes.modal}
         >
-          <div>Hello from modal</div>
+          <div
+            style={{
+              padding: '2rem',
+              backgroundColor: '#fff',
+              width: 400,
+              position: 'absolute',
+              border: '2px solid #000',
+            }}
+          >
+            hello
+          </div>
         </Modal>
         <DragDropContext onDragEnd={this.onDragEnd}>
           <div>

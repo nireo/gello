@@ -10,21 +10,25 @@ export const setToken = (newToken: string) => {
 
 const getConfig = () => ({
   headers: {
-    Authorization: token
-  }
+    Authorization: token,
+  },
 });
 
 export const createItem = async (item: CreateItem, id: string) => {
-  const response = await axios.post(`${baseUrl}${id}`, item);
+  const response = await axios.post(
+    `${baseUrl}create/${id}`,
+    item,
+    getConfig()
+  );
   return response.data;
 };
 
 export const deleteItem = async (id: string) => {
-  const response = await axios.delete(`${baseUrl}${id}`);
+  const response = await axios.delete(`${baseUrl}${id}`, getConfig());
   return response.data;
 };
 
 export const updateItem = async (item: UpdateItem, id: string) => {
-  const response = await axios.patch(`${baseUrl}${id}`, item);
+  const response = await axios.patch(`${baseUrl}${id}`, item, getConfig());
   return response.data;
 };
