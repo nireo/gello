@@ -5,6 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import { Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
+import { Item } from '../../interfaces/Item';
 
 const CardContainer = styled.div`
   margin-bottom: 8px;
@@ -14,9 +15,14 @@ type Props = {
   text: string;
   id: number;
   index: number;
+  setItem: (item: Item) => void;
 };
 
-export const BoardCard: React.FC<Props> = ({ text, id, index }) => {
+export const BoardCard: React.FC<Props> = ({ text, id, index, setItem }) => {
+  const handleSetItem = () => {
+    setItem({ content: text, uuid: text });
+  };
+
   return (
     <Draggable draggableId={String(id)} index={index}>
       {(provided) => (
@@ -27,8 +33,12 @@ export const BoardCard: React.FC<Props> = ({ text, id, index }) => {
         >
           <Card>
             <CardContent>
-              <Typography gutterBottom>{text}</Typography>
-              <Button variant="contained">Edit</Button>
+              <div style={{ display: 'flex' }}>
+                <Typography gutterBottom>{text}</Typography>
+                <Button variant="contained" onClick={() => handleSetItem()}>
+                  Edit
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </CardContainer>

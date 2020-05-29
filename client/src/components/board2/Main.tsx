@@ -16,6 +16,7 @@ import { Container, Typography } from '@material-ui/core';
 import DashboardIcons from '@material-ui/icons/Dashboard';
 import IconButton from '@material-ui/core/IconButton';
 import Modal from '@material-ui/core/Modal';
+import { Item } from '../../interfaces/Item';
 
 const drawerWidth = 339;
 
@@ -119,6 +120,18 @@ class Main extends React.Component<Props> {
     this.props.dispatch(updateActive(this.props.active, newData));
   };
 
+  closeModal = () => {
+    this.setState({
+      selectedItem: { content: '' },
+    });
+  };
+
+  setItem = (item: Item) => {
+    this.setState({
+      selectedItem: item,
+    });
+  };
+
   render() {
     const { lists, active } = this.props;
     const { classes } = this.props;
@@ -133,12 +146,6 @@ class Main extends React.Component<Props> {
       );
     }
 
-    const closeModal = () => {
-      this.setState({
-        selectedItem: { content: '' },
-      });
-    };
-
     return (
       <div
         style={{ display: 'flex', height: '100vh' }}
@@ -146,14 +153,14 @@ class Main extends React.Component<Props> {
       >
         <Modal
           open={this.state.selectedItem != null}
-          onClose={closeModal}
+          onClose={this.closeModal}
           className={classes.modal}
         >
           <div
             style={{
               padding: '2rem',
               backgroundColor: '#fff',
-              width: 400,
+              width: 600,
               position: 'absolute',
               border: '2px solid #000',
             }}
@@ -213,6 +220,7 @@ class Main extends React.Component<Props> {
                 >
                   {lists.map((list: any, index: number) => (
                     <BoardList
+                      setItem={this.setItem}
                       id={list.uuid}
                       title={list.title}
                       items={list.items}

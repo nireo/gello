@@ -14,6 +14,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
 import { deleteList } from '../../actions';
+import { Item } from '../../interfaces/Item';
 
 const ListContainer = styled.div`
   background-color: #ebecf0;
@@ -30,6 +31,7 @@ type Props = {
   id: string;
   index: number;
   deleteList: (listID: string) => void;
+  setItem: (item: Item) => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,8 +39,8 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       width: '100%',
       maxWidth: 360,
-      backgroundColor: theme.palette.background.paper
-    }
+      backgroundColor: theme.palette.background.paper,
+    },
   })
 );
 
@@ -47,7 +49,8 @@ const BoardList: React.FC<Props> = ({
   items,
   id,
   index,
-  deleteList
+  deleteList,
+  setItem,
 }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -70,14 +73,14 @@ const BoardList: React.FC<Props> = ({
   return (
     <div>
       <Draggable draggableId={String(id)} index={index}>
-        {provided => (
+        {(provided) => (
           <ListContainer
             {...provided.draggableProps}
             ref={provided.innerRef}
             {...provided.dragHandleProps}
           >
             <Droppable droppableId={String(id)}>
-              {provided => (
+              {(provided) => (
                 <div {...provided.droppableProps} ref={provided.innerRef}>
                   <div style={{ display: 'flex' }}>
                     <h4>{title}</h4>
@@ -98,11 +101,11 @@ const BoardList: React.FC<Props> = ({
                     anchorEl={anchorEl}
                     anchorOrigin={{
                       vertical: 'bottom',
-                      horizontal: 'center'
+                      horizontal: 'center',
                     }}
                     transformOrigin={{
                       vertical: 'top',
-                      horizontal: 'center'
+                      horizontal: 'center',
                     }}
                   >
                     <div>
@@ -137,6 +140,7 @@ const BoardList: React.FC<Props> = ({
                   </Popover>
                   {items.map((item: any, index: number) => (
                     <BoardCard
+                      setItem={setItem}
                       key={item.uuid}
                       index={index}
                       text={item.content}
