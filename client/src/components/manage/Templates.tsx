@@ -13,6 +13,8 @@ import { getTemplatesAction } from '../../actions/index';
 import formatDate from '../../utils/date';
 import { Link } from 'react-router-dom';
 import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -72,14 +74,14 @@ const Templates: React.FC<Props> = ({ templates, getTemplatesAction }) => {
           <PermIdentityOutlinedIcon />
         </Icon>
         <h3>Templates</h3>
+        <IconButton
+          style={{ marginLeft: '2rem' }}
+          onClick={() => setOpen(true)}
+        >
+          <AddIcon />
+        </IconButton>
       </div>
       <Divider style={{ marginBottom: '1rem' }} />
-      <Button onClick={() => setOpen(true)} variant="contained">
-        Create template
-      </Button>
-      <Typography variant="body1" color="textSecondary">
-        Here you can find premade boards, so that you can get more easily.
-      </Typography>
       <h4>Official templates</h4>
       <div style={{ display: 'flex' }}>
         {templates.templates.map((template: Template) => (
@@ -100,13 +102,18 @@ const Templates: React.FC<Props> = ({ templates, getTemplatesAction }) => {
       <h4>Community templates</h4>
       <div style={{ display: 'flex' }}>
         {templates.templates.map((template: Template) => (
-          <div>
-            <Typography>{template.title}</Typography>
-            <Typography color="textSecondary">
-              {template.description}
-            </Typography>
-            <Typography>{formatDate(template.created_at)}</Typography>
-          </div>
+          <Link
+            to={`template/${template.uuid}`}
+            style={{ textDecoration: 'none', color: 'black' }}
+          >
+            <div className="template-box">
+              <Typography>{template.title}</Typography>
+              <Typography color="textSecondary">
+                {template.description}
+              </Typography>
+              <Typography>{formatDate(template.created_at)}</Typography>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
