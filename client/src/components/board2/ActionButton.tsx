@@ -6,7 +6,7 @@ import Card from '@material-ui/core/Card';
 import TextArea from 'react-textarea-autosize';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
-import { addItem, createList, createNewItem } from '../../actions';
+import { createList, createNewItem } from '../../actions';
 import { CreateList } from '../../interfaces/List';
 import { CreateItem } from '../../interfaces/Item';
 
@@ -20,24 +20,24 @@ type Props = {
 class ActionButton extends React.Component<Props> {
   state = {
     formOpen: false,
-    text: ''
+    text: '',
   };
 
   openForm = () => {
     this.setState({
-      formOpen: true
+      formOpen: true,
     });
   };
 
   closeForm = () => {
     this.setState({
-      formOpen: false
+      formOpen: false,
     });
   };
 
   handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     this.setState({
-      text: event.target.value
+      text: event.target.value,
     });
   };
 
@@ -46,12 +46,12 @@ class ActionButton extends React.Component<Props> {
     const { text } = this.state;
 
     const createListObject: CreateList = {
-      title: text
+      title: text,
     };
 
     if (text && boardID) {
       this.setState({
-        text: ''
+        text: '',
       });
       dispatch(createList(createListObject, boardID));
     }
@@ -64,12 +64,12 @@ class ActionButton extends React.Component<Props> {
     const { text } = this.state;
 
     const createItemObject: CreateItem = {
-      content: text
+      content: text,
     };
 
     if (text && this.props.listID) {
       this.setState({
-        text: ''
+        text: '',
       });
       dispatch(createNewItem(createItemObject, this.props.listID));
     }
@@ -90,7 +90,7 @@ class ActionButton extends React.Component<Props> {
           ...styles.openForButtonGroup,
           opacity: buttonTextOpacity,
           color: buttonTextColor,
-          backgroundColor: buttonTextBackground
+          backgroundColor: buttonTextBackground,
         }}
       >
         <Icon>
@@ -115,7 +115,7 @@ class ActionButton extends React.Component<Props> {
           style={{
             minHeight: 80,
             minWidth: 272,
-            padding: '6px 8px 2px'
+            padding: '6px 8px 2px',
           }}
         >
           <TextArea
@@ -130,7 +130,7 @@ class ActionButton extends React.Component<Props> {
               outline: 'none',
               border: 'none',
               overflow: 'hidden',
-              fontFamily: 'Roboto, sans-serif'
+              fontFamily: 'Roboto, sans-serif',
             }}
           />
         </Card>
@@ -146,7 +146,7 @@ class ActionButton extends React.Component<Props> {
             style={{
               marginLeft: 0,
               cursor: 'pointer',
-              color: `${!list ? 'white' : 'black'}`
+              color: `${!list ? 'white' : 'black'}`,
             }}
             onClick={this.closeForm}
           >
@@ -170,13 +170,13 @@ const styles = {
     borderRadius: 3,
     height: 36,
     width: 272,
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   formButtonGroup: {
     marginTop: 8,
     display: 'flex',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 };
 
 export default connect()(ActionButton);

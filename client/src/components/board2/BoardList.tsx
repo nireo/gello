@@ -88,7 +88,7 @@ const BoardList: React.FC<Props> = ({
                       style={{ marginLeft: 'auto' }}
                       size="small"
                       disableFocusRipple={true}
-                      aria-descripedby={id}
+                      aria-describedby={id}
                       onClick={handleClick}
                     >
                       <MoreHorizIcon />

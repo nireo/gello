@@ -10,7 +10,7 @@ const reducer = (state: any = [], action: any) => {
       const newList = {
         title: action.payload,
         items: [],
-        uuid: `list-${listID}`
+        uuid: `list-${listID}`,
       };
 
       listID += 1;
@@ -18,7 +18,7 @@ const reducer = (state: any = [], action: any) => {
     case CONSTANTS.ADD_ITEM:
       const newCard = {
         content: action.payload.text,
-        uuid: `card-${itemID}`
+        uuid: `card-${itemID}`,
       };
 
       itemID += 1;
@@ -27,7 +27,7 @@ const reducer = (state: any = [], action: any) => {
         if (list.uuid === action.payload.listID) {
           return {
             ...list,
-            items: [...list.items, newCard]
+            items: [...list.items, newCard],
           };
         } else {
           return list;
@@ -41,8 +41,7 @@ const reducer = (state: any = [], action: any) => {
         droppableIdEnd,
         droppableIndexStart,
         droppableIndexEnd,
-        draggableId,
-        type
+        type,
       } = action.payload;
 
       const newState2 = [...state];
@@ -83,7 +82,7 @@ const reducer = (state: any = [], action: any) => {
         if (list.uuid === action.payload.id) {
           return {
             ...list,
-            items: [...list.items, action.payload.data]
+            items: [...list.items, action.payload.data],
           };
         } else {
           return list;
@@ -103,7 +102,7 @@ const reducer = (state: any = [], action: any) => {
 const updateTheItemList = (newList: any, item: any) => {
   const updatedItem = {
     content: item[0].content,
-    uuid: newList.uuid
+    uuid: newList.uuid,
   };
 
   updateItem(updatedItem, item[0].uuid);

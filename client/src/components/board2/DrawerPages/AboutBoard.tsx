@@ -14,7 +14,7 @@ type Props = {
   updateActive: (old: any, newData: CreateBoard) => void;
 };
 
-const AboutBoard: React.FC<Props> = props => {
+const AboutBoard: React.FC<Props> = (props) => {
   const [field, setField] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -25,7 +25,7 @@ const AboutBoard: React.FC<Props> = props => {
       setDescription(props.active.title);
       setTitle(props.active.title);
     }
-  }, []);
+  }, [description, props.active.title, title]);
 
   const changeBoardData = (event: any) => {
     if (event.keyCode === 13) {
@@ -37,7 +37,7 @@ const AboutBoard: React.FC<Props> = props => {
     event.preventDefault();
     const newData: CreateBoard = {
       title,
-      color: props.active.color
+      color: props.active.color,
     };
 
     props.updateActive(props.active, newData);
@@ -54,7 +54,7 @@ const AboutBoard: React.FC<Props> = props => {
             onChange={({ target }) => setTitle(target.value)}
             placeholder="Title..."
             style={{ marginBottom: '1rem' }}
-            onKeyDown={event => changeBoardData(event)}
+            onKeyDown={(event) => changeBoardData(event)}
           />
           <button style={{ display: 'none' }} type="submit"></button>
         </form>
@@ -73,7 +73,7 @@ const AboutBoard: React.FC<Props> = props => {
           value={description}
           onChange={({ target }) => setDescription(target.value)}
           placeholder="Description..."
-          onKeyDown={event => changeBoardData(event)}
+          onKeyDown={(event) => changeBoardData(event)}
         />
       )}
     </Container>
@@ -81,7 +81,7 @@ const AboutBoard: React.FC<Props> = props => {
 };
 
 const mapStateToProps = (state: AppState) => ({
-  active: state.active
+  active: state.active,
 });
 
 export default connect(mapStateToProps, { updateActive })(AboutBoard);

@@ -28,7 +28,7 @@ const ManageMain: React.FC<Props> = ({ boards, dispatch, user }) => {
       dispatch(initBoards());
       setLoaded(false);
     }
-  }, []);
+  }, [boards.length, dispatch, loaded]);
 
   const closeModal = () => {
     setOpen(false);

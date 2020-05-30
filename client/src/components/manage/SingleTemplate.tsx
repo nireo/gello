@@ -56,7 +56,7 @@ const SingleTemplate: React.FC<Props> = ({
       loadTemplate();
       setLoaded(true);
     }
-  }, [loaded]);
+  }, [loaded, loadTemplate]);
 
   const closeModal = () => {
     setOpen(false);
