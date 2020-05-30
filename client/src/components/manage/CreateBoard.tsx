@@ -13,16 +13,16 @@ const useStyles = makeStyles((theme: Theme) =>
     modal: {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     paper: {
       position: 'absolute',
-      width: 400,
+      width: 600,
       backgroundColor: theme.palette.background.paper,
       border: '2px solid #000',
       boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3)
-    }
+      padding: theme.spacing(2, 4, 3),
+    },
   })
 );
 
@@ -44,7 +44,7 @@ const CreateBoard: React.FC<Props> = ({ open, closeModal, createBoard }) => {
 
     const newBoard: CreateBoardInterface = {
       color: 'red',
-      title
+      title,
     };
 
     createBoard(newBoard);

@@ -3,6 +3,9 @@ import { Board } from '../../interfaces/Board';
 import Icon from '@material-ui/core/Icon';
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
 import { Link } from 'react-router-dom';
+import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/Add';
+import Divider from '@material-ui/core/Divider';
 
 type Props = {
   boards: Board[];
@@ -17,7 +20,14 @@ export const Boards: React.FC<Props> = ({ boards, setOpen }) => {
           <PermIdentityOutlinedIcon />
         </Icon>
         <h3>Personal boards</h3>
+        <IconButton
+          onClick={() => setOpen(true)}
+          style={{ marginLeft: '1rem' }}
+        >
+          <AddIcon />
+        </IconButton>
       </div>
+      <Divider style={{ marginBottom: '1rem' }} />
       <div
         style={{
           display: 'flex',
@@ -76,25 +86,6 @@ export const Boards: React.FC<Props> = ({ boards, setOpen }) => {
             </div>
           </Link>
         ))}
-        <button
-          style={{
-            border: 'none',
-            background: 'none',
-            cursor: 'pointer',
-          }}
-          onClick={() => setOpen(true)}
-        >
-          <div className="create-board-button">
-            <p
-              style={{
-                marginLeft: '1rem',
-                marginRight: '1rem',
-              }}
-            >
-              Create new board
-            </p>
-          </div>
-        </button>
       </div>
     </div>
   );

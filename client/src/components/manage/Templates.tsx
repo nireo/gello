@@ -12,6 +12,7 @@ import { AppState } from '../../store';
 import { getTemplatesAction } from '../../actions/index';
 import formatDate from '../../utils/date';
 import { Link } from 'react-router-dom';
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -72,6 +73,7 @@ const Templates: React.FC<Props> = ({ templates, getTemplatesAction }) => {
         </Icon>
         <h3>Templates</h3>
       </div>
+      <Divider style={{ marginBottom: '1rem' }} />
       <Button onClick={() => setOpen(true)} variant="contained">
         Create template
       </Button>
