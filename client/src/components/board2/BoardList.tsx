@@ -79,65 +79,63 @@ const BoardList: React.FC<Props> = ({
             ref={provided.innerRef}
             {...provided.dragHandleProps}
           >
+            <div style={{ display: 'flex' }}>
+              <h4>{title}</h4>
+              <IconButton
+                style={{ marginLeft: 'auto' }}
+                size="small"
+                disableFocusRipple={true}
+                aria-describedby={id}
+                onClick={handleClick}
+              >
+                <MoreHorizIcon />
+              </IconButton>
+            </div>
+            <Popover
+              id={componentId}
+              open={open}
+              onClose={handleClose}
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+            >
+              <div>
+                <List
+                  component="nav"
+                  aria-labelledby="list-menu"
+                  subheader={
+                    <ListSubheader component="div">List actions</ListSubheader>
+                  }
+                  className={classes.root}
+                >
+                  <ListItem button style={{ width: '100%' }}>
+                    <ListItemText primary="Add card..." />
+                  </ListItem>
+                  <ListItem button onClick={handleListDeletion}>
+                    <ListItemText primary="Delete list..." />
+                  </ListItem>
+                  <ListItem button>
+                    <ListItemText primary="Copy list..." />
+                  </ListItem>
+                  <ListItem button>
+                    <ListItemText primary="Move list..." />
+                  </ListItem>
+                  <Divider />
+                  <ListItem button>
+                    <ListItemText primary="Sort by..." />
+                  </ListItem>
+                </List>
+              </div>
+            </Popover>
             <Droppable droppableId={String(id)}>
               {(provided) => (
                 <div {...provided.droppableProps} ref={provided.innerRef}>
-                  <div style={{ display: 'flex' }}>
-                    <h4>{title}</h4>
-                    <IconButton
-                      style={{ marginLeft: 'auto' }}
-                      size="small"
-                      disableFocusRipple={true}
-                      aria-describedby={id}
-                      onClick={handleClick}
-                    >
-                      <MoreHorizIcon />
-                    </IconButton>
-                  </div>
-                  <Popover
-                    id={componentId}
-                    open={open}
-                    onClose={handleClose}
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'center',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'center',
-                    }}
-                  >
-                    <div>
-                      <List
-                        component="nav"
-                        aria-labelledby="list-menu"
-                        subheader={
-                          <ListSubheader component="div">
-                            List actions
-                          </ListSubheader>
-                        }
-                        className={classes.root}
-                      >
-                        <ListItem button style={{ width: '100%' }}>
-                          <ListItemText primary="Add card..." />
-                        </ListItem>
-                        <ListItem button onClick={handleListDeletion}>
-                          <ListItemText primary="Delete list..." />
-                        </ListItem>
-                        <ListItem button>
-                          <ListItemText primary="Copy list..." />
-                        </ListItem>
-                        <ListItem button>
-                          <ListItemText primary="Move list..." />
-                        </ListItem>
-                        <Divider />
-                        <ListItem button>
-                          <ListItemText primary="Sort by..." />
-                        </ListItem>
-                      </List>
-                    </div>
-                  </Popover>
                   {items.map((item: any, index: number) => (
                     <BoardCard
                       setItem={setItem}
