@@ -17,6 +17,8 @@ import DashboardIcons from '@material-ui/icons/Dashboard';
 import IconButton from '@material-ui/core/IconButton';
 import Modal from '@material-ui/core/Modal';
 import { Item } from '../../interfaces/Item';
+import { User } from '../../interfaces/User';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const drawerWidth = 339;
 
@@ -46,6 +48,7 @@ type Props = {
   id: string;
   classes: any;
   active: any;
+  user: User | null;
 };
 
 class Main extends React.Component<Props> {
@@ -89,11 +92,12 @@ class Main extends React.Component<Props> {
     );
   };
 
-  componentDidMount(): void {
-    if (this.state.loaded === false) {
+  componentDidUpdate(): void {
+    if (this.state.loaded === false && this.props.user !== null) {
       this.props.dispatch(initListData(this.props.id));
       getSingleBoard(this.props.id).then((response: any) => {
         this.props.dispatch(setActiveBoard(response.board));
+        this.setState({ loaded: true });
       });
     }
   }
@@ -136,12 +140,12 @@ class Main extends React.Component<Props> {
     const { lists, active } = this.props;
     const { classes } = this.props;
 
-    if (active === null) {
+    if (active === null || this.props.user === null) {
       return (
         <Container>
-          <Typography variant="h4" style={{ marginTop: '4rem' }}>
-            The board you're looking for is private or it's not found.
-          </Typography>
+          <div style={{ textAlign: 'center' }}>
+            <CircularProgress />
+          </div>
         </Container>
       );
     }
@@ -256,6 +260,7 @@ class Main extends React.Component<Props> {
 const mapStateToProps = (state: AppState) => ({
   lists: state.lists,
   active: state.active,
+  user: state.user,
 });
 
 export default connect(mapStateToProps)(withStyles(stylesMaterial)(Main));
