@@ -6,15 +6,8 @@ import styled from 'styled-components';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
-import { makeStyles, Theme, createStyles } from '@material-ui/core';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Divider from '@material-ui/core/Divider';
-import { connect } from 'react-redux';
-import { deleteList } from '../../actions';
 import { Item } from '../../interfaces/Item';
+import ListMenu from './ListMenu';
 
 const ListContainer = styled.div`
   background-color: #ebecf0;
@@ -30,29 +23,10 @@ type Props = {
   items: any;
   id: string;
   index: number;
-  deleteList: (listID: string) => void;
   setItem: (item: Item) => void;
 };
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-  })
-);
-
-const BoardList: React.FC<Props> = ({
-  title,
-  items,
-  id,
-  index,
-  deleteList,
-  setItem,
-}) => {
-  const classes = useStyles();
+const BoardList: React.FC<Props> = ({ title, items, id, index, setItem }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -65,10 +39,6 @@ const BoardList: React.FC<Props> = ({
 
   const open = Boolean(anchorEl);
   const componentId = open ? 'menu-popover' : undefined;
-
-  const handleListDeletion = () => {
-    deleteList(id);
-  };
 
   return (
     <div>
@@ -105,33 +75,7 @@ const BoardList: React.FC<Props> = ({
                 horizontal: 'center',
               }}
             >
-              <div>
-                <List
-                  component="nav"
-                  aria-labelledby="list-menu"
-                  subheader={
-                    <ListSubheader component="div">List actions</ListSubheader>
-                  }
-                  className={classes.root}
-                >
-                  <ListItem button style={{ width: '100%' }}>
-                    <ListItemText primary="Add card..." />
-                  </ListItem>
-                  <ListItem button onClick={handleListDeletion}>
-                    <ListItemText primary="Delete list..." />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemText primary="Copy list..." />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemText primary="Move list..." />
-                  </ListItem>
-                  <Divider />
-                  <ListItem button>
-                    <ListItemText primary="Sort by..." />
-                  </ListItem>
-                </List>
-              </div>
+              <ListMenu id={id} />
             </Popover>
             <Droppable droppableId={String(id)}>
               {(provided) => (
@@ -157,4 +101,4 @@ const BoardList: React.FC<Props> = ({
   );
 };
 
-export default connect(null, { deleteList })(BoardList);
+export default BoardList;
