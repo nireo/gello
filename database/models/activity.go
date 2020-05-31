@@ -47,6 +47,27 @@ func CreateActivityReport(username, actionType, boardID string, db *gorm.DB) boo
 	return true
 }
 
+// DeleteActivityReport takes an activity\s id and deletes that activity
+func DeleteActivityReport(activityID string, db *gorm.DB) bool {
+	activity, ok := FindActivity(activityID, db)
+	if !ok {
+		return false
+	}
+
+	db.Delete(&activity)
+	return true
+}
+
+// FindActivity takes an activity's id and return that activity
+func FindActivity(activityID string, db *gorm.DB) (Activity, bool) {
+	var activity Activity
+	if err := db.Where("uuid = ?", activityID).First(&activity).Error; err != nil {
+		return activity, false
+	}
+
+	return activity, true
+}
+
 func generateActivityMessage(username, actionType string) (string, bool) {
 	switch actionType {
 	case messageTypes[0]:
