@@ -1,6 +1,8 @@
 package models
 
 import (
+	"math/rand"
+
 	"github.com/jinzhu/gorm"
 	"github.com/nireo/gello/lib/common"
 )
@@ -17,6 +19,46 @@ type Board struct {
 	UserID uint
 	User   User
 	Tags   []Tag
+}
+
+// Different colors used as board backgrounds.
+// The colors are used in a classname so the colors are a bit different from just
+// red, green, orange, green.
+var colors = [4]string{"blue", "red", "orange", "green"}
+
+// GetBoardWithID finds a board with the given ID
+func GetBoardWithID(id string, db *gorm.DB) (Board, bool) {
+	var board Board
+	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
+		return board, false
+	}
+
+	return board, true
+}
+
+// GetListsRelatedToBoard returns all the lists which are related to a given board.
+func GetListsRelatedToBoard(board Board, db *gorm.DB) ([]List, bool) {
+	var lists []List
+	if err := db.Model(&board).Related(&lists).Error; err != nil {
+		return lists, false
+	}
+
+	return lists, true
+}
+
+// GetUsersBoards finds all the boards related to a user model
+func GetUsersBoards(user User, db *gorm.DB) ([]Board, bool) {
+	var boards []Board
+	if err := db.Model(&user).Related(&boards).Error; err != nil {
+		return boards, false
+	}
+
+	return boards, true
+}
+
+// ChooseRandomBoardColor returns a random color from a predefined list of colors.
+func ChooseRandomBoardColor() string {
+	return colors[rand.Intn(4)]
 }
 
 // Serialize board data into json
