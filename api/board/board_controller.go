@@ -39,12 +39,7 @@ func get(c *gin.Context) {
 		return
 	}
 
-	serialized := make([]JSON, len(boards), len(boards))
-	for index := range boards {
-		serialized[index] = boards[index].Serialize()
-	}
-
-	c.JSON(http.StatusOK, serialized)
+	c.JSON(http.StatusOK, models.SerializeBoards(boards))
 }
 
 func create(c *gin.Context) {

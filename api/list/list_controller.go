@@ -66,12 +66,7 @@ func get(c *gin.Context) {
 		return
 	}
 
-	listsSerialized := make([]JSON, len(lists), len(lists))
-	for index := range lists {
-		listsSerialized[index] = lists[index].Serialize()
-	}
-
-	c.JSON(http.StatusOK, listsSerialized)
+	c.JSON(http.StatusOK, models.SerializeLists(lists))
 }
 
 func create(c *gin.Context) {
