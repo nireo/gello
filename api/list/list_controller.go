@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"github.com/nireo/gello/api/board"
 	"github.com/nireo/gello/database/models"
 	"github.com/nireo/gello/lib/common"
 )
@@ -30,25 +29,6 @@ type RequestBody struct {
 	Title string `json:"title" binding:"required"`
 }
 
-// GetListWithID returns a list corresponding to a id
-func GetListWithID(id string, db *gorm.DB) (List, bool) {
-	var list List
-	if err := db.Where("uuid = ?", id).First(&list).Error; err != nil {
-		return list, false
-	}
-
-	return list, true
-}
-
-func getListsRelatedToABoard(board *Board, db *gorm.DB) ([]List, bool) {
-	var lists []List
-	if err := db.Model(&board).Related(&lists).Error; err != nil {
-		return lists, false
-	}
-
-	return lists, true
-}
-
 func validateRequestBody(c *gin.Context) (RequestBody, bool) {
 	var body RequestBody
 	if err := c.BindJSON(&body); err != nil {
@@ -69,7 +49,7 @@ func get(c *gin.Context) {
 		return
 	}
 
-	board, ok := board.GetBoardWithID(id, db)
+	board, ok := models.GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -80,7 +60,7 @@ func get(c *gin.Context) {
 		return
 	}
 
-	lists, ok := getListsRelatedToABoard(&board, db)
+	lists, ok := models.GetListsRelatedToBoard(board, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
@@ -109,7 +89,7 @@ func create(c *gin.Context) {
 		return
 	}
 
-	board, ok := board.GetBoardWithID(id, db)
+	board, ok := models.GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -143,7 +123,7 @@ func delete(c *gin.Context) {
 		return
 	}
 
-	list, ok := GetListWithID(id, db)
+	list, ok := models.GetListWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -167,7 +147,7 @@ func update(c *gin.Context) {
 		return
 	}
 
-	list, ok := GetListWithID(id, db)
+	list, ok := models.GetListWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -189,7 +169,7 @@ func copyList(c *gin.Context) {
 		return
 	}
 
-	list, ok := GetListWithID(id, db)
+	list, ok := models.GetListWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return

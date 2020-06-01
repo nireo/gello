@@ -1,7 +1,6 @@
 package board
 
 import (
-	"math/rand"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,46 +29,11 @@ type RequestBody struct {
 	Title string `json:"title" binding:"required"`
 }
 
-// Colors used as board backgrounds
-var colors = [4]string{"blue", "red", "orange", "green"}
-
-// GetBoardWithID finds a board with the given ID
-func GetBoardWithID(id string, db *gorm.DB) (Board, bool) {
-	var board Board
-	if err := db.Where("uuid = ?", id).First(&board).Error; err != nil {
-		return board, false
-	}
-
-	return board, true
-}
-
-func getUsersBoards(user models.User, db *gorm.DB) ([]Board, bool) {
-	var boards []Board
-	if err := db.Model(&user).Related(&boards).Error; err != nil {
-		return boards, false
-	}
-
-	return boards, true
-}
-
-func getListsRelatedToBoard(board Board, db *gorm.DB) ([]List, bool) {
-	var lists []List
-	if err := db.Model(&board).Related(&lists).Error; err != nil {
-		return lists, false
-	}
-
-	return lists, true
-}
-
-func chooseRandomColor() string {
-	return colors[rand.Intn(4)]
-}
-
 func get(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	user := c.MustGet("user").(models.User)
 
-	boards, ok := getUsersBoards(user, db)
+	boards, ok := models.GetUsersBoards(user, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
@@ -97,7 +61,7 @@ func create(c *gin.Context) {
 	board := Board{
 		Title:  body.Title,
 		UUID:   uuid,
-		Color:  chooseRandomColor(),
+		Color:  models.ChooseRandomBoardColor(),
 		UserID: user.ID,
 	}
 
@@ -112,7 +76,7 @@ func getSingle(c *gin.Context) {
 	id := c.Param("id")
 	user := c.MustGet("user").(models.User)
 
-	board, ok := GetBoardWithID(id, db)
+	board, ok := models.GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -124,7 +88,7 @@ func getSingle(c *gin.Context) {
 		return
 	}
 
-	lists, ok := getListsRelatedToBoard(board, db)
+	lists, ok := models.GetListsRelatedToBoard(board, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
@@ -159,7 +123,7 @@ func delete(c *gin.Context) {
 		return
 	}
 
-	board, ok := GetBoardWithID(id, db)
+	board, ok := models.GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -190,7 +154,7 @@ func update(c *gin.Context) {
 		return
 	}
 
-	board, ok := GetBoardWithID(id, db)
+	board, ok := models.GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -268,7 +232,7 @@ func addTagToBoard(c *gin.Context) {
 		return
 	}
 
-	board, ok := GetBoardWithID(id, db)
+	board, ok := models.GetBoardWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return

@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"github.com/nireo/gello/api/list"
 	"github.com/nireo/gello/database/models"
 	"github.com/nireo/gello/lib/common"
 )
@@ -18,9 +17,6 @@ type List = models.List
 
 // JSON type alias
 type JSON = common.JSON
-
-// Board model alias
-type Board = models.Board
 
 // User model alias
 type User = models.User
@@ -54,7 +50,7 @@ func create(c *gin.Context) {
 		return
 	}
 
-	list, ok := list.GetListWithID(id, db)
+	list, ok := models.GetListWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -95,7 +91,7 @@ func delete(c *gin.Context) {
 		return
 	}
 
-	list, ok := list.GetListWithID(id, db)
+	list, ok := models.GetListWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
@@ -137,7 +133,7 @@ func update(c *gin.Context) {
 		return
 	}
 
-	list, ok := list.GetListWithID(body.ListUUID, db)
+	list, ok := models.GetListWithID(body.ListUUID, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
