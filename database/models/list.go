@@ -39,3 +39,13 @@ func (list *List) Serialize() common.JSON {
 		"uuid":  list.UUID,
 	}
 }
+
+// SerializeLists serializes an array of templates
+func SerializeLists(lists []List) []common.JSON {
+	serialized := make([]common.JSON, len(lists), len(lists))
+	for index := range lists {
+		serialized[index] = lists[index].Serialize()
+	}
+
+	return serialized
+}

@@ -32,3 +32,13 @@ func (item *Item) Serialize() common.JSON {
 		"uuid":    item.UUID,
 	}
 }
+
+// SerializeItems serializes an array of items
+func SerializeItems(items []Item) []common.JSON {
+	serialized := make([]common.JSON, len(items), len(items))
+	for index := range items {
+		serialized[index] = items[index].Serialize()
+	}
+
+	return serialized
+}

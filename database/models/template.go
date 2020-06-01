@@ -31,3 +31,13 @@ func (template *Template) Serialize() common.JSON {
 		"likes":       template.Likes,
 	}
 }
+
+// SerializeTemplates serializes an array of templates
+func SerializeTemplates(templates []Template) []common.JSON {
+	serialized := make([]common.JSON, len(templates), len(templates))
+	for index := range templates {
+		serialized[index] = templates[index].Serialize()
+	}
+
+	return serialized
+}

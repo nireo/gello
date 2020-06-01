@@ -70,3 +70,13 @@ func (board *Board) Serialize() common.JSON {
 		"color":   board.Color,
 	}
 }
+
+// SerializeBoards serializes an array of boards
+func SerializeBoards(boards []Board) []common.JSON {
+	serialized := make([]common.JSON, len(boards), len(boards))
+	for index := range boards {
+		serialized[index] = boards[index].Serialize()
+	}
+
+	return serialized
+}

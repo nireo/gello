@@ -92,3 +92,13 @@ func (activity *Activity) Serialize() common.JSON {
 		"uuid":       activity.UUID,
 	}
 }
+
+// SerializeActivities serializes an array of activities
+func SerializeActivities(activities []Activity) []common.JSON {
+	serialized := make([]common.JSON, len(activities), len(activities))
+	for index := range activities {
+		serialized[index] = activities[index].Serialize()
+	}
+
+	return serialized
+}
