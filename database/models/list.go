@@ -15,6 +15,16 @@ type List struct {
 	UserID  uint
 }
 
+// GetListWithID returns a list corresposind to an id
+func GetListWithID(id string, db *gorm.DB) (List, bool) {
+	var list List
+	if err := db.Where("uuid = ?", id).First(&list).Error; err != nil {
+		return list, false
+	}
+
+	return list, true
+}
+
 // Serialize list data into JSON
 func (list *List) Serialize() common.JSON {
 	// parse the item data

@@ -23,6 +23,16 @@ func (user *User) Serialize() common.JSON {
 	}
 }
 
+// GetUserWithID returns a user with given id
+func GetUserWithID(id string, db *gorm.DB) (User, bool) {
+	var user User
+	if err := db.Where("uuid = ?", id).First(&user).Error; err != nil {
+		return user, false
+	}
+
+	return user, true
+}
+
 // Read user data
 func (user *User) Read(m common.JSON) {
 	user.ID = uint(m["id"].(float64))

@@ -15,6 +15,16 @@ type Item struct {
 	TagID    uint
 }
 
+// GetItemWithID returns an item with given id
+func GetItemWithID(id string, db *gorm.DB) (Item, bool) {
+	var item Item
+	if err := db.Where("uuid = ?", id).First(&item).Error; err != nil {
+		return item, false
+	}
+
+	return item, true
+}
+
 // Serialize item data into json
 func (item *Item) Serialize() common.JSON {
 	return common.JSON{
