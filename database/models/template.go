@@ -39,6 +39,16 @@ func GetUserTemplates(user User, db *gorm.DB) ([]Template, bool) {
 	return templates, true
 }
 
+// GetSingleTemplate returns a template with the given id
+func GetSingleTemplate(id string, db *gorm.DB) (Template, bool) {
+	var template Template
+	if err := db.Where("uuid = ?", id).First(&template).Error; err != nil {
+		return template, false
+	}
+
+	return template, true
+}
+
 // Serialize template data into json
 func (template *Template) Serialize() common.JSON {
 	return common.JSON{

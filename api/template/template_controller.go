@@ -30,12 +30,6 @@ func getTemplates(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	user := c.MustGet("user").(User)
 
-	var templates []Template
-	if err := db.Find(&templates).Error; err != nil {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "no templates found"})
-		return
-	}
-
 	templates, ok := models.GetTemplates(db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
@@ -113,9 +107,9 @@ func updateTemplate(c *gin.Context) {
 		return
 	}
 
-	var template Template
-	if err := db.Where("uuid = ?", id).First(&template).Error; err != nil {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "template not found"})
+	template, ok := models.GetSingleTemplate(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
@@ -141,9 +135,9 @@ func deleteTemplate(c *gin.Context) {
 		return
 	}
 
-	var template Template
-	if err := db.Where("uuid = ?", id).First(&template).Error; err != nil {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "template not found"})
+	template, ok := models.GetSingleTemplate(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
@@ -177,9 +171,9 @@ func applyTemplate(c *gin.Context) {
 		return
 	}
 
-	var template Template
-	if err := db.Where("uuid = ?", id).First(&template).Error; err != nil {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "template has not been found"})
+	template, ok := models.GetSingleTemplate(id, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
@@ -227,8 +221,8 @@ func getTemplateWithID(c *gin.Context) {
 		return
 	}
 
-	var template Template
-	if err := db.Where("uuid = ?", id).First(&template).Error; err != nil {
+	template, ok := models.GetSingleTemplate(id, db)
+	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -255,8 +249,8 @@ func likeTemplate(c *gin.Context) {
 		return
 	}
 
-	var template Template
-	if err := db.Where("uuid = ?", id).First(&template).Error; err != nil {
+	template, ok := models.GetSingleTemplate(id, db)
+	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
