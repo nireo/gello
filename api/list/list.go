@@ -11,8 +11,8 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		list.GET("/:id", middlewares.Authorized, get)
 		list.POST("/:id", middlewares.Authorized, create)
-		list.DELETE("/:id", delete)
-		list.PATCH("/:id", update)
-		list.POST("/:id/copy", copyList)
+		list.DELETE("/:id", middlewares.Authorized, delete)
+		list.PATCH("/:id", middlewares.Authorized, update)
+		list.POST("/:id/copy", middlewares.Authorized, copyList)
 	}
 }

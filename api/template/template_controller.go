@@ -36,23 +36,22 @@ func getTemplates(c *gin.Context) {
 		return
 	}
 
-	var userTemplates []Template
-	if err := db.Model(&user).Related(&userTemplates).Error; err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+	templates, ok := models.GetTemplates(db)
+	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	serializedTemplates := make([]JSON, len(templates), len(templates))
-	for index := range templates {
-		serializedTemplates[index] = templates[index].Serialize()
+	userTemplates, ok := models.GetUserTemplates(user, db)
+	if !ok {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
 	}
 
-	serializedUserTemplates := make([]JSON, len(userTemplates), len(userTemplates))
-	for index := range userTemplates {
-		serializedUserTemplates[index] = userTemplates[index].Serialize()
-	}
-
-	c.JSON(http.StatusOK, gin.H{"userTemplates": serializedUserTemplates, "templates": serializedTemplates})
+	c.JSON(http.StatusOK, gin.H{
+		"userTemplates": models.SerializeTemplates(userTemplates),
+		"templates":     models.SerializeTemplates(templates),
+	})
 }
 
 func createTemplate(c *gin.Context) {

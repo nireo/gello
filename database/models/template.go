@@ -19,6 +19,26 @@ type Template struct {
 	Likes       uint
 }
 
+// GetTemplates returns all templates
+func GetTemplates(db *gorm.DB) ([]Template, bool) {
+	var templates []Template
+	if err := db.Find(&templates).Error; err != nil {
+		return templates, false
+	}
+
+	return templates, true
+}
+
+// GetUserTemplates gets all templates related to user model
+func GetUserTemplates(user User, db *gorm.DB) ([]Template, bool) {
+	var templates []Template
+	if err := db.Model(&user).Related(&templates).Error; err != nil {
+		return templates, false
+	}
+
+	return templates, true
+}
+
 // Serialize template data into json
 func (template *Template) Serialize() common.JSON {
 	return common.JSON{

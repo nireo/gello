@@ -112,6 +112,7 @@ func create(c *gin.Context) {
 func delete(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
+	user := c.MustGet("user").(User)
 
 	if id == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -124,6 +125,11 @@ func delete(c *gin.Context) {
 		return
 	}
 
+	if user.ID != list.UserID {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
 	db.Delete(&list)
 	c.Status(http.StatusNoContent)
 }
@@ -131,6 +137,7 @@ func delete(c *gin.Context) {
 func update(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
+	user := c.MustGet("user").(User)
 
 	if id == "" {
 		c.AbortWithStatus(http.StatusBadRequest)
@@ -144,6 +151,11 @@ func update(c *gin.Context) {
 
 	list, ok := models.GetListWithID(id, db)
 	if !ok {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if user.ID != list.UserID {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -167,6 +179,11 @@ func copyList(c *gin.Context) {
 	list, ok := models.GetListWithID(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if user.ID != list.ID {
+		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 
