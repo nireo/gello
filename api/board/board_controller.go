@@ -283,3 +283,24 @@ func shareBoard(c *gin.Context) {
 	db.Save(&newSharedBoard)
 	c.Status(http.StatusNoContent)
 }
+
+func unShareBoard(c *gin.Context) {
+	db := common.GetDatabase()
+	user := c.MustGet("user").(models.User)
+	boardID := c.Param("id")
+
+	var board Board
+	if err := db.Where("uuid = ?", boardID).First(&board).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if err := db.Where(
+		&models.SharedBoard{SharedUserID: user.ID,
+			SharedBoardID: board.ID}).Delete(&models.SharedBoard{}).Error; err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	c.Status(http.StatusNoContent)
+}
