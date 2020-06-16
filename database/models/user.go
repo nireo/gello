@@ -41,6 +41,17 @@ func GetUserWithID(id string, db *gorm.DB) (User, bool) {
 	return user, true
 }
 
+// FindOneUser finds a single user that matches the given condition
+func FindOneUser(condition interface{}) (User, error) {
+	db := common.GetDatabase()
+	var user User
+	if err := db.Where(condition).First(&user).Error; err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
 // Read user data
 func (user *User) Read(m common.JSON) {
 	user.ID = uint(m["id"].(float64))

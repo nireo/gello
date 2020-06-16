@@ -49,6 +49,17 @@ func GetSingleTemplate(id string, db *gorm.DB) (Template, bool) {
 	return template, true
 }
 
+// FindOneTemplate returns a template matching the given condition
+func FindOneTemplate(condition interface{}) (Template, error) {
+	db := common.GetDatabase()
+	var template Template
+	if err := db.Where(condition).First(&template).Error; err != nil {
+		return template, err
+	}
+
+	return template, nil
+}
+
 // Serialize template data into json
 func (template *Template) Serialize() common.JSON {
 	return common.JSON{

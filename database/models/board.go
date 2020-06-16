@@ -61,6 +61,17 @@ func ChooseRandomBoardColor() string {
 	return colors[rand.Intn(4)]
 }
 
+// FindOneBoard finds a single board that matches the given condition
+func FindOneBoard(condition interface{}) (Board, error) {
+	db := common.GetDatabase()
+	var board Board
+	if err := db.Where(condition).First(&board).Error; err != nil {
+		return board, err
+	}
+
+	return board, nil
+}
+
 // Serialize board data into json
 func (board *Board) Serialize() common.JSON {
 	return common.JSON{

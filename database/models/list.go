@@ -25,6 +25,17 @@ func GetListWithID(id string, db *gorm.DB) (List, bool) {
 	return list, true
 }
 
+// FindOneList returns a list that matches the given condition
+func FindOneList(condition interface{}) (List, error) {
+	db := common.GetDatabase()
+	var list List
+	if err := db.Where(condition).First(&list).Error; err != nil {
+		return list, err
+	}
+
+	return list, nil
+}
+
 // Serialize list data into JSON
 func (list *List) Serialize() common.JSON {
 	// parse the item data

@@ -33,6 +33,17 @@ func (item *Item) Serialize() common.JSON {
 	}
 }
 
+// FindOneItem finds a single item what matches the given condition
+func FindOneItem(condition interface{}) (Item, error) {
+	db := common.GetDatabase()
+	var item Item
+	if err := db.Where(condition).First(&item).Error; err != nil {
+		return item, err
+	}
+
+	return item, nil
+}
+
 // SerializeItems serializes an array of items
 func SerializeItems(items []Item) []common.JSON {
 	serialized := make([]common.JSON, len(items), len(items))
