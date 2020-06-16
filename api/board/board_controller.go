@@ -211,11 +211,6 @@ func addTagToBoard(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	id := c.Param("id")
 
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
 	type TagRequestBody struct {
 		Color string `json:"color" binding:"required"`
 		Label string `json:"label" binding:"required"`
@@ -249,4 +244,42 @@ func addTagToBoard(c *gin.Context) {
 	db.Save(&newTag)
 
 	c.JSON(http.StatusOK, newTag.Serialize())
+}
+
+func shareBoard(c *gin.Context) {
+	db := common.GetDatabase()
+	user := c.MustGet("user").(models.User)
+	boardID := c.Param("id")
+
+	type RequestBody struct {
+		Username string `json:"username" binding:"required"`
+	}
+
+	var board Board
+	if err := db.Where("uuid = ?", boardID).First(&board).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if board.UserID != user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
+	var userToShare models.User
+	if err := db.Where("uuid = ?", boardID).First(&userToShare).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	newSharedBoard := models.SharedBoard{
+		SharedBoard:   board,
+		SharedBoardID: board.ID,
+		SharedUser:    userToShare,
+		SharedUserID:  userToShare.ID,
+	}
+
+	db.NewRecord(newSharedBoard)
+	db.Save(&newSharedBoard)
+	c.Status(http.StatusNoContent)
 }

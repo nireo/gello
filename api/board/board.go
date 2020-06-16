@@ -11,10 +11,12 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		board.GET("/", middlewares.Authorized, get)
 		board.GET("/:id", middlewares.Authorized, getSingle)
+
 		board.POST("/", middlewares.Authorized, create)
-		board.DELETE("/:id", middlewares.Authorized, delete)
-		board.PATCH("/:id", middlewares.Authorized, update)
 		board.POST("/share/:id", middlewares.Authorized)
 		board.POST("/tag/:id", middlewares.Authorized, addTagToBoard)
+
+		board.PATCH("/:id", middlewares.Authorized, update)
+		board.DELETE("/:id", middlewares.Authorized, delete)
 	}
 }

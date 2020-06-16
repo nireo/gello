@@ -14,6 +14,14 @@ type User struct {
 	UUID     string
 }
 
+// SharedBoard makes adding users to a board easier
+type SharedBoard struct {
+	SharedBoardID uint
+	SharedUserID  uint
+	SharedBoard   Board
+	SharedUser    User
+}
+
 // Serialize user data into JSON
 func (user *User) Serialize() common.JSON {
 	return common.JSON{

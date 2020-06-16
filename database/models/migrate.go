@@ -8,6 +8,6 @@ import (
 
 // Migrate models to the database
 func Migrate(db *gorm.DB) {
-	db.AutoMigrate(&Item{}, &Board{}, &List{}, &User{}, &Template{}, &Tag{}, &Activity{})
+	db.AutoMigrate(&Item{}, &Board{}, &List{}, &User{}, &Template{}, &Tag{}, &Activity{}, &SharedBoard{})
 	fmt.Println("Migration complete.")
 }
