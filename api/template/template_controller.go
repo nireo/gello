@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"github.com/nireo/gello/database/models"
 	"github.com/nireo/gello/lib/common"
 )
@@ -27,7 +26,7 @@ type List = models.List
 type Template = models.Template
 
 func getTemplates(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	user := c.MustGet("user").(User)
 
 	templates, ok := models.GetTemplates(db)
@@ -49,7 +48,7 @@ func getTemplates(c *gin.Context) {
 }
 
 func createTemplate(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	user := c.MustGet("user").(User)
 
 	type RequestBody struct {
@@ -90,7 +89,7 @@ func createTemplate(c *gin.Context) {
 }
 
 func updateTemplate(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	user := c.MustGet("user").(User)
 	id := c.Param("id")
 
@@ -126,7 +125,7 @@ func updateTemplate(c *gin.Context) {
 }
 
 func deleteTemplate(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	user := c.MustGet("user").(User)
 	id := c.Param("id")
 
@@ -152,7 +151,7 @@ func deleteTemplate(c *gin.Context) {
 
 // the function for creating the new board with the lists in the template
 func applyTemplate(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
 
@@ -213,7 +212,7 @@ func applyTemplate(c *gin.Context) {
 }
 
 func getTemplateWithID(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 
 	if id == "" {
@@ -240,7 +239,7 @@ func getTemplateWithID(c *gin.Context) {
 }
 
 func likeTemplate(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
 

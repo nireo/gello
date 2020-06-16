@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"github.com/nireo/gello/database/models"
 	"github.com/nireo/gello/lib/common"
 )
@@ -30,7 +29,7 @@ type RequestBody struct {
 }
 
 func get(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	user := c.MustGet("user").(models.User)
 
 	boards, ok := models.GetUsersBoards(user, db)
@@ -43,7 +42,7 @@ func get(c *gin.Context) {
 }
 
 func create(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	user := c.MustGet("user").(models.User)
 
 	var body RequestBody
@@ -67,7 +66,7 @@ func create(c *gin.Context) {
 }
 
 func getSingle(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(models.User)
 
@@ -109,7 +108,7 @@ func getSingle(c *gin.Context) {
 }
 
 func delete(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(models.User)
 
@@ -134,7 +133,7 @@ func delete(c *gin.Context) {
 }
 
 func update(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(models.User)
 
@@ -167,47 +166,8 @@ func update(c *gin.Context) {
 	c.JSON(http.StatusOK, board.Serialize())
 }
 
-/*
-func shareBoard(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-	id := c.Param("id")
-	user := c.MustGet("user").(models.User)
-
-	type RequestBody struct {
-		UserID string `json:"user_id" binding:"required"`
-	}
-
-	var body RequestBody
-	if err := c.BindJSON(&body); err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
-	board, ok := GetBoardWithID(id, db)
-	if !ok {
-		c.AbortWithStatus(http.StatusNotFound)
-		return
-	}
-
-	if board.UserID != user.ID {
-		c.AbortWithStatus(http.StatusForbidden)
-	}
-
-	var userToAdd models.User
-	if err := db.Where("uuid = ?", body.UserID).First(&userToAdd).Error; err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
-		return
-	}
-
-	board.Users = append(board.Users, userToAdd)
-	userToAdd.Shared = append(userToAdd.Shared, board)
-
-	c.JSON(http.StatusOK, board.Serialize())
-}
-*/
-
 func addTagToBoard(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	user := c.MustGet("user").(models.User)
 	id := c.Param("id")
 

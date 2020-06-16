@@ -24,7 +24,6 @@ type Template = models.Template
 // Board model alias
 type Board = models.Board
 
-
 // Returns the user struct or a boolean telling if the user was found
 func getUserWithUsername(username string, db *gorm.DB) (User, bool) {
 	var user User
@@ -86,7 +85,7 @@ func addTokenWithUserToResponse(serializedUser JSON) common.JSON {
 }
 
 func registerController(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 
 	type RequestBody struct {
 		Email    string `json:"email" binding:"required"`
@@ -94,11 +93,11 @@ func registerController(c *gin.Context) {
 		Password string `json:"password" binding:"required"`
 	}
 
-  var requestBody RequestBody
-  if err := c.BindJSON(&requestBody); err != nil {
-    c.Status(http.StatusBadRequest)
-    return
-  }
+	var requestBody RequestBody
+	if err := c.BindJSON(&requestBody); err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
 
 	// if the user was found, return a conflict notice that the user already exists
 	_, ok := getUserWithUsername(requestBody.Username, db)
@@ -126,7 +125,7 @@ func registerController(c *gin.Context) {
 }
 
 func loginController(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 
 	type RequestBody struct {
 		Username string `json:"username" binding:"required"`
@@ -154,7 +153,7 @@ func loginController(c *gin.Context) {
 }
 
 func removeUser(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	user := c.MustGet("user").(User)
 
 	// remove all of the user's templates
@@ -183,7 +182,7 @@ func removeUser(c *gin.Context) {
 }
 
 func updateUser(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	user := c.MustGet("user").(models.User)
 
 	type RequestBody struct {

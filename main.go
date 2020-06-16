@@ -14,7 +14,6 @@ func main() {
 
 	common.SetDatabase(db)
 
-	app.Use(database.Inject(db))
 	app.Use(middlewares.JWTMiddleware())
 	api.ApplyRoutes(app)
 	app.Run(":8080")

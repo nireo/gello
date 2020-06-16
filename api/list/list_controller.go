@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"github.com/nireo/gello/database/models"
 	"github.com/nireo/gello/lib/common"
 )
@@ -40,7 +39,7 @@ func validateRequestBody(c *gin.Context) (RequestBody, bool) {
 }
 
 func get(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(models.User)
 
@@ -70,7 +69,7 @@ func get(c *gin.Context) {
 }
 
 func create(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(models.User)
 
@@ -110,7 +109,7 @@ func create(c *gin.Context) {
 }
 
 func delete(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
 
@@ -135,7 +134,7 @@ func delete(c *gin.Context) {
 }
 
 func update(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
 
@@ -167,7 +166,7 @@ func update(c *gin.Context) {
 }
 
 func copyList(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
 

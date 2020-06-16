@@ -31,7 +31,7 @@ func getItemWithID(id string, db *gorm.DB) (Item, bool) {
 }
 
 func create(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	user := c.MustGet("user").(User)
 	id := c.Param("id")
 
@@ -76,7 +76,7 @@ func create(c *gin.Context) {
 }
 
 func delete(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
 
@@ -107,7 +107,7 @@ func delete(c *gin.Context) {
 }
 
 func update(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
 
@@ -155,7 +155,7 @@ func update(c *gin.Context) {
 }
 
 func addTagToItem(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
+	db := common.GetDatabase()
 	id := c.Param("id")
 
 	if id == "" {
