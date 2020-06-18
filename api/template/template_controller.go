@@ -1,8 +1,8 @@
 package template
 
 import (
-	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -59,15 +59,15 @@ func createTemplate(c *gin.Context) {
 	}
 
 	var body RequestBody
-	fmt.Println(body)
 	if err := c.BindJSON(&body); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	privateValue := false
-	if body.Private == "true" {
-		privateValue = true
+	privateBool, err := strconv.ParseBool(body.Private)
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
 	}
 
 	uuid := common.GenerateUUID()
@@ -78,7 +78,7 @@ func createTemplate(c *gin.Context) {
 		UUID:        uuid,
 		User:        user,
 		UserID:      user.ID,
-		Private:     privateValue,
+		Private:     privateBool,
 		Lists:       body.Lists,
 	}
 
@@ -106,8 +106,8 @@ func updateTemplate(c *gin.Context) {
 		return
 	}
 
-	template, ok := models.GetSingleTemplate(id, db)
-	if !ok {
+	template, err := models.FindOneTemplate(&Template{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -129,11 +129,6 @@ func deleteTemplate(c *gin.Context) {
 	user := c.MustGet("user").(User)
 	id := c.Param("id")
 
-	if id == "" {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "an id has to be provided"})
-		return
-	}
-
 	template, ok := models.GetSingleTemplate(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
@@ -154,11 +149,6 @@ func applyTemplate(c *gin.Context) {
 	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
-
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
 
 	type RequestBody struct {
 		Title string `json:"title" binding:"required"`
@@ -215,11 +205,6 @@ func getTemplateWithID(c *gin.Context) {
 	db := common.GetDatabase()
 	id := c.Param("id")
 
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
 	template, ok := models.GetSingleTemplate(id, db)
 	if !ok {
 		c.AbortWithStatus(http.StatusNotFound)
@@ -242,11 +227,6 @@ func likeTemplate(c *gin.Context) {
 	db := common.GetDatabase()
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
-
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
 
 	template, ok := models.GetSingleTemplate(id, db)
 	if !ok {

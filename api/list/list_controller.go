@@ -43,13 +43,8 @@ func get(c *gin.Context) {
 	id := c.Param("id")
 	user := c.MustGet("user").(models.User)
 
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
-	board, ok := models.GetBoardWithID(id, db)
-	if !ok {
+	board, err := models.FindOneBoard(&Board{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -73,18 +68,13 @@ func create(c *gin.Context) {
 	id := c.Param("id")
 	user := c.MustGet("user").(models.User)
 
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
 	body, ok := validateRequestBody(c)
 	if !ok {
 		return
 	}
 
-	board, ok := models.GetBoardWithID(id, db)
-	if !ok {
+	board, err := models.FindOneBoard(&Board{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -113,15 +103,9 @@ func delete(c *gin.Context) {
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
 
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
-	list, ok := models.GetListWithID(id, db)
-	if !ok {
+	list, err := models.FindOneList(&List{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
-		return
 	}
 
 	if user.ID != list.UserID {
@@ -138,18 +122,13 @@ func update(c *gin.Context) {
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
 
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
 	body, ok := validateRequestBody(c)
 	if !ok {
 		return
 	}
 
-	list, ok := models.GetListWithID(id, db)
-	if !ok {
+	list, err := models.FindOneList(&List{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -170,13 +149,8 @@ func copyList(c *gin.Context) {
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
 
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
-	list, ok := models.GetListWithID(id, db)
-	if !ok {
+	list, err := models.FindOneList(&List{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
