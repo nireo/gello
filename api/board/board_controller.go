@@ -70,8 +70,8 @@ func getSingle(c *gin.Context) {
 	id := c.Param("id")
 	user := c.MustGet("user").(models.User)
 
-	board, ok := models.GetBoardWithID(id, db)
-	if !ok {
+	board, err := models.FindOneBoard(&Board{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -112,13 +112,8 @@ func delete(c *gin.Context) {
 	id := c.Param("id")
 	user := c.MustGet("user").(models.User)
 
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
-	board, ok := models.GetBoardWithID(id, db)
-	if !ok {
+	board, err := models.FindOneBoard(&Board{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -148,8 +143,8 @@ func update(c *gin.Context) {
 		return
 	}
 
-	board, ok := models.GetBoardWithID(id, db)
-	if !ok {
+	board, err := models.FindOneBoard(&Board{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -182,8 +177,8 @@ func addTagToBoard(c *gin.Context) {
 		return
 	}
 
-	board, ok := models.GetBoardWithID(id, db)
-	if !ok {
+	board, err := models.FindOneBoard(&Board{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -215,8 +210,8 @@ func shareBoard(c *gin.Context) {
 		Username string `json:"username" binding:"required"`
 	}
 
-	var board Board
-	if err := db.Where("uuid = ?", boardID).First(&board).Error; err != nil {
+	board, err := models.FindOneBoard(&Board{UUID: boardID})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -249,8 +244,8 @@ func unShareBoard(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	boardID := c.Param("id")
 
-	var board Board
-	if err := db.Where("uuid = ?", boardID).First(&board).Error; err != nil {
+	board, err := models.FindOneBoard(&Board{UUID: boardID})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}

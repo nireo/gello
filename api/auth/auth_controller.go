@@ -100,8 +100,8 @@ func registerController(c *gin.Context) {
 	}
 
 	// if the user was found, return a conflict notice that the user already exists
-	_, ok := getUserWithUsername(requestBody.Username, db)
-	if ok {
+	_, err := models.FindOneUser(&User{Username: requestBody.Username})
+	if err == nil {
 		c.AbortWithStatus(http.StatusConflict)
 		return
 	}
@@ -125,8 +125,6 @@ func registerController(c *gin.Context) {
 }
 
 func loginController(c *gin.Context) {
-	db := common.GetDatabase()
-
 	type RequestBody struct {
 		Username string `json:"username" binding:"required"`
 		Password string `json:"password" binding:"required"`
@@ -138,8 +136,8 @@ func loginController(c *gin.Context) {
 		return
 	}
 
-	user, ok := getUserWithUsername(requestBody.Username, db)
-	if !ok {
+	user, err := models.FindOneUser(&User{Username: requestBody.Username})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -206,8 +204,8 @@ func updateUser(c *gin.Context) {
 	// check for new username
 	if user.Username != body.Username {
 		// check for conflicts
-		_, ok := getUserWithUsername(body.Username, db)
-		if ok {
+		_, err := models.FindOneUser(&User{Username: body.Username})
+		if err == nil {
 			c.AbortWithStatus(http.StatusConflict)
 			return
 		}
@@ -217,14 +215,16 @@ func updateUser(c *gin.Context) {
 
 	if user.Email != body.Email {
 		// check for conflitcts
-		_, ok := getUserWithEmail(body.Email, db)
-		if ok {
+		_, err := models.FindOneUser(&User{Email: body.Email})
+		if err == nil {
 			c.AbortWithStatus(http.StatusConflict)
 			return
 		}
 
 		user.Email = body.Email
 	}
+
+	db.Save(&user)
 
 	c.Status(http.StatusNoContent)
 }

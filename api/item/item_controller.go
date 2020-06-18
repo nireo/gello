@@ -35,11 +35,6 @@ func create(c *gin.Context) {
 	user := c.MustGet("user").(User)
 	id := c.Param("id")
 
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
 	type RequestBody struct {
 		Content string `json:"content" binding:"required"`
 	}
@@ -50,8 +45,8 @@ func create(c *gin.Context) {
 		return
 	}
 
-	list, ok := models.GetListWithID(id, db)
-	if !ok {
+	list, err := models.FindOneList(&List{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -80,25 +75,20 @@ func delete(c *gin.Context) {
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
 
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
-	item, ok := getItemWithID(id, db)
-	if !ok {
+	item, err := models.FindOneItem(&Item{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	list, ok := models.GetListWithID(id, db)
-	if !ok {
+	list, err := models.FindOneList(&List{UUID: item.ListUUID})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
 	if list.UserID != user.ID {
-		c.AbortWithStatus(http.StatusNotFound)
+		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
 
@@ -111,14 +101,8 @@ func update(c *gin.Context) {
 	id := c.Param("id")
 	user := c.MustGet("user").(User)
 
-	if id == "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
 	type RequestBody struct {
-		Content  string `json:"content" binding:"required"`
-		ListUUID string `json:"uuid" binding:"required"`
+		Content string `json:"content" binding:"required"`
 	}
 
 	var body RequestBody
@@ -127,14 +111,15 @@ func update(c *gin.Context) {
 		return
 	}
 
-	item, ok := getItemWithID(id, db)
-	if !ok {
+	item, err := models.FindOneItem(&Item{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
+
 	}
 
-	list, ok := models.GetListWithID(body.ListUUID, db)
-	if !ok {
+	list, err := models.FindOneList(&List{UUID: item.ListUUID})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -158,11 +143,6 @@ func addTagToItem(c *gin.Context) {
 	db := common.GetDatabase()
 	id := c.Param("id")
 
-	if id == "" {
-		c.AbortWithStatus(http.StatusNotFound)
-		return
-	}
-
 	type RequestBody struct {
 		TagID string `json:"tag_id" binding:"required"`
 	}
@@ -173,8 +153,8 @@ func addTagToItem(c *gin.Context) {
 		return
 	}
 
-	var item Item
-	if err := db.Where("uuid = ?", id).First(&item).Error; err != nil {
+	item, err := models.FindOneItem(&Item{UUID: id})
+	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
