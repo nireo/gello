@@ -142,7 +142,7 @@ func loginController(c *gin.Context) {
 		return
 	}
 
-	if !checkHash(requestBody.Password, user.Password) {
+	if checkHash(requestBody.Password, user.Password) {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}

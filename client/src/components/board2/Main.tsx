@@ -12,7 +12,7 @@ import { DrawerContent } from './Drawer';
 import { setActiveBoard } from '../../actions';
 import { getSingleBoard } from '../../services/board';
 import { CreateBoard } from '../../interfaces/Board';
-import { Container, Typography } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
 import DashboardIcons from '@material-ui/icons/Dashboard';
 import IconButton from '@material-ui/core/IconButton';
 import Modal from '@material-ui/core/Modal';
