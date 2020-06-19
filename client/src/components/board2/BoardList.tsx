@@ -29,6 +29,16 @@ type Props = {
 const BoardList: React.FC<Props> = ({ title, items, id, index, setItem }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
+  // state to control the form in ActionButton Component
+  const [formOpen, setOpenForm] = useState<boolean>(false);
+  const closeForm = () => {
+    setOpenForm(false);
+  };
+
+  const openForm = () => {
+    setOpenForm(true);
+  };
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -75,7 +85,7 @@ const BoardList: React.FC<Props> = ({ title, items, id, index, setItem }) => {
                 horizontal: 'center',
               }}
             >
-              <ListMenu id={id} />
+              <ListMenu id={id} openForm={openForm} />
             </Popover>
             <Droppable droppableId={String(id)}>
               {(provided) => (
@@ -89,7 +99,12 @@ const BoardList: React.FC<Props> = ({ title, items, id, index, setItem }) => {
                       id={item.uuid}
                     />
                   ))}
-                  <ActionButton listID={id} list={true} />
+                  <ActionButton
+                    closeForm={closeForm}
+                    formOpen={formOpen}
+                    listID={id}
+                    list={true}
+                  />
                   {provided.placeholder}
                 </div>
               )}

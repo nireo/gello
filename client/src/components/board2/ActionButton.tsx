@@ -15,6 +15,8 @@ type Props = {
   dispatch: any;
   listID?: string;
   boardID?: string;
+  formOpen?: boolean;
+  closeForm?: () => void;
 };
 
 class ActionButton extends React.Component<Props> {
@@ -40,6 +42,14 @@ class ActionButton extends React.Component<Props> {
       text: event.target.value,
     });
   };
+
+  componentDidUpdate() {
+    if (this.props.formOpen !== undefined && this.state.formOpen === false) {
+      if (this.props.formOpen === true) {
+        this.openForm();
+      }
+    }
+  }
 
   handleAddList = () => {
     const { dispatch, boardID } = this.props;

@@ -21,9 +21,10 @@ const useStyles = makeStyles((theme: Theme) =>
 type Props = {
   id: string;
   deleteList: (listID: string) => void;
+  openForm: () => void;
 };
 
-const ListMenu: React.FC<Props> = ({ id, deleteList }) => {
+const ListMenu: React.FC<Props> = ({ id, deleteList, openForm }) => {
   const classes = useStyles();
 
   const handleListDeletion = () => {
@@ -38,7 +39,7 @@ const ListMenu: React.FC<Props> = ({ id, deleteList }) => {
         subheader={<ListSubheader component="div">List actions</ListSubheader>}
         className={classes.root}
       >
-        <ListItem button style={{ width: '100%' }}>
+        <ListItem button style={{ width: '100%' }} onClick={() => openForm()}>
           <ListItemText primary="Add card..." />
         </ListItem>
         <ListItem button onClick={handleListDeletion}>
