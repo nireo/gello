@@ -38,6 +38,24 @@ func get(c *gin.Context) {
 		return
 	}
 
+	var sharedBoards []models.SharedBoard
+	if err := db.Where(&models.SharedBoard{SharedUserID: user.ID}); err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	// serialize shared boards
+	for index := range sharedBoards {
+		// find board
+		var board Board
+		if err := db.Where("id = ?", sharedBoards[index].SharedBoardID).First(&board).Error; err != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+			return
+		}
+
+		boards = append(boards, board)
+	}
+
 	c.JSON(http.StatusOK, models.SerializeBoards(boards))
 }
 
