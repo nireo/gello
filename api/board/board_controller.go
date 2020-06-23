@@ -39,21 +39,19 @@ func get(c *gin.Context) {
 	}
 
 	var sharedBoards []models.SharedBoard
-	if err := db.Where(&models.SharedBoard{SharedUserID: user.ID}); err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
-		return
-	}
+	if err := db.Where(&models.SharedBoard{SharedUserID: user.ID}); err == nil {
+		// serialize shared boards
+		for index := range sharedBoards {
+			// find board
+			var board Board
+			if err := db.Where("id = ?", sharedBoards[index].SharedBoardID).First(&board).Error; err != nil {
+				c.AbortWithStatus(http.StatusNotFound)
+				return
+			}
 
-	// serialize shared boards
-	for index := range sharedBoards {
-		// find board
-		var board Board
-		if err := db.Where("id = ?", sharedBoards[index].SharedBoardID).First(&board).Error; err != nil {
-			c.AbortWithStatus(http.StatusNotFound)
-			return
+			boards = append(boards, board)
 		}
 
-		boards = append(boards, board)
 	}
 
 	c.JSON(http.StatusOK, models.SerializeBoards(boards))
@@ -228,6 +226,12 @@ func shareBoard(c *gin.Context) {
 		Username string `json:"username" binding:"required"`
 	}
 
+	var body RequestBody
+	if err := c.BindJSON(&body); err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
 	board, err := models.FindOneBoard(&Board{UUID: boardID})
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
@@ -240,7 +244,7 @@ func shareBoard(c *gin.Context) {
 	}
 
 	var userToShare models.User
-	if err := db.Where("uuid = ?", boardID).First(&userToShare).Error; err != nil {
+	if err := db.Where("username = ?", body.Username).First(&userToShare).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
