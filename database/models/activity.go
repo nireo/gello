@@ -12,7 +12,8 @@ var messageTypes = [4]string{"deleteItem", "deleteList", "addList", "addItem"}
 // Activity model
 type Activity struct {
 	gorm.Model
-	UUID string
+	UUID    string
+	BoardID uint
 
 	// we could store the whole user here, but I don't think that is necessary.
 	// for the activity display just showing the username is fine.
@@ -39,6 +40,7 @@ func CreateActivityReport(username, actionType, boardID string, db *gorm.DB) boo
 		UUID:     common.GenerateUUID(),
 		Username: username,
 		Content:  contentMessage,
+		BoardID:  board.ID,
 	}
 
 	db.NewRecord(newActivity)

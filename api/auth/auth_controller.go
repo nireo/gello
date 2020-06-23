@@ -6,7 +6,6 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"github.com/nireo/gello/database/models"
 	"github.com/nireo/gello/lib/common"
 	"golang.org/x/crypto/bcrypt"
@@ -23,36 +22,6 @@ type Template = models.Template
 
 // Board model alias
 type Board = models.Board
-
-// Returns the user struct or a boolean telling if the user was found
-func getUserWithUsername(username string, db *gorm.DB) (User, bool) {
-	var user User
-	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
-		return user, false
-	}
-
-	return user, true
-}
-
-// Returns the user struct with a boolean informing the user was found
-func getUserWithEmail(email string, db *gorm.DB) (User, bool) {
-	var user User
-	if err := db.Where("email = ?", email).First(&user).Error; err != nil {
-		return user, false
-	}
-
-	return user, true
-}
-
-func deleteUser(username string, db *gorm.DB) bool {
-	user, ok := getUserWithUsername(username, db)
-	if !ok {
-		return false
-	}
-
-	db.Delete(&user)
-	return true
-}
 
 func hash(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 12)
