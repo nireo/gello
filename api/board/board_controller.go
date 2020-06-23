@@ -1,6 +1,7 @@
 package board
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -39,7 +40,7 @@ func get(c *gin.Context) {
 	}
 
 	var sharedBoards []models.SharedBoard
-	if err := db.Where(&models.SharedBoard{SharedUserID: user.ID}); err == nil {
+	if err := db.Where(&models.SharedBoard{SharedUserID: user.ID}).Find(&sharedBoards); err == nil {
 		// serialize shared boards
 		for index := range sharedBoards {
 			// find board
@@ -48,6 +49,8 @@ func get(c *gin.Context) {
 				c.AbortWithStatus(http.StatusNotFound)
 				return
 			}
+
+			fmt.Println(board)
 
 			boards = append(boards, board)
 		}

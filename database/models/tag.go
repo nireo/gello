@@ -21,3 +21,20 @@ func (tag *Tag) Serialize() common.JSON {
 		"label": tag.Label,
 	}
 }
+
+func (tag *Tag) ChangeColor(newColor string) {
+	tag.Color = newColor
+}
+
+func (tag *Tag) ChangeLabel(newLabel string) {
+	tag.Label = newLabel
+}
+
+func SerializeTags(tags []Tag) []common.JSON {
+	serializedTags := make([]common.JSON, len(tags), len(tags))
+	for index := range tags {
+		serializedTags[index] = tags[index].Serialize()
+	}
+
+	return serializedTags
+}

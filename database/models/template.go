@@ -29,6 +29,18 @@ func GetTemplates(db *gorm.DB) ([]Template, bool) {
 	return templates, true
 }
 
+func (template *Template) ChangeDescription(description string) {
+	template.Description = description
+}
+
+func (template *Template) ChangeTitle(title string) {
+	template.Title = title
+}
+
+func (template *Template) AddLike() {
+	template.Likes += 1
+}
+
 // GetUserTemplates gets all templates related to user model
 func GetUserTemplates(user User, db *gorm.DB) ([]Template, bool) {
 	var templates []Template

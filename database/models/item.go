@@ -25,6 +25,14 @@ func GetItemWithID(id string, db *gorm.DB) (Item, bool) {
 	return item, true
 }
 
+func (item *Item) ChangeContent(newContent string) {
+	item.Content = newContent
+}
+
+func (item *Item) ChangeTag(tagID uint) {
+	item.TagID = tagID
+}
+
 // Serialize item data into json
 func (item *Item) Serialize() common.JSON {
 	return common.JSON{
