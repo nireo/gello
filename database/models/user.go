@@ -31,6 +31,16 @@ func (user *User) Serialize() common.JSON {
 	}
 }
 
+// SerializeUsers serializes a list of users into json format
+func SerializeUsers(users []User) []common.JSON {
+	serializedUsers := make([]common.JSON, len(users), len(users))
+	for index := range users {
+		serializedUsers[index] = users[index].Serialize()
+	}
+
+	return serializedUsers
+}
+
 // GetUserWithID returns a user with given id
 func GetUserWithID(id string, db *gorm.DB) (User, bool) {
 	var user User

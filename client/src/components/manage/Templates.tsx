@@ -85,7 +85,6 @@ const Templates: React.FC<Props> = ({ templates, getTemplatesAction }) => {
         </IconButton>
       </div>
       <Divider style={{ marginBottom: "1rem" }} />
-      <h4>Official templates</h4>
       <div>
         {templates.templates.map((template: Template) => (
           <div style={{ width: "100%", marginBottom: "1rem" }}>
@@ -113,41 +112,9 @@ const Templates: React.FC<Props> = ({ templates, getTemplatesAction }) => {
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small">Read more</Button>
-              </CardActions>
-            </Card>
-          </div>
-        ))}
-      </div>
-      <h4>Community templates</h4>
-      <div style={{ display: "flex" }}>
-        {templates.templates.map((template: Template) => (
-          <div style={{ width: "100%", marginBottom: "1rem" }}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" component="h3">
-                  {template.title}
-                </Typography>
-                <Typography
-                  color="textSecondary"
-                  style={{
-                    marginBottom: "0.25rem",
-                    padding: 0,
-                    fontSize: "0.8rem",
-                  }}
-                >
-                  {formatDate(template.created_at)}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  style={{ fontSize: "1rem" }}
-                  component="p"
-                >
-                  {template.description}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small">Read more</Button>
+                <Link to={`/template/${template.uuid}`}>
+                  <Button size="small">Read more</Button>
+                </Link>
               </CardActions>
             </Card>
           </div>

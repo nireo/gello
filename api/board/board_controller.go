@@ -1,7 +1,6 @@
 package board
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -41,20 +40,6 @@ func get(c *gin.Context) {
 
 	var sharedBoards []models.SharedBoard
 	if err := db.Where(&models.SharedBoard{SharedUserID: user.ID}).Find(&sharedBoards); err == nil {
-		// serialize shared boards
-		for index := range sharedBoards {
-			// find board
-			var board Board
-			if err := db.Where("id = ?", sharedBoards[index].SharedBoardID).First(&board).Error; err != nil {
-				c.AbortWithStatus(http.StatusNotFound)
-				return
-			}
-
-			fmt.Println(board)
-
-			boards = append(boards, board)
-		}
-
 	}
 
 	c.JSON(http.StatusOK, models.SerializeBoards(boards))
@@ -283,4 +268,41 @@ func unShareBoard(c *gin.Context) {
 	}
 
 	c.Status(http.StatusNoContent)
+}
+
+func getSharedUsers(c *gin.Context) {
+	db := common.GetDatabase()
+	user := c.MustGet("user").(models.User)
+	boardID := c.Param("id")
+
+	board, err := models.FindOneBoard(&Board{UUID: boardID})
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if board.UserID != user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
+	var shared []models.SharedBoard
+	if err := db.Where(&models.SharedBoard{SharedBoardID: board.ID}).Find(&shared).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	// find all users
+	var users []models.User
+	for index := range shared {
+		var sharedUser models.User
+		if err := db.Where("id = ?", shared[index].SharedUserID).First(&sharedUser).Error; err != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+			return
+		}
+
+		users = append(users, sharedUser)
+	}
+
+	c.JSON(http.StatusOK, models.SerializeUsers(users))
 }
