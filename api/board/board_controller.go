@@ -253,6 +253,13 @@ func unShareBoard(c *gin.Context) {
 	db := common.GetDatabase()
 	user := c.MustGet("user").(models.User)
 	boardID := c.Param("id")
+	username := c.Param("id")
+
+	userToRemove, err := models.FindOneUser(&models.User{Username: username})
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
 
 	board, err := models.FindOneBoard(&Board{UUID: boardID})
 	if err != nil {
@@ -260,8 +267,13 @@ func unShareBoard(c *gin.Context) {
 		return
 	}
 
+	if board.UserID != user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
 	if err := db.Where(
-		&models.SharedBoard{SharedUserID: user.ID,
+		&models.SharedBoard{SharedUserID: userToRemove.ID,
 			SharedBoardID: board.ID}).Delete(&models.SharedBoard{}).Error; err != nil {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return

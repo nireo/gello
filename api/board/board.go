@@ -20,6 +20,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 		board.PATCH("/:id", middlewares.Authorized, update)
 
 		board.DELETE("/board/:id", middlewares.Authorized, delete)
-		board.DELETE("/share/:id", middlewares.Authorized, unShareBoard)
+		board.DELETE("/share/:id/:username", middlewares.Authorized, unShareBoard)
 	}
 }
