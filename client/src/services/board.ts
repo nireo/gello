@@ -44,3 +44,25 @@ export const addTagToBoard = async (newTag: Tag, id: string) => {
   const response = await axios.post(`${baseUrl}/${id}`, newTag, getConfig());
   return response.data;
 };
+
+export const addUserToBoard = async (username: string, boardID: string) => {
+  const response = await axios.post(
+    `${baseUrl}/share/${boardID}`,
+    { username },
+    getConfig()
+  );
+  return response.data;
+};
+
+export const getSharedUsers = async (boardID: string) => {
+  const response = await axios.get(`${baseUrl}/shared/${boardID}`, getConfig());
+  return response.data;
+};
+
+export const unShareBoard = async (username: string, boardID: string) => {
+  const response = await axios.post(
+    `${baseUrl}/share/${boardID}/${username}`,
+    getConfig()
+  );
+  return response.data;
+};
