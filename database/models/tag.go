@@ -14,6 +14,25 @@ type Tag struct {
 	BoardID uint
 }
 
+func (tag *Tag) Save() {
+	db := common.GetDatabase()
+
+	db.Save(&tag)
+}
+
+func (tag *Tag) Create() {
+	db := common.GetDatabase()
+
+	db.NewRecord(&db)
+	db.Create(&db)
+}
+
+func (tag *Tag) Delete() {
+	db := common.GetDatabase()
+
+	db.Delete(&tag)
+}
+
 // Serialize tag data to json
 func (tag *Tag) Serialize() common.JSON {
 	return common.JSON{

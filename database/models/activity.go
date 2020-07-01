@@ -49,6 +49,25 @@ func CreateActivityReport(username, actionType, boardID string, db *gorm.DB) boo
 	return true
 }
 
+func (activity *Activity) Update() {
+	db := common.GetDatabase()
+
+	db.Save(&activity)
+}
+
+func (activity *Activity) Save() {
+	db := common.GetDatabase()
+
+	db.NewRecord(&activity)
+	db.Save(&activity)
+}
+
+func (activity *Activity) Delete() {
+	db := common.GetDatabase()
+
+	db.Delete(&activity)
+}
+
 // DeleteActivityReport takes an activity\s id and deletes that activity
 func DeleteActivityReport(activityID string, db *gorm.DB) bool {
 	activity, ok := FindActivity(activityID, db)

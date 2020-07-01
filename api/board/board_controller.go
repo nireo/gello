@@ -39,8 +39,7 @@ func get(c *gin.Context) {
 	}
 
 	var sharedBoards []models.SharedBoard
-	if err := db.Where(&models.SharedBoard{SharedUserID: user.ID}).Find(&sharedBoards); err == nil {
-	}
+	db.Where(&models.SharedBoard{SharedUserID: user.ID}).Find(&sharedBoards)
 
 	c.JSON(http.StatusOK, models.SerializeBoards(boards))
 }

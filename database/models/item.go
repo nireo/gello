@@ -15,6 +15,24 @@ type Item struct {
 	TagID    uint
 }
 
+func (item *Item) Delete() {
+	db := common.GetDatabase()
+
+	db.Delete(&item)
+}
+
+func (item *Item) Save() {
+	db := common.GetDatabase()
+
+	db.Save(&item)
+}
+
+func (item *Item) Create() {
+	db := common.GetDatabase()
+
+	db.Create(&item)
+}
+
 // GetItemWithID returns an item with given id
 func GetItemWithID(id string, db *gorm.DB) (Item, bool) {
 	var item Item

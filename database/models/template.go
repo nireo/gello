@@ -29,6 +29,24 @@ func GetTemplates(db *gorm.DB) ([]Template, bool) {
 	return templates, true
 }
 
+func (template *Template) Delete() {
+	db := common.GetDatabase()
+
+	db.Delete(&template)
+}
+
+func (template *Template) Save() {
+	db := common.GetDatabase()
+
+	db.Save(&template)
+}
+
+func (template *Template) Create() {
+	db := common.GetDatabase()
+
+	db.Create(&template)
+}
+
 func (template *Template) ChangeDescription(description string) {
 	template.Description = description
 }

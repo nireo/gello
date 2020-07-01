@@ -15,6 +15,24 @@ type List struct {
 	UserID  uint
 }
 
+func (list *List) Delete() {
+	db := common.GetDatabase()
+
+	db.Delete(&list)
+}
+
+func (list *List) Save() {
+	db := common.GetDatabase()
+
+	db.Save(&list)
+}
+
+func (list *List) Create() {
+	db := common.GetDatabase()
+
+	db.Create(&list)
+}
+
 // GetListWithID returns a list corresposind to an id
 func GetListWithID(id string, db *gorm.DB) (List, bool) {
 	var list List
