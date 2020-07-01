@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { CreateList } from '../interfaces/List';
+
 const baseUrl: string = '/api/list/';
 let token: string | null = null;
 
@@ -9,8 +10,8 @@ export const setToken = (newToken: string) => {
 
 const getConfig = () => ({
   headers: {
-    Authorization: token
-  }
+    Authorization: token,
+  },
 });
 
 export const getSingleList = async (id: string) => {
@@ -30,5 +31,10 @@ export const deleteList = async (id: string) => {
 
 export const updateList = async (list: CreateList, id: string) => {
   const response = await axios.patch(`${baseUrl}${id}`, list, getConfig());
+  return response.data;
+};
+
+export const copyList = async (id: string) => {
+  const response = await axios.post(`${baseUrl}/${id}/copy`, getConfig());
   return response.data;
 };

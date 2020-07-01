@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { CreateItem, UpdateItem } from '../interfaces/Item';
-const baseUrl: string = '/api/items/';
+import axios from "axios";
+import { CreateItem, UpdateItem } from "../interfaces/Item";
+const baseUrl: string = "/api/items/";
 
 let token: string | null = null;
 
@@ -10,8 +10,8 @@ export const setToken = (newToken: string) => {
 
 const getConfig = () => ({
   headers: {
-    Authorization: token,
-  },
+    Authorization: token
+  }
 });
 
 export const createItem = async (item: CreateItem, id: string) => {
@@ -30,5 +30,14 @@ export const deleteItem = async (id: string) => {
 
 export const updateItem = async (item: UpdateItem, id: string) => {
   const response = await axios.patch(`${baseUrl}${id}`, item, getConfig());
+  return response.data;
+};
+
+export const addTagToItem = async (itemId: string, tag_id: string) => {
+  const response = await axios.post(
+    `${baseUrl}/tag/${itemId}}`,
+    { tag_id },
+    getConfig()
+  );
   return response.data;
 };
