@@ -3,6 +3,8 @@ import Container from '@material-ui/core/Container';
 import { User } from '../../../interfaces/User';
 import { getSharedUsers } from '../../../services/board';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import { unShareBoard } from '../../../services/board';
 
 type Props = {
   boardID: string;
@@ -13,7 +15,7 @@ export const SharedUsers: React.FC<Props> = ({ boardID }) => {
 
   const loadSharedUsers = useCallback(async () => {
     const data = await getSharedUsers(boardID);
-    setUsers(null);
+    setUsers(data);
   }, [boardID]);
 
   useEffect(() => {
@@ -21,6 +23,14 @@ export const SharedUsers: React.FC<Props> = ({ boardID }) => {
       loadSharedUsers();
     }
   }, []);
+
+  const handleUserRemove = (username: string) => {
+    if (
+      window.confirm(`Are you sure you want remove ${username} from the board?`)
+    ) {
+      unShareBoard(username, boardID);
+    }
+  };
 
   return (
     <Container>
@@ -31,7 +41,15 @@ export const SharedUsers: React.FC<Props> = ({ boardID }) => {
       ) : (
         <div style={{ marginTop: '4rem', textAlign: 'center' }}>
           {users.map((user: User) => (
-            <div style={{ marginBottom: '0.5rem' }}>{user.username}</div>
+            <div style={{ marginBottom: '0.5rem', display: 'flex' }}>
+              {user.username}
+              <Button
+                style={{ marginLeft: '2rem' }}
+                onClick={() => handleUserRemove(user.username)}
+              >
+                Remove
+              </Button>
+            </div>
           ))}
         </div>
       )}
