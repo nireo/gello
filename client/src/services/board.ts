@@ -1,7 +1,7 @@
-import axios from 'axios';
-import { CreateBoard } from '../interfaces/Board';
-import { Tag } from '../interfaces/Item';
-const baseUrl: string = '/api/board/';
+import axios from "axios";
+import { CreateBoard } from "../interfaces/Board";
+import { Tag } from "../interfaces/Item";
+const baseUrl: string = "/api/board/";
 
 let token: string | null = null;
 
@@ -11,8 +11,8 @@ export const setToken = (newToken: string) => {
 
 const getConfig = () => ({
   headers: {
-    Authorization: token,
-  },
+    Authorization: token
+  }
 });
 
 export const getBoards = async () => {
@@ -21,7 +21,7 @@ export const getBoards = async () => {
 };
 
 export const getSingleBoard = async (id: string) => {
-  const response = await axios.get(`${baseUrl}single/${id}`, getConfig());
+  const response = await axios.get(`${baseUrl}board/${id}`, getConfig());
   return response.data;
 };
 
