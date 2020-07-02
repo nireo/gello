@@ -8,6 +8,8 @@ import BoardActions from './DrawerPages/BoardActions';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import { ShareBoard } from './DrawerPages/ShareBoard';
+import { SharedUsers } from './DrawerPages/SharedUsers';
 
 type Props = {
   closeDrawer: () => void;
@@ -59,12 +61,20 @@ export const DrawerContent: React.FC<Props> = ({ closeDrawer, id }) => {
             <ListItem button onClick={() => setPage('actions')}>
               <ListItemText primary="Board actions" />
             </ListItem>
+            <ListItem button onClick={() => setPage('sharedUsers')}>
+              <ListItemText primary="Shared users" />
+            </ListItem>
+            <ListItem button onClick={() => setPage('shareUser')}>
+              <ListItemText primary="Share board" />
+            </ListItem>
           </List>
         </div>
       )}
       {page === 'about' && <AboutBoard title="Board title" description="" />}
       {page === 'color' && <ChangeBackground />}
       {page === 'actions' && <BoardActions id={id} />}
+      {page === 'shareUser' && <ShareBoard id={id} />}
+      {page === 'sharedUsers' && <SharedUsers boardID={id} />}
     </div>
   );
 };
