@@ -197,3 +197,34 @@ func updateUser(c *gin.Context) {
 
 	c.Status(http.StatusNoContent)
 }
+
+func updatePassword(c *gin.Context) {
+	user := c.MustGet("user").(models.User)
+
+	type RequestBody struct {
+		OldPassword string `json:"oldPassword" binding:"required"`
+		NewPassword string `json:"newPassword" binding:"required"`
+	}
+
+	var requestBody RequestBody
+	if err := c.BindJSON(&requestBody); err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	if !checkHash(requestBody.OldPassword, user.Password) {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
+	hash, err := hash(requestBody.NewPassword)
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	user.Password = hash
+	user.Save()
+
+	c.Status(http.StatusNoContent)
+}
