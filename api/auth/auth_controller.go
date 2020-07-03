@@ -165,7 +165,7 @@ func updateUser(c *gin.Context) {
 
 	// check that there is a difference in information
 	if user.Username == body.Username && user.Email == body.Email {
-		// return no content because the request was successfull, but there is no content to return
+		// return no content because the request was successful, but there is no content to return
 		c.AbortWithStatus(http.StatusNoContent)
 		return
 	}
@@ -183,7 +183,7 @@ func updateUser(c *gin.Context) {
 	}
 
 	if user.Email != body.Email {
-		// check for conflitcts
+		// check for conflicts
 		_, err := models.FindOneUser(&User{Email: body.Email})
 		if err == nil {
 			c.AbortWithStatus(http.StatusConflict)

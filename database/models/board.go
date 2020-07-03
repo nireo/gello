@@ -72,6 +72,18 @@ func FindOneBoard(condition interface{}) (Board, error) {
 	return board, nil
 }
 
+// FindManyBoards finds multiple boards that satisfy the given condition
+func FindManyBoards(condition interface{}) ([]Board, error) {
+	db := common.GetDatabase()
+
+	var boards []Board
+	if err := db.Where(condition).Find(&boards).Error; err != nil {
+		return boards, err
+	}
+
+	return boards, nil
+}
+
 // Serialize board data into json
 func (board *Board) Serialize() common.JSON {
 	return common.JSON{

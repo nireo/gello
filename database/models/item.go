@@ -70,6 +70,17 @@ func FindOneItem(condition interface{}) (Item, error) {
 	return item, nil
 }
 
+// FindManyItems finds many items that satisfy a given condition
+func FindManyItems(condition interface{}) ([]Item, error) {
+	db := common.GetDatabase()
+	var items []Item
+	if err := db.Where(condition).Find(&items).Error; err != nil {
+		return items, err
+	}
+
+	return items, nil
+}
+
 // SerializeItems serializes an array of items
 func SerializeItems(items []Item) []common.JSON {
 	serialized := make([]common.JSON, len(items), len(items))

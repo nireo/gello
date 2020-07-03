@@ -49,6 +49,17 @@ func (tag *Tag) ChangeLabel(newLabel string) {
 	tag.Label = newLabel
 }
 
+// FindManyTags finds all the tags that match the given condition
+func FindManyTags(condition interface{}) ([]Tag, error) {
+	db := common.GetDatabase()
+	var tags []Tag
+	if err := db.Where(condition).Find(&tags).Error; err != nil {
+		return tags, err
+	}
+
+	return tags, nil
+}
+
 func SerializeTags(tags []Tag) []common.JSON {
 	serializedTags := make([]common.JSON, len(tags), len(tags))
 	for index := range tags {

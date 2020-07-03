@@ -54,6 +54,17 @@ func FindOneList(condition interface{}) (List, error) {
 	return list, nil
 }
 
+// FindManyLists finds all the lists that satisfy the given condition
+func FindManyLists(condition interface{}) ([]List, error) {
+	db := common.GetDatabase()
+	var lists []List
+	if err := db.Where(condition).Find(&lists).Error; err != nil {
+		return lists, err
+	}
+
+	return lists, nil
+}
+
 // Serialize list data into JSON
 func (list *List) Serialize() common.JSON {
 	// parse the item data

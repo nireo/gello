@@ -90,6 +90,17 @@ func FindOneTemplate(condition interface{}) (Template, error) {
 	return template, nil
 }
 
+// FindManyTemplates returns all the templates that satisfy the given condition
+func FindManyTemplates(condition interface{}) ([]Template, error) {
+	db := common.GetDatabase()
+	var templates []Template
+	if err := db.Where(condition).Find(&templates).Error; err != nil {
+		return templates, err
+	}
+
+	return templates, nil
+}
+
 // Serialize template data into json
 func (template *Template) Serialize() common.JSON {
 	return common.JSON{
