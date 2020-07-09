@@ -24,13 +24,8 @@ type User = models.User
 func CheckSharedListOwnership(list List, userID uint) bool {
 	db := common.GetDatabase()
 
-	var board models.Board
-	if err := db.Where("id = ?", list.BoardID).First(&board).Error; err != nil {
-		return false
-	}
-
 	var sharedBoard models.SharedBoard
-	if err := db.Where(&models.SharedBoard{SharedBoardID: board.ID, SharedUserID: userID}).First(&sharedBoard).Error; err != nil {
+	if err := db.Where(&models.SharedBoard{SharedBoardID: list.BoardID, SharedUserID: userID}).First(&sharedBoard).Error; err != nil {
 		return false
 	}
 

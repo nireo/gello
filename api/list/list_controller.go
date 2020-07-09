@@ -49,7 +49,7 @@ func get(c *gin.Context) {
 		return
 	}
 
-	if user.ID == board.UserID {
+	if user.ID == board.UserID || !models.CheckBoardOwnership(board.ID, user.ID)  {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
@@ -79,7 +79,7 @@ func create(c *gin.Context) {
 		return
 	}
 
-	if board.UserID != user.ID {
+	if board.UserID != user.ID || !models.CheckBoardOwnership(board.ID, user.ID) {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
@@ -108,7 +108,7 @@ func delete(c *gin.Context) {
 		c.AbortWithStatus(http.StatusNotFound)
 	}
 
-	if user.ID != list.UserID {
+	if user.ID != list.UserID || !models.CheckBoardOwnership(list.BoardID, user.ID) {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
@@ -133,7 +133,7 @@ func update(c *gin.Context) {
 		return
 	}
 
-	if user.ID != list.UserID {
+	if user.ID != list.UserID || !models.CheckBoardOwnership(list.BoardID, user.ID) {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}

@@ -76,3 +76,16 @@ func (user *User) Read(m common.JSON) {
 	user.ID = uint(m["id"].(float64))
 	user.Username = m["username"].(string)
 }
+
+// CheckBoardOwnership checks for shared board ownership between board and user
+func CheckBoardOwnership(boardID uint, userID uint) bool {
+	db := common.GetDatabase()
+
+	var sharedBoard SharedBoard
+	if err := db.Where(&SharedBoard{SharedUserID: userId, SharedBoardID: boardID}).First(&sharedBoard).Error; err != nil {
+		return false
+	}
+
+	return true
+}
+
