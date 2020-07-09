@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"github.com/nireo/gello/database/models"
 	"github.com/nireo/gello/lib/common"
 )
@@ -21,13 +20,21 @@ type JSON = common.JSON
 // User model alias
 type User = models.User
 
-func getItemWithID(id string, db *gorm.DB) (Item, bool) {
-	var item Item
-	if err := db.Where("uuid = ?", id).First(&item).First(&item).Error; err != nil {
-		return item, false
+// CheckSharedListOwnership returns a true if the board is shared to the user and false if not
+func CheckSharedListOwnership(list List, userID uint) bool {
+	db := common.GetDatabase()
+
+	var board models.Board
+	if err := db.Where("id = ?", list.BoardID).First(&board).Error; err != nil {
+		return false
 	}
 
-	return item, true
+	var sharedBoard models.SharedBoard
+	if err := db.Where(&models.SharedBoard{SharedBoardID: board.ID, SharedUserID: userID}).First(&sharedBoard).Error; err != nil {
+		return false
+	}
+
+	return true
 }
 
 func create(c *gin.Context) {
@@ -52,7 +59,7 @@ func create(c *gin.Context) {
 	}
 
 	// check that user owns list
-	if list.UserID != user.ID {
+	if list.UserID != user.ID || !CheckSharedListOwnership(list, user.ID) {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
@@ -87,7 +94,7 @@ func delete(c *gin.Context) {
 		return
 	}
 
-	if list.UserID != user.ID {
+	if list.UserID != user.ID || !CheckSharedListOwnership(list, user.ID) {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
@@ -124,7 +131,7 @@ func update(c *gin.Context) {
 		return
 	}
 
-	if list.UserID != user.ID {
+	if list.UserID != user.ID || !CheckSharedListOwnership(list, user.ID) {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
