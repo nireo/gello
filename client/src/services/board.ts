@@ -67,9 +67,20 @@ export const unShareBoard = async (username: string, boardID: string) => {
   return response.data;
 };
 
-export const getBoardActivies = async (boardID: string) => {
+export const getBoardActivities = async (boardID: string) => {
   const response = await axios.get(
     `${baseUrl}/activities/${boardID}`,
+    getConfig()
+  );
+  return response.data;
+};
+
+export const removeBoardActivity = async (
+  activityID: string,
+  boardID: string
+) => {
+  const response = await axios.delete(
+    `${baseUrl}/activity/${boardID}/${activityID}`,
     getConfig()
   );
   return response.data;
