@@ -82,10 +82,9 @@ func CheckBoardOwnership(boardID uint, userID uint) bool {
 	db := common.GetDatabase()
 
 	var sharedBoard SharedBoard
-	if err := db.Where(&SharedBoard{SharedUserID: userId, SharedBoardID: boardID}).First(&sharedBoard).Error; err != nil {
+	if err := db.Where(&SharedBoard{SharedUserID: userID, SharedBoardID: boardID}).First(&sharedBoard).Error; err != nil {
 		return false
 	}
 
 	return true
 }
-

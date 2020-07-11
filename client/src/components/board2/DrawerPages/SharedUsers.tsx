@@ -5,6 +5,12 @@ import { getSharedUsers } from '../../../services/board';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import { unShareBoard } from '../../../services/board';
+import List from '@material-ui/core/List';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import { ListItem } from '@material-ui/core';
 
 type Props = {
   boardID: string;
@@ -12,6 +18,7 @@ type Props = {
 
 export const SharedUsers: React.FC<Props> = ({ boardID }) => {
   const [users, setUsers] = useState<User[] | null>(null);
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
 
   const loadSharedUsers = useCallback(async () => {
     const data = await getSharedUsers(boardID);
@@ -24,12 +31,29 @@ export const SharedUsers: React.FC<Props> = ({ boardID }) => {
     }
   }, []);
 
-  const handleUserRemove = (username: string) => {
+  const removeAllSelectedUsers = () => {
     if (
-      window.confirm(`Are you sure you want remove ${username} from the board?`)
+      window.confirm(
+        `Are you sure you want to remove ${selectedUsers.length} users?`
+      )
     ) {
-      unShareBoard(username, boardID);
+      selectedUsers.forEach(async (user) => {
+        await unShareBoard(user.username, boardID);
+      });
     }
+  };
+
+  const handleCheckboxToggle = (value: User) => () => {
+    const currentIndex = selectedUsers.indexOf(value);
+    const newSelectedUsers = [...selectedUsers];
+
+    if (currentIndex === -1) {
+      newSelectedUsers.push(value);
+    } else {
+      newSelectedUsers.splice(currentIndex, 1);
+    }
+
+    setSelectedUsers(newSelectedUsers);
   };
 
   return (
@@ -39,18 +63,31 @@ export const SharedUsers: React.FC<Props> = ({ boardID }) => {
           <CircularProgress />
         </div>
       ) : (
-        <div style={{ marginTop: '4rem', textAlign: 'center' }}>
-          {users.map((user: User) => (
-            <div style={{ marginBottom: '0.5rem', display: 'flex' }}>
-              {user.username}
-              <Button
-                style={{ marginLeft: '2rem' }}
-                onClick={() => handleUserRemove(user.username)}
+        <div>
+          <List>
+            {users.map((user: User) => (
+              <ListItem
+                key={user.id}
+                button
+                onClick={handleCheckboxToggle(user)}
               >
-                Remove
-              </Button>
-            </div>
-          ))}
+                <ListItemIcon>
+                  <Checkbox
+                    edge="start"
+                    tabIndex={-1}
+                    disableRipple
+                    checked={selectedUsers.indexOf(user) !== -1}
+                  />
+                </ListItemIcon>
+                <ListItemText primary={user.username} />
+              </ListItem>
+            ))}
+          </List>
+          {selectedUsers.length > 0 && (
+            <Button variant="contained" onClick={removeAllSelectedUsers}>
+              Remove selected users
+            </Button>
+          )}
         </div>
       )}
     </Container>
