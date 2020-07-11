@@ -363,3 +363,29 @@ func deleteBoardActivity(c *gin.Context) {
 	db.Delete(&activity)
 	c.Status(http.StatusNoContent)
 }
+
+func deleteTag(c *gin.Context) {
+	db := common.GetDatabase()
+	tagID := c.Param("tagID")
+	user := c.MustGet("user").(models.User)
+
+	var tag models.Tag
+	if err := db.Where("uuid = ?", tagID).First(&tag).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	var board Board
+	if err := db.Where("id = ?", tag.BoardID).First(&board).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if user.ID != board.UserID || !models.CheckBoardOwnership(board.ID, user.ID) {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
+	db.Delete(&tag)
+	c.Status(http.StatusNoContent)
+}

@@ -22,6 +22,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 
 		board.DELETE("activity/:boardID/:activityID", middlewares.Authorized, deleteBoardActivity)
 		board.DELETE("/board/:id", middlewares.Authorized, delete)
+		board.DELETE("/tag/:id", middlewares.Authorized, deleteTag)
 		board.DELETE("/share/:id/:username", middlewares.Authorized, unShareBoard)
 	}
 }
