@@ -336,3 +336,30 @@ func getBoardActivity(c *gin.Context) {
 
 	c.JSON(http.StatusOK, models.SerializeActivities(activities))
 }
+
+func deleteBoardActivity(c *gin.Context) {
+	db := common.GetDatabase()
+	boardID := c.Param("boardID")
+	activityID := c.Param("activityID")
+	user := c.MustGet("user").(models.User)
+
+	board, err := models.FindOneBoard(&Board{UUID: boardID})
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	if board.UserID != user.ID {
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
+	var activity models.Activity
+	if err := db.Where(&models.Activity{UUID: activityID}).First(&activity).Error; err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	db.Delete(&activity)
+	c.Status(http.StatusNoContent)
+}
