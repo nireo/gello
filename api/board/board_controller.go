@@ -80,7 +80,7 @@ func getSingle(c *gin.Context) {
 	}
 
 	// check if the user owns the board
-	if board.UserID != user.ID {
+	if board.UserID != user.ID || !models.CheckBoardOwnership(board.ID, user.ID) {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}
@@ -152,7 +152,7 @@ func update(c *gin.Context) {
 		return
 	}
 
-	if board.UserID != user.ID {
+	if board.UserID != user.ID || !models.CheckBoardOwnership(board.ID, user.ID) {
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}

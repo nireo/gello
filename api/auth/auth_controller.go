@@ -136,15 +136,11 @@ func removeUser(c *gin.Context) {
 
 	// remove all of the user's boards
 	var boards []Board
-	if err := db.Where("user_id = ?", user.ID).Find(&boards).Error; err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
-		return
-	}
+	db.Model(&user).Related(&boards)
 
 	for index := range boards {
 		db.Delete(&boards[index])
 	}
-
 	db.Delete(&user)
 }
 
