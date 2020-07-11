@@ -9,3 +9,9 @@ export interface Board {
   uuid: string;
   color: string;
 }
+
+export interface Activity {
+  uuid: string;
+  username: string;
+  content: string;
+}
