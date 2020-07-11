@@ -14,12 +14,14 @@ type Tag struct {
 	BoardID uint
 }
 
+// Save saves all changes made to a tag
 func (tag *Tag) Save() {
 	db := common.GetDatabase()
 
 	db.Save(&tag)
 }
 
+// Create creates a new tag entry to the database
 func (tag *Tag) Create() {
 	db := common.GetDatabase()
 
@@ -27,6 +29,7 @@ func (tag *Tag) Create() {
 	db.Create(&db)
 }
 
+// Delete removes the database entry of a given tag
 func (tag *Tag) Delete() {
 	db := common.GetDatabase()
 
@@ -41,10 +44,12 @@ func (tag *Tag) Serialize() common.JSON {
 	}
 }
 
+// ChangeColor changes the color of a tag
 func (tag *Tag) ChangeColor(newColor string) {
 	tag.Color = newColor
 }
 
+// ChangeLabel changes the label of a tag
 func (tag *Tag) ChangeLabel(newLabel string) {
 	tag.Label = newLabel
 }
@@ -60,6 +65,7 @@ func FindManyTags(condition interface{}) ([]Tag, error) {
 	return tags, nil
 }
 
+// SerializeTags serializes a list of tags into JSON format
 func SerializeTags(tags []Tag) []common.JSON {
 	serializedTags := make([]common.JSON, len(tags), len(tags))
 	for index := range tags {

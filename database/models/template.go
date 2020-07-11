@@ -29,34 +29,40 @@ func GetTemplates(db *gorm.DB) ([]Template, bool) {
 	return templates, true
 }
 
+// Delete removes the given user
 func (template *Template) Delete() {
 	db := common.GetDatabase()
 
 	db.Delete(&template)
 }
 
+// Save saves any changes made to a template
 func (template *Template) Save() {
 	db := common.GetDatabase()
 
 	db.Save(&template)
 }
 
+// Create creates a database entry from users
 func (template *Template) Create() {
 	db := common.GetDatabase()
 
 	db.Create(&template)
 }
 
+// ChangeDescription changes the description
 func (template *Template) ChangeDescription(description string) {
 	template.Description = description
 }
 
+// ChangeTitle changes the title
 func (template *Template) ChangeTitle(title string) {
 	template.Title = title
 }
 
+// AddLike adds a like
 func (template *Template) AddLike() {
-	template.Likes += 1
+	template.Likes++
 }
 
 // GetUserTemplates gets all templates related to user model

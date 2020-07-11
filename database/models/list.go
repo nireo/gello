@@ -15,18 +15,21 @@ type List struct {
 	UserID  uint
 }
 
+// Delete removes the given list's database entry
 func (list *List) Delete() {
 	db := common.GetDatabase()
 
 	db.Delete(&list)
 }
 
+// Save saves the changes made to a list into the database
 func (list *List) Save() {
 	db := common.GetDatabase()
 
 	db.Save(&list)
 }
 
+// Create creates a database entry from a struct
 func (list *List) Create() {
 	db := common.GetDatabase()
 

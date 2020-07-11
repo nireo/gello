@@ -49,12 +49,14 @@ func CreateActivityReport(username, actionType, boardID string, db *gorm.DB) boo
 	return true
 }
 
+// Update updates the activities' database entry
 func (activity *Activity) Update() {
 	db := common.GetDatabase()
 
 	db.Save(&activity)
 }
 
+// Save creates a new database entry for an activity
 func (activity *Activity) Save() {
 	db := common.GetDatabase()
 
@@ -62,6 +64,7 @@ func (activity *Activity) Save() {
 	db.Save(&activity)
 }
 
+// Delete deletes the database entry of an activity
 func (activity *Activity) Delete() {
 	db := common.GetDatabase()
 

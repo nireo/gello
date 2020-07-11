@@ -31,6 +31,7 @@ func (user *User) Serialize() common.JSON {
 	}
 }
 
+// Create creates a new database entry from a user struct
 func (user *User) Create() {
 	db := common.GetDatabase()
 
@@ -38,12 +39,14 @@ func (user *User) Create() {
 	db.Create(&user)
 }
 
+// Save saves all changes made to a user in the database
 func (user *User) Save() {
 	db := common.GetDatabase()
 
 	db.Save(&user)
 }
 
+// Delete removes the database entry of a given user
 func (user *User) Delete() {
 	db := common.GetDatabase()
 

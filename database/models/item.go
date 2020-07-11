@@ -15,18 +15,21 @@ type Item struct {
 	TagID    uint
 }
 
+// Delete removes a item's database entry
 func (item *Item) Delete() {
 	db := common.GetDatabase()
 
 	db.Delete(&item)
 }
 
+// Save saves the changes made to a item
 func (item *Item) Save() {
 	db := common.GetDatabase()
 
 	db.Save(&item)
 }
 
+// Create creates a new database entry from a struct
 func (item *Item) Create() {
 	db := common.GetDatabase()
 
@@ -43,10 +46,12 @@ func GetItemWithID(id string, db *gorm.DB) (Item, bool) {
 	return item, true
 }
 
+// ChangeContent changes the content of a given item
 func (item *Item) ChangeContent(newContent string) {
 	item.Content = newContent
 }
 
+// ChangeTag changes the tag of a given item
 func (item *Item) ChangeTag(tagID uint) {
 	item.TagID = tagID
 }
