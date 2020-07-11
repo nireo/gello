@@ -317,3 +317,22 @@ func getSharedUsers(c *gin.Context) {
 
 	c.JSON(http.StatusOK, models.SerializeUsers(users))
 }
+
+func getBoardActivity(c *gin.Context) {
+	db := common.GetDatabase()
+	boardID := c.Param("boardID")
+
+	board, err := models.FindOneBoard(&Board{UUID: boardID})
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	var activities []models.Activity
+	if err := db.Model(&board).Related(&activities).Error; err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusOK, models.SerializeActivities(activities))
+}

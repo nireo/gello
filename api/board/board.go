@@ -11,6 +11,7 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	{
 		board.GET("/", middlewares.Authorized, get)
 		board.GET("/board/:id", middlewares.Authorized, getSingle)
+		board.GET("/activity/:boardID", middlewares.Authorized, getBoardActivity)
 		board.GET("/shared/:id", middlewares.Authorized, getSharedUsers)
 
 		board.POST("/", middlewares.Authorized, create)
