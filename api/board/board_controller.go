@@ -1,6 +1,7 @@
 package board
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -78,6 +79,8 @@ func getSingle(c *gin.Context) {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}
+
+	fmt.Println(models.CheckBoardOwnership(board.ID, user.ID))
 
 	// check if the user owns the board
 	if board.UserID != user.ID || !models.CheckBoardOwnership(board.ID, user.ID) {

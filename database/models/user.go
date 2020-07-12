@@ -16,6 +16,7 @@ type User struct {
 
 // SharedBoard makes adding users to a board easier
 type SharedBoard struct {
+	gorm.Model
 	SharedBoardID uint
 	SharedUserID  uint
 	SharedBoard   Board
@@ -89,5 +90,9 @@ func CheckBoardOwnership(boardID uint, userID uint) bool {
 		return false
 	}
 
-	return true
+	if sharedBoard.ID > 0 {
+		return true
+	}
+
+	return false
 }

@@ -85,3 +85,8 @@ export const removeBoardActivity = async (
   );
   return response.data;
 };
+
+export const removeTag = async (tagID: string) => {
+  const response = await axios.delete(`${baseUrl}/tag/${tagID}`, getConfig());
+  return response.data;
+};
